@@ -12,9 +12,9 @@
     <?php
     if (!empty($xpThreshold)) {
 
-    echo '<br><br><h4><b>Adjusted XP per Adventuring Day: '. $adjustedXpDay . '</b></h4>';
+        echo '<br><br><h4><b>Adjusted XP per Adventuring Day: ' . $adjustedXpDay . '</b></h4>';
         ?>
-    <table>
+        <table>
             <?php
             echo ('<tr>');
             echo ('<td width="150">Easy</td><td>' . $xpThreshold['easy'] . '</td>');
@@ -29,11 +29,11 @@
             echo (' <td>Deadly</td><td>' . $xpThreshold['deadly'] . '</td>');
             echo ('</tr>');
             ?>    
-    </table>
-    <table>
+        </table>
+        <table>
             <?php
             echo ('<tr>');
-            echo ('<td width="150"></td><th>1 (x0.5)</th><th>2(x1)</th><th>3-6(x1.5)</th><th>7-10(x2)</th><th>11-14(x2.5)</th><th>15+(x3)</th>');
+            echo ('<td width="150"></td><th>1 (x' . $multiplierIndex[1] . ')</th><th>2(x' . $multiplierIndex[2] . ')</th><th>3-6(x' . $multiplierIndex[3] . ')</th><th>7-10(x' . $multiplierIndex[7] . ')</th><th>11-14(x' . $multiplierIndex[11] . ')</th><th>15+(x' . $multiplierIndex[15] . ')</th>');
             echo ('</tr>');
             foreach ($xpMultiplier as $difficulty => $diff_table) {
                 echo ('<tr><td width="150">' . $difficulty . '</td>');
@@ -43,9 +43,9 @@
                 echo ('</tr>');
             }
             ?>
-    </table>
+        </table>
 
-    <table>
+        <table>
             <?php
             echo ('<tr>');
             echo ('<th>Name</th>');
@@ -62,7 +62,7 @@
                 echo ('<td width="150">' . $adventurer['AdventurersPerAdventure']['lvl_inicial'] . '</td></tr>');
             }
             ?>
-    </table>
+        </table>
 
 
         <?php

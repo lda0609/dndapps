@@ -12,10 +12,8 @@ class MonstersController extends AppController
 
     function index()
     {
-
         $monsterList = $this->Monsters->find('all', array(
             'order' => 'cr'));
-//        debug($monsterList);
         $this->set('monsterList', $monsterList);
     }
 
@@ -37,18 +35,6 @@ class MonstersController extends AppController
 
     function update($monsterId = null)
     {
-//        if (is_null($monsterId)) {
-//            $monsterId = Cache::read('monsterId');
-//            if ($monsterId === false) {
-//                Cache::write('monsterId', 1);
-//            } else {
-//                $monsterId++;
-//                Cache::write('monsterId', $monsterId);
-//            }
-//        } else {
-//            Cache::write('monsterId', $monsterId);
-//        }
-
         $monster = $this->Monsters->find('first', array(
             'conditions' => array('size' => null),
             'order' => 'page'));
@@ -98,8 +84,6 @@ class MonstersController extends AppController
 
     function consulta()
     {
-        debug($this->data);
-
         if (!empty($this->data)) {
             $conditions = array();
             if (!empty($this->data['Monsters']['name'])) {
@@ -130,10 +114,50 @@ class MonstersController extends AppController
                 'conditions' => $conditions,
                 'order' => 'cr'));
 
-//            $this->paginate = array('Monsters' => array('conditions' => $conditions));
-//            $this->set('listMonsters', $this->paginate('Monsters'));
             $this->set('monsters', $monsters);
         }
+    }
+
+    function search()
+    {
+        $this->autoRender = false;
+        $params = $this->params['form'];
+
+        $conditions = array();
+        if (!empty($params['monsterName'])) {
+            $conditions['Monsters.name LIKE'] = '%' . $params['monsterName'] . '%';
+        }
+        if (!empty($params['crMin'])) {
+            $conditions['Monsters.cr >='] = $params['crMin'];
+        }
+        if (!empty($params['crMax'])) {
+            $conditions['Monsters.cr <='] = $params['crMax'];
+        }
+        if (!empty($params['type'])) {
+            $conditions['MonsterType.dnd_type_id'] = $params['type'];
+        }
+        if (!empty($params['alignment'])) {
+            $conditions['Monsters.alignment'] = $params['alignment'];
+        }
+
+        $monsters = $this->Monsters->find('all', array(
+            'joins' => array(
+                array('table' => 'monster_types',
+                    'alias' => 'MonsterType',
+                    'type' => 'LEFT',
+                    'conditions' => array(
+                        'Monsters.id = MonsterType.dnd_monsters_id',
+                    ),
+                    'order' => 'id'
+                )
+            ),
+            'conditions' => $conditions,
+            'order' => 'cr'));
+        foreach ($monsters as $key => $monster) {
+            $monsters[$key]['MonsterTypes'][0]['dnd_type_id'] = $this->viewVars['dnd_monster_type'][$monster['MonsterTypes'][0]['dnd_type_id']];
+        }
+
+        return json_encode($monsters);
     }
 
 }
