@@ -1,14 +1,9 @@
 <link rel="stylesheet" href="/cdw/css/redmond/jquery-ui-1.10.4.custom.css" type="text/css"/> 
+<link rel="stylesheet" href="/cdw/css/encounterBuilder.css" type="text/css"/> 
 <script type="text/javascript" src="/<?php echo APP_DIR ?>/js/jquery-1.7.2.js"></script>
 <script type="text/javascript" src="/<?php echo APP_DIR ?>/js/jquery.meio.mask.min.js"></script>
 <script type="text/javascript" src="/<?php echo APP_DIR ?>/js/jquery-ui-1.10.4.min.js"></script>
 
-<style type="text/css">
-    input, textarea {
-        font-size: 100%;
-        padding: 0.5%;
-    }
-</style>
 
 
 <div id="conteudo_corpo">

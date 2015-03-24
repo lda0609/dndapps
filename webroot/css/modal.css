@@ -1,0 +1,82 @@
+/* 
+    Created on : 13/01/2015, 10:00:21
+    Author     : Leandro Domingos Almeida
+*/
+/* root element for tabs  */
+
+#basic-modal-content {
+    display:none;
+}
+
+#simplemodal-overlay {
+    background-color:#000;
+}
+
+#simplemodal-container {
+    top:400px;
+    height:460px;
+    width:600px; 
+    color:#bbb; 
+    background-color:#FFF; 
+    border:1px solid #CCC; 
+    padding:2px;
+    padding-top: 20px;
+    box-shadow: 3px 3px 3px #8c8c8c;
+}
+#simplemodal-container  table{
+    border-spacing: 0px;
+}
+#simplemodal-container  table td{
+    border: 1px solid black;
+    border-spacing: 0px;
+    margin-left: 2px;
+    margin-right: 2px;
+}
+
+
+#simplemodal-container .simplemodal-data {
+    padding:8px;
+}
+#simplemodal-container code {
+    background:#141414; 
+    border-left:3px solid #65B43D; 
+    color:#bbb; display:block; 
+    font-size:12px; 
+    margin-bottom:12px; 
+    padding:4px 6px 6px;
+}
+#simplemodal-container a {
+    color:#ddd;
+}
+#simplemodal-container a.modalCloseImg {
+    background: url(../img/icons/cross.png) no-repeat;
+    background-color: #FFF;
+    width:15px; 
+    height:15px; 
+    display:inline; 
+    z-index:3200; 
+    position:absolute; 
+    top:2px; 
+    right:2px; 
+    cursor:pointer;
+}
+
+.modal-scroll {
+    overflow: auto;
+    height: 360px;
+}
+/* table borders */
+
+#tabMensagens, #tabPendencias, #tabMensagensArquivadas, #tabMensagensExcluidas, #modal_table{
+    border-collapse: collapse;
+}
+
+#tabMensagens td, #tabPendencias td, #tabArquivadas td, #tabMensagensArquivadas td, #tabMensagensExcluidas td {
+    /*    border: 1px solid black;
+        border: none;*/
+}
+
+tr.header
+{
+    cursor:pointer;
+}
