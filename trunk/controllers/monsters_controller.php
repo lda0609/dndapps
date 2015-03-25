@@ -121,7 +121,7 @@ class MonstersController extends AppController
     function search()
     {
         $this->autoRender = false;
-        $params = $this->params['form'];
+        $params = $this->params['url'];
 
         $conditions = array();
         if (!empty($params['monsterName'])) {

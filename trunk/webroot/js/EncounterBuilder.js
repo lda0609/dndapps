@@ -1,5 +1,6 @@
 //$.mask.masks.numero3 = {mask: '999'};
 var xpThreshold = '';
+var multiplierIndex = '';
 
 $("#btnLimparConsulta").click(function () {
     $('#tabResult > tbody:last').html('');
@@ -22,7 +23,7 @@ $("#btnConsultar").click(function () {
     };
     $.ajax({
         url: 'http://' + host + '/dndapps/monsters/search',
-        type: 'POST',
+        type: 'GET',
         data: callOptions,
         async: true
     }).done(function (data, textStatus, request) {
@@ -91,8 +92,7 @@ $('#tabEncontro').on('change', '.quantidade', function () {
             multiplier = '15+';
         }
 
-        console.log(multiplier);
-        console.log(total);
+        console.log(multiplierIndex);
         if (total < xpThreshold['easy'][multiplier]) {
             $('#dificuldade').html('<font color="FF66FF"><strong>Too Easy</strong></font>');
         } else if (total < xpThreshold['medium'][multiplier]) {
@@ -104,7 +104,7 @@ $('#tabEncontro').on('change', '.quantidade', function () {
         } else {
             $('#dificuldade').html('<font color="FF0000"><strong>Deadly</strong></font>');
         }
-
+        console.log(total * Number(multiplierIndex[multiplier]));
     }
 });
 
@@ -114,18 +114,17 @@ $('#tabEncontro').on('change', '.quantidade', function () {
 $("#btnBuscarGrupo").click(function () {
     var host = window.location.hostname;
     var callOptions = {
-        "dataAventura": $("#data").val(),
+        "idAventura": $("#data").val(),
     };
-    console.log(callOptions);
-
     $.ajax({
         dataType: "json",
         url: 'http://' + host + '/dndapps/encounters/getAdventurers',
-        type: 'POST',
+        type: 'GET',
         data: callOptions,
         async: true
     }).done(function (data, textStatus, request) {
-//        console.log(data);
+        console.log(data);
+        multiplierIndex = data['multiplierIndex'];
         xpThreshold = data['xpMultiplier'];
         $('#XPDay').html(data['adjustedXpDay']);
         $('#easyXP').html(data['xpThreshold']['easy']);
@@ -134,7 +133,7 @@ $("#btnBuscarGrupo").click(function () {
         $('#deadlyXP').html(data['xpThreshold']['deadly']);
 
         $('#xpThreshhold').html('<thead></thead><tbody></tbody>');
-        $('#xpThreshhold > thead:last').append('<tr><td width="150"></td><th id="oneCreat">1 (x' + data['multiplierIndex']['1'] + ') </th><th id="twoCreat">2 (x' + data['multiplierIndex']['2'] + ')</th><th id="threeCreat">3-6 (x' + data['multiplierIndex']['3'] + ')</th><th id="sevenCreat">7-10 (x' + data['multiplierIndex']['7'] + ') </th><th id="elevenCreat">11-14 (x' + data['multiplierIndex']['11'] + ') </th><th id="fifteenCreat"> 15+ (x' + data['multiplierIndex']['15'] + ')</th></tr>');
+        $('#xpThreshhold > thead:last').append('<tr><td width="150"></td><th id="oneCreat">1 (x' + data['multiplierIndex']['1'] + ') </th><th id="twoCreat">2 (x' + data['multiplierIndex']['2'] + ')</th><th id="threeCreat">3-6 (x' + data['multiplierIndex']['3-6'] + ')</th><th id="sevenCreat">7-10 (x' + data['multiplierIndex']['7-10'] + ') </th><th id="elevenCreat">11-14 (x' + data['multiplierIndex']['11-14'] + ') </th><th id="fifteenCreat"> 15+ (x' + data['multiplierIndex']['15+'] + ')</th></tr>');
         $('#xpThreshhold > tbody:last').append('<tr><td>Easy</td><td>' + data['xpMultiplier']['easy']['1'] + '</td><td>' + data['xpMultiplier']['easy']['2'] + '</td><td>' + data['xpMultiplier']['easy']['3-6'] + '</td><td>' + data['xpMultiplier']['easy']['7-10'] + '</td><td>' + data['xpMultiplier']['easy']['11-14'] + '</td><td>' + data['xpMultiplier']['easy']['15+'] + '</td></tr>');
         $('#xpThreshhold > tbody:last').append('<tr><td>Medium</td><td>' + data['xpMultiplier']['medium']['1'] + '</td><td>' + data['xpMultiplier']['medium']['2'] + '</td><td>' + data['xpMultiplier']['medium']['3-6'] + '</td><td>' + data['xpMultiplier']['medium']['7-10'] + '</td><td>' + data['xpMultiplier']['medium']['11-14'] + '</td><td>' + data['xpMultiplier']['medium']['15+'] + '</td></tr>');
         $('#xpThreshhold > tbody:last').append('<tr><td>Hard</td><td>' + data['xpMultiplier']['hard']['1'] + '</td><td>' + data['xpMultiplier']['hard']['2'] + '</td><td>' + data['xpMultiplier']['hard']['3-6'] + '</td><td>' + data['xpMultiplier']['hard']['7-10'] + '</td><td>' + data['xpMultiplier']['hard']['11-14'] + '</td><td>' + data['xpMultiplier']['hard']['15+'] + '</td></tr>');
@@ -148,3 +147,41 @@ $("#btnBuscarGrupo").click(function () {
         });
     });
 });
+
+$("#btnNovoGrupo").click(function () {
+    var host = window.location.hostname;
+    var callOptions = {
+        "dataAventura": $("#data").val(),
+    };
+    $.ajax({
+        dataType: "json",
+        url: 'http://' + host + '/dndapps/encounters/getAdventurers',
+        type: 'POST',
+        data: callOptions,
+        async: true
+    }).done(function (data, textStatus, request) {
+        console.log(data);
+        multiplierIndex = data['multiplierIndex'];
+        xpThreshold = data['xpMultiplier'];
+        $('#XPDay').html(data['adjustedXpDay']);
+        $('#easyXP').html(data['xpThreshold']['easy']);
+        $('#mediumXP').html(data['xpThreshold']['medium']);
+        $('#hardXP').html(data['xpThreshold']['hard']);
+        $('#deadlyXP').html(data['xpThreshold']['deadly']);
+
+        $('#xpThreshhold').html('<thead></thead><tbody></tbody>');
+        $('#xpThreshhold > thead:last').append('<tr><td width="150"></td><th id="oneCreat">1 (x' + data['multiplierIndex']['1'] + ') </th><th id="twoCreat">2 (x' + data['multiplierIndex']['2'] + ')</th><th id="threeCreat">3-6 (x' + data['multiplierIndex']['3-6'] + ')</th><th id="sevenCreat">7-10 (x' + data['multiplierIndex']['7-10'] + ') </th><th id="elevenCreat">11-14 (x' + data['multiplierIndex']['11-14'] + ') </th><th id="fifteenCreat"> 15+ (x' + data['multiplierIndex']['15+'] + ')</th></tr>');
+        $('#xpThreshhold > tbody:last').append('<tr><td>Easy</td><td>' + data['xpMultiplier']['easy']['1'] + '</td><td>' + data['xpMultiplier']['easy']['2'] + '</td><td>' + data['xpMultiplier']['easy']['3-6'] + '</td><td>' + data['xpMultiplier']['easy']['7-10'] + '</td><td>' + data['xpMultiplier']['easy']['11-14'] + '</td><td>' + data['xpMultiplier']['easy']['15+'] + '</td></tr>');
+        $('#xpThreshhold > tbody:last').append('<tr><td>Medium</td><td>' + data['xpMultiplier']['medium']['1'] + '</td><td>' + data['xpMultiplier']['medium']['2'] + '</td><td>' + data['xpMultiplier']['medium']['3-6'] + '</td><td>' + data['xpMultiplier']['medium']['7-10'] + '</td><td>' + data['xpMultiplier']['medium']['11-14'] + '</td><td>' + data['xpMultiplier']['medium']['15+'] + '</td></tr>');
+        $('#xpThreshhold > tbody:last').append('<tr><td>Hard</td><td>' + data['xpMultiplier']['hard']['1'] + '</td><td>' + data['xpMultiplier']['hard']['2'] + '</td><td>' + data['xpMultiplier']['hard']['3-6'] + '</td><td>' + data['xpMultiplier']['hard']['7-10'] + '</td><td>' + data['xpMultiplier']['hard']['11-14'] + '</td><td>' + data['xpMultiplier']['hard']['15+'] + '</td></tr>');
+        $('#xpThreshhold > tbody:last').append('<tr><td>Deadly</td><td>' + data['xpMultiplier']['deadly']['1'] + '</td><td>' + data['xpMultiplier']['deadly']['2'] + '</td><td>' + data['xpMultiplier']['deadly']['3-6'] + '</td><td>' + data['xpMultiplier']['deadly']['7-10'] + '</td><td>' + data['xpMultiplier']['deadly']['11-14'] + '</td><td>' + data['xpMultiplier']['deadly']['15+'] + '</td></tr>');
+
+        $('#adventurers').html('<thead></thead><tbody></tbody>');
+        $('#adventurers > thead:last').append('<tr><th>Name</th><th>Race</th><th>Class</th><th>Player</th><th>Level</th></tr>');
+
+        $.each(data['adventurers'], function (key, adventurer) {
+            $('#adventurers > tbody:last').append('<tr><td>' + adventurer['Adventurers']['name'] + '</td><td>' + adventurer['Adventurers']['race'] + '</td><td>' + dnd_classes[adventurer['Adventurers']['class']] + '</td><td>' + adventurer['Adventurers']['player'] + '</td><td>' + adventurer['AdventurersPerAdventure']['lvl_inicial'] + '</td></tr>');
+        });
+    });
+});
+
