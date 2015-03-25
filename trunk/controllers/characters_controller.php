@@ -116,7 +116,7 @@ class CharactersController extends AppController
                         'fields' => array('lvl_inicial', 'xp_final')
                     ));
                     $AdventurersPerAdventure[$char]['AdventurersPerAdventure']['xp_inicial'] = $AdventurersPerAdventureAnterior[$char]['AdventurersPerAdventure']['xp_final'];
-                }else {
+                } else {
                     $AdventurersPerAdventure[$char]['AdventurersPerAdventure']['xp_inicial'] = 0;
                 }
 
@@ -164,9 +164,13 @@ class CharactersController extends AppController
         }
     }
 
-    function
+    function getListCharacters()
+    {
+        $this->autoRender = false;
+        return json_encode($this->Adventurers->find("all"));
+    }
 
-    notes()
+    function notes()
     {
         
     }
