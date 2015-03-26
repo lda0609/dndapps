@@ -63,7 +63,7 @@ class EncountersController extends AppController
                 )
             ),
             'conditions' => array('AdventurersPerAdventure.dnd_adventure_id' => $this->params['url']['idAventura'], 'AdventurersPerAdventure.ausente' => '0'),
-            'fields' => array('dnd_adventure_id', 'dnd_adventurers_id', 'lvl_inicial', 'Adventurers.name', 'Adventurers.race', 'Adventurers.class', 'Adventurers.player'),
+            'fields' => array('dnd_adventure_id', 'dnd_adventurers_id', 'lvl_inicial', 'xp_final', 'Adventurers.name', 'Adventurers.race', 'Adventurers.class', 'Adventurers.player'),
             'order' => 'AdventurersPerAdventure.id',
         ));
         $groupLvl = 0;

@@ -67,8 +67,10 @@
     <table>
         <thead>
             <tr>
-                <td width="160px"><strong>Total Encontro: </strong></td>
-                <td width="40px" id="totalEncontro"></td>
+                <td width="140px"><strong>Total Encontro: </strong></td>
+                <td width="50px" id="totalEncontro"></td>
+                <td width="140px"><strong>Adjusted XP:</strong></td>
+                <td width="50px" id="adjustedXP"></td>
                 <td id="dificuldade"></td>
             </tr>
         </thead>

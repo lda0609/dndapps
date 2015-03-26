@@ -3,7 +3,7 @@
 class CharactersController extends AppController
 {
 
-    var $uses = array('CharacterProgression', 'Adventurers', 'AdventurersPerAdventure', 'Adventure');
+    var $uses = array('CharacterProgression', 'Adventurers', 'AdventurersPerAdventure', 'Adventure', 'xpThresholds');
 
     function index()
     {
@@ -164,10 +164,49 @@ class CharactersController extends AppController
         }
     }
 
+ 
+
     function getListCharacters()
     {
         $this->autoRender = false;
         return json_encode($this->Adventurers->find("all"));
+    }
+
+    function salvarGrupo()
+    {
+        $this->autoRender = false;
+        $data = explode('/', $this->params['url']['dataAventura']);
+
+        if (!empty($data) && checkdate($data[1], $data[0], $data[2])) {
+            $adventure['Adventure']['date'] = $this->params['url']['dataAventura'];
+            if ($this->Adventure->save($adventure)) {
+                $adventure = $this->Adventure->find('first', array('conditions' => array('date' => $this->params['url']['dataAventura'])));
+
+                foreach ($this->params['url']['level'] as $key => $level) {
+                    $adventurersPerAdventure = array();
+                    $adventurersPerAdventure['AdventurersPerAdventure']['dnd_adventure_id'] = $adventure['Adventure']['id'];
+                    $adventurersPerAdventure['AdventurersPerAdventure']['dnd_adventurers_id'] = $key + 1;
+                    $adventurersPerAdventure['AdventurersPerAdventure']['lvl_inicial'] = $level;
+                    $adventurersPerAdventure['AdventurersPerAdventure']['ausente'] = 0;
+                    if (!empty($this->params['url']['ausencia'])) {
+                        if (in_array('aventureiro' . ($key + 1), $this->params['url']['ausencia'])) {
+                            $adventurersPerAdventure['AdventurersPerAdventure']['ausente'] = 1;
+                        }
+                    }
+                    $this->AdventurersPerAdventure->saveAll($adventurersPerAdventure);
+                }
+                return json_encode('ok');
+            } else {
+                return json_encode('nok');
+            }
+        } else {
+            return json_encode('nok');
+        }
+    }
+
+    function atualizarXP()
+    {
+        
     }
 
     function notes()
