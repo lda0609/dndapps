@@ -240,9 +240,9 @@ $('body').on('click', '#btnAtualizarXP', function () {
         return $(this).val();
     }).get();
 
-    console.log(values);
+    console.log($('#data').val());
     var callOptions = {
-        "dataAventura": $('#dataAventura').val(),
+        "idAventura": $('#data').val(),
         "xp": values,
     };
 
@@ -253,9 +253,10 @@ $('body').on('click', '#btnAtualizarXP', function () {
         data: callOptions,
         async: true
     }).done(function (data, textStatus, request) {
+        console.log(data)
 
         if (data == 'ok') {
-            $('#btnVoltar').click();
+            console.log('ade')
         } else {
             alert('deu pau!')
         }
