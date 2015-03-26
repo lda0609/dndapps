@@ -1,8 +1,8 @@
-<div>
+<div id="grupo1">
     <form class="pure-form pure-form-aligned">
         <fieldset>
             <div class="pure-control-group">
-                <table border='0'>
+                <table border="0">
                     <tr>
                         <td>
                             <?php
@@ -21,6 +21,13 @@
         </fieldset>
     </form>
 </div>
+<div id="grupo2">
+
+    <div class="pure-control-group"><label for="dataAventura">Data da Aventura:</label>  <input type="text" class="datepicker" id="dataAventura"></div>
+
+</div>
+
+
 <div id="conteudo_corpo">
     <table id="grupoHeader">
 
