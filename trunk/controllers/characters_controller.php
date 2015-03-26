@@ -164,8 +164,6 @@ class CharactersController extends AppController
         }
     }
 
- 
-
     function getListCharacters()
     {
         $this->autoRender = false;
@@ -206,7 +204,17 @@ class CharactersController extends AppController
 
     function atualizarXP()
     {
-        
+        $this->autoRender = false;
+        foreach ($this->params['url']['xp'] as $key => $value) {
+            $AdventurerPerAdventure = $this->AdventurersPerAdventure->find('first', array('conditions' => array(
+                    'dnd_adventure_id' => $this->params['url']['idAventura'],
+                    'dnd_adventurers_id' => $key + 1
+            )));
+            $AdventurerPerAdventure['AdventurersPerAdventure']['xp_final'] = $value;
+//            return json_encode($AdventurerPerAdventure);
+            $this->AdventurersPerAdventure->save($AdventurerPerAdventure);
+        }
+        return json_encode('ok');
     }
 
     function notes()
