@@ -6,12 +6,7 @@
                 <table border="0">
                     <tr>
                         <td>
-                           <div class="pure-control-group"><label for="data">Data Da Aventura</label><select id="data">
-
-                                </select></div>
-                            <?php
-//                            echo $this->Form->input('data da aventura', array('type' => 'select', 'options' => $data_adventures, 'id' => 'data'));
-                            ?>
+                            <div class="pure-control-group"><label for="data">Data Da Aventura</label><select id="data"></select></div>
                         </td>
                         <td>
                             <div class="pure-control-group"><button class="pure-button pure-button-primary button-error" type="button" id="btnNovaAventura">Nova Aventura</button></div>
@@ -23,11 +18,8 @@
     </form>
 </div>
 <div id="grupo2">
-
     <div class="pure-control-group"><label for="dataAventura">Data da Aventura:</label>  <input type="text" class="datepicker" id="dataAventura"></div>
-
 </div>
-
 
 <div id="conteudo_corpo">
     <table id="grupoHeader">

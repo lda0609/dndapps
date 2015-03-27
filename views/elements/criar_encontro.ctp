@@ -18,8 +18,8 @@
     </form>
 
     <div align="center">
-        <button class="pure-button pure-button-primary" type="button" id="btnConsultar">Consultar</button>
         <button class="button-secondary pure-button" type="button" id="btnLimparConsulta">Limpar</button>
+        <button class="pure-button pure-button-primary" type="button" id="btnConsultar">Consultar</button>
     </div>
     <br>
 </div>
@@ -61,7 +61,6 @@
             </tr>
         </thead>
         <tbody>
-
         </tbody>
     </table>
     <table>
@@ -77,5 +76,6 @@
     </table>
     <div align="center">
         <button class="button-secondary pure-button" type="button" id="btnLimparEncontro">Limpar Encontro</button>
+        <button class="pure-button pure-button-primary" type="button" id="btnSalvarEncontro">Salvar Encontro</button>
     </div>
 </div>
