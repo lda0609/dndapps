@@ -112,3 +112,22 @@ h1 {
     margin-right: auto;
 }
 
+#msg {
+  border: 1px solid #CCC;
+  padding: 7px;
+  font-family: Arial, Verdana, Helvetica, sans-serif;
+  font-size: 13px;
+  color: #000000;
+  text-align: center;
+  margin-bottom: 0px;
+}
+
+.msg_erro {
+  color: #CC0000;
+  text-align: center;
+}
+
+.msg_sucesso {
+  color: #009900;
+  text-align: center;
+}

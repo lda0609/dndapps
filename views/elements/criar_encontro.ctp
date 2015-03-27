@@ -47,7 +47,25 @@
     </div>
 </div>
 <h1>Encontro </h1>
+
+<div id="msg">
+    <table align="center">
+        <tbody><tr>
+                <td class="msg_sucesso">Encontro salvo com sucesso.</td>
+            </tr>
+        </tbody></table>
+</div>
+
+
 <div class="modulo">
+    <form class="pure-form">
+        <table>
+            <tr>
+                <td><label for="tituloEncontro">Título do Encontro</label><input id="tituloEncontro" type="text"></td>
+                <td><label for="tesouro">Tesouro</label><input id="tesouro" type="text"></td>
+            </tr>
+        </table>
+    </form>
 
     <table id="tabEncontro">
         <thead>
@@ -74,6 +92,8 @@
             </tr>
         </thead>
     </table>
+
+
     <div align="center">
         <button class="button-secondary pure-button" type="button" id="btnLimparEncontro">Limpar Encontro</button>
         <button class="pure-button pure-button-primary" type="button" id="btnSalvarEncontro">Salvar Encontro</button>
