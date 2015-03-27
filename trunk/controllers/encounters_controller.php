@@ -59,7 +59,7 @@ class EncountersController extends AppController
             'fields' => array('dnd_adventure_id', 'dnd_adventurers_id', 'lvl_inicial', 'xp_final', 'ausente', 'Adventurers.id', 'Adventurers.name', 'Adventurers.race', 'Adventurers.class', 'Adventurers.player'),
             'order' => 'AdventurersPerAdventure.id',
         ));
-        
+
         $AdventurersPerAdventurePresentes = $this->AdventurersPerAdventure->find('all', array(
             'joins' => array(
                 array('table' => 'adventurers',
@@ -74,13 +74,13 @@ class EncountersController extends AppController
             'fields' => array('dnd_adventure_id', 'dnd_adventurers_id', 'lvl_inicial', 'xp_final', 'ausente', 'Adventurers.id', 'Adventurers.name', 'Adventurers.race', 'Adventurers.class', 'Adventurers.player'),
             'order' => 'AdventurersPerAdventure.id',
         ));
-        
+
         $groupLvl = 0;
         $adjustedXpDay = $xpThreshold['deadly'] = $xpThreshold['hard'] = $xpThreshold['medium'] = $xpThreshold['easy'] = 0;
 
 
-        
-        
+
+
         foreach ($AdventurersPerAdventurePresentes as $key => $adventurer) {
             $groupLvl += $adventurer['AdventurersPerAdventure']['lvl_inicial'];
             $xp = $xpTable[$adventurer['AdventurersPerAdventure']['lvl_inicial'] - 1]['xpThresholds'];
@@ -148,6 +148,25 @@ class EncountersController extends AppController
             return json_encode('ok');
         } else {
             return json_encode('nok');
+        }
+    }
+
+    function saveEncounter()
+    {
+        $this->autoRender = false;
+//        return json_encode($this->params['url']);
+
+        $encontro['Encounters']['dnd_adventure_id'] = $this->params['url']['idAventura'];
+        $encontro['Encounters']['title'] = $this->params['url']['tituloEncontro'];
+        $encontro['Encounters']['xp'] = $this->params['url']['totalEncontro'];
+        $encontro['Encounters']['treasure'] = $this->params['url']['tesouro'];
+        $encontro['Encounters']['adjusted_xp'] = $this->params['url']['adjustedXP'];
+        $encontro['Encounters']['difficulty'] = $this->params['url']['difficulty'];
+
+        if ($this->Encounters->save($encontro)) {
+            return json_encode('ok');
+        } else {
+            return json_encode($encontro);
         }
     }
 
