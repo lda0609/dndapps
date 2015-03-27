@@ -97,5 +97,18 @@ h1 {
 }
 
 #dataAventura {
-     width: 140px;
+    width: 140px;
 }
+
+/*.ui-tabs {
+    width: 860px;
+
+}*/
+
+#content {
+    width: 860px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
