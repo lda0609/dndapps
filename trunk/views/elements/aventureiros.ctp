@@ -1,3 +1,4 @@
+<h1>Aventureiros</h1>
 <div id="grupo1">
     <form class="pure-form pure-form-aligned">
         <fieldset>
@@ -5,15 +6,15 @@
                 <table border="0">
                     <tr>
                         <td>
+                           <div class="pure-control-group"><label for="data">Data Da Aventura</label><select id="data">
+
+                                </select></div>
                             <?php
-                            echo $this->Form->input('data da aventura', array('type' => 'select', 'options' => $data_adventures, 'id' => 'data'));
+//                            echo $this->Form->input('data da aventura', array('type' => 'select', 'options' => $data_adventures, 'id' => 'data'));
                             ?>
                         </td>
                         <td>
-                            <div class="pure-control-group"><button class="pure-button pure-button-primary" type="button" id="btnBuscarGrupo">Buscar Grupo</button></div>
-                        </td>
-                        <td>
-                            <div class="pure-control-group"><button class="pure-button pure-button-primary button-error" type="button" id="btnNovoGrupo">Novo Grupo</button></div>
+                            <div class="pure-control-group"><button class="pure-button pure-button-primary button-error" type="button" id="btnNovaAventura">Nova Aventura</button></div>
                         </td>
                     </tr>
                 </table>

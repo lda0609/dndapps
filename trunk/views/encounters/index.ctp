@@ -14,14 +14,18 @@
 <div id="tabs">
     <ul>
         <li><a id="t1" href="#aventureiros">Grupo</a></li>
-        <li><a id="t2" href="#encontro">Montar Encontro</a></li>
+        <li><a id="t2" href="#criar_encontro">Criar Encontros</a></li>
+        <li><a id="t3" href="#consultar_aventura">Consultar Aventura</a></li>
     </ul>
     <!-- panes -->
-    <div id ="encontro">
-        <?php echo $this->element('encontro'); ?>
-    </div>
     <div id ="aventureiros">
         <?php echo $this->element('aventureiros'); ?>
+    </div>
+    <div id ="criar_encontro">
+        <?php echo $this->element('criar_encontro'); ?>
+    </div>
+    <div id ="consultar_aventura">
+        <?php echo $this->element('consultar_aventura'); ?>
     </div>
 
 </div>
