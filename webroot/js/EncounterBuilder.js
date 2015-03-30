@@ -1,10 +1,26 @@
-//$.mask.masks.numero3 = {mask: '999'};
+$.mask.masks.numero3 = {mask: '999'};
+$.mask.masks.numero6 = {mask: '999999'};
+$(function () {
+    $("#tabs").tabs();
+});
+jQuery(function ($) {
+    $('input[type="text"]').setMask();
+});
+
 var xpThreshold = '';
 var multiplierIndex = '';
 var host = window.location.hostname;
 $('#grupo2').hide();
 getDataAventura();
 $("#msg").hide();
+
+//aplica a mascara para os campos dinâmicos
+function aplicaMask() {
+    $('input[alt]').each(function () {
+        var input = $(this);
+        input.setMask(input.data('mask'));
+    });
+}
 
 $('body').on('focus', '.datepicker', function () {
     $(".datepicker").datepicker();
@@ -36,7 +52,7 @@ $("#btnConsultar").click(function () {
         "crMin": $("#crMin").val(),
         "crMax": $("#crMax").val(),
         "type": $("#type").val(),
-        "alignment": $("#alignment").val(),
+        "alignment": $("#alignment").val()
     };
     $.ajax({
         url: 'http://' + host + '/dndapps/monsters/search',
@@ -56,7 +72,8 @@ function adicionarAoEncontro(monsterId) {
     var monster = $(monsterData).find('td#tdMonster').html();
     var cr = $(monsterData).find('td#tdCr').html();
     var page = $(monsterData).find('td#tdPage').html();
-    $('#tabEncontro > tbody:last').append('<tr class="encounterMonster" id="' + monsterId + '"><td> <a onclick="excluirDoEncontro(\'' + monsterId + '\')"><img src="/dndapps/img/minus24px.png"></a></td><td>' + monster + '</td><td><input id="qtde' + monsterId + '" class="quantidade" alt="numero3" size="3" maxlength="3"></td><td id="tdCr">' + cr + '</td><td>' + page + '</td><td id="xp' + monsterId + '" class="xpEncounter"></td></tr>');
+    $('#tabEncontro > tbody:last').append('<tr class="encounterMonster" id="' + monsterId + '"><td> <a onclick="excluirDoEncontro(\'' + monsterId + '\')"><img src="/dndapps/img/minus24px.png"></a></td><td>' + monster + '</td><td><input type="text" id="qtde' + monsterId + '" class="quantidade" alt="numero3" size="3" maxlength="3"></td><td id="tdCr">' + cr + '</td><td>' + page + '</td><td id="xp' + monsterId + '" class="xpEncounter"></td></tr>');
+    aplicaMask();
 }
 
 function excluirDoEncontro(monsterId) {
@@ -148,7 +165,7 @@ $("#btnSalvarEncontro").click(function () {
                 "adjustedXP": $('#adjustedXP').html(),
                 "difficulty": $('#diff').html(),
                 "tituloEncontro": $('#tituloEncontro').val(),
-                "tesouro": $('#tesouro').val(),
+                "tesouro": $('#tesouro').val()
             };
             console.log(callOptions);
             $.ajax({
@@ -175,7 +192,7 @@ function getDataAventura() {
     }).done(function (data, textStatus, request) {
         var options = '<option value="">SELECIONE</option>';
         $.each(data, function (key, dataAventura) {
-            options += '<option value="' + key + '">' + dataAventura + '</option>'
+            options += '<option value="' + key + '">' + dataAventura + '</option>';
         });
         $('#data').html(options);
 //        $('#data option:last-child').attr('selected', 'selected');
@@ -190,7 +207,7 @@ $("#data").change(function () {
         $('#adventurers').html('<thead></thead><tbody></tbody>');
     } else {
         var callOptions = {
-            "idAventura": $("#data").val(),
+            "idAventura": $("#data").val()
         };
         $.ajax({
             dataType: "json",
@@ -217,7 +234,7 @@ $("#data").change(function () {
             $('#adventurers > thead:last').append('<tr><th width="40px"></th><th>Name</th><th>Race</th><th>Class</th><th>Player</th><th>Level Inicial</th><th>XP Final</th></tr>');
             $.each(data['adventurers'], function (key, adventurer) {
                 if (adventurer['AdventurersPerAdventure']['xp_final'] == null) {
-                    xp_final = '<input id="xp_final' + adventurer['Adventurers']['id'] + '" class="xp_final" size="8" maxlength="6" required="true">';
+                    xp_final = '<input type="text" id="xp_final' + adventurer['Adventurers']['id'] + '" class="xp_final" alt="numero6" size="8" maxlength="6">';
                     $('#saveButtom').html('<div align="center" class="pure-control-group"><button class="pure-button pure-button-primary" type="button" id="btnAtualizarXP">Atualizar XP</button></div>');
                 } else {
                     xp_final = adventurer['AdventurersPerAdventure']['xp_final'];
@@ -227,6 +244,7 @@ $("#data").change(function () {
                     $('#aventureiro' + adventurer['Adventurers']['id']).addClass('ausencia');
                     $('#img' + adventurer['Adventurers']['id']).html('<a onclick="toggleAusencia(\'' + adventurer['Adventurers']['id'] + '\')"><img height="38px" src="/dndapps/img/pink-paw-print.png"></a>');
                 }
+                aplicaMask();
 
             });
         });
@@ -246,11 +264,11 @@ $("#btnNovaAventura").click(function () {
     }).done(function (data, textStatus, request) {
         $('#adventurers > thead:last').append('<tr><th width="40px"></th><th>Name</th><th>Race</th><th>Class</th><th>Player</th><th>Level</th></tr>');
         $.each(data, function (key, adventurer) {
-            var select = '<select class="selectLvl id="lvl' + adventurer['Adventurers']['id'] + '">'
+            var select = '<select class="selectLvl id="lvl' + adventurer['Adventurers']['id'] + '">';
             for (var count = 1; count <= 20; count++) {
-                select += '<option value="' + count + '">' + count + '</option>'
+                select += '<option value="' + count + '">' + count + '</option>';
             }
-            select += '</select>'
+            select += '</select>';
             $('#adventurers > tbody:last').append('<tr id="aventureiro' + adventurer['Adventurers']['id'] + '"><td id="img' + adventurer['Adventurers']['id'] + '"><a onclick="toggleAusencia(\'' + adventurer['Adventurers']['id'] + '\')"><img height="38px" src="/dndapps/img/green-dragon.png"></a></td><td>' + adventurer['Adventurers']['name'] + '</td><td>' + adventurer['Adventurers']['race'] + '</td><td>' + dnd_classes[adventurer['Adventurers']['class']] + '</td><td>' + adventurer['Adventurers']['player'] + '</td><td>' + select + '</td></tr>');
         });
         $('#saveButtom').html('<div align="center"><button class="pure-button button-warning" type="button" id="btnVoltar">Voltar</button> <button class="pure-button pure-button-primary" type="button" id="btnSalvarAventura">Salvar Aventura</button></div>');
@@ -273,7 +291,7 @@ $('body').on('click', '#btnSalvarAventura', function () {
     var callOptions = {
         "dataAventura": $('#dataAventura').val(),
         "level": values,
-        "ausencia": ausencia,
+        "ausencia": ausencia
     };
     $.ajax({
         dataType: "json",
@@ -287,7 +305,7 @@ $('body').on('click', '#btnSalvarAventura', function () {
             $('#btnVoltar').click();
             getDataAventura();
         } else {
-            alert('deu pau!')
+            alert('deu pau!');
         }
     });
 });
@@ -298,7 +316,7 @@ $('body').on('click', '#btnAtualizarXP', function () {
     console.log($('#data').val());
     var callOptions = {
         "idAventura": $('#data').val(),
-        "xp": values,
+        "xp": values
     };
     $.ajax({
         dataType: "json",
@@ -307,12 +325,12 @@ $('body').on('click', '#btnAtualizarXP', function () {
         data: callOptions,
         async: true
     }).done(function (data, textStatus, request) {
-        console.log(data)
+        console.log(data);
 
         if (data == 'ok') {
-            console.log('ade')
+            console.log('ade');
         } else {
-            alert('deu pau!')
+            alert('deu pau!');
         }
     });
 });
@@ -331,7 +349,7 @@ function toggleAusencia(adventurerId) {
         var callOptions = {
             "idAventura": $('#data').val(),
             "adventurer": adventurerId,
-            "ausente": ausente,
+            "ausente": ausente
         };
         $.ajax({
             dataType: "json",
@@ -343,7 +361,7 @@ function toggleAusencia(adventurerId) {
             if (data == 'ok') {
                 $("#data").change();
             } else {
-                alert('deu pau!')
+                alert('deu pau!');
             }
         });
     }
