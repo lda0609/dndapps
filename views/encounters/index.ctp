@@ -3,10 +3,12 @@
 <script type="text/javascript" src="/<?php echo APP_DIR ?>/js/jquery-1.11.2.min.js"></script>
 <script src="/<?php echo APP_DIR ?>/js/jquery-ui.js"></script>
 <script type="text/javascript" src="/<?php echo APP_DIR ?>/js/meiomask.min.js"></script>
+
 <script>
 
     var dnd_xp = JSON.parse('<?php echo json_encode($dnd_xp); ?>');
     var dnd_classes = JSON.parse('<?php echo json_encode($dnd_classes); ?>');
+
 </script>
 
 <!-- tabs -->

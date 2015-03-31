@@ -160,10 +160,10 @@ table tr td {
 	vertical-align: top;
 	border-bottom:1px solid #ddd;
 }
-table tr:nth-child(2n) td {
+.alternate tr:nth-child(2n) td {
 	background: #f5f5f5;
 }
-table .altrow td {
+.alternate .altrow td {
 	background: #f5f5f5;
 }
 td.actions {
