@@ -78,9 +78,6 @@ class EncountersController extends AppController
         $groupLvl = 0;
         $adjustedXpDay = $xpThreshold['deadly'] = $xpThreshold['hard'] = $xpThreshold['medium'] = $xpThreshold['easy'] = 0;
 
-
-
-
         foreach ($AdventurersPerAdventurePresentes as $key => $adventurer) {
             $groupLvl += $adventurer['AdventurersPerAdventure']['lvl_inicial'];
             $xp = $xpTable[$adventurer['AdventurersPerAdventure']['lvl_inicial'] - 1]['xpThresholds'];
@@ -154,8 +151,6 @@ class EncountersController extends AppController
     function saveEncounter()
     {
         $this->autoRender = false;
-//        return json_encode($this->params['url']);
-
         $encontro['Encounters']['dnd_adventure_id'] = $this->params['url']['idAventura'];
         $encontro['Encounters']['title'] = $this->params['url']['tituloEncontro'];
         $encontro['Encounters']['xp'] = $this->params['url']['totalEncontro'];
@@ -164,10 +159,30 @@ class EncountersController extends AppController
         $encontro['Encounters']['difficulty'] = $this->params['url']['difficulty'];
 
         if ($this->Encounters->save($encontro)) {
+            foreach ($this->params['url']['monsterId'] as $key => $monsterId) {
+                $monstros[$key]['EncountersMonsters']['dnd_encounters_id'] = $this->Encounters->id;
+                $monstros[$key]['EncountersMonsters']['dnd_monsters_id'] = $monsterId;
+                $monstros[$key]['EncountersMonsters']['quantidade'] = $this->params['url']['monsterQtde'][$key];
+            }
+            $this->EncountersMonsters->saveAll($monstros);
             return json_encode('ok');
         } else {
             return json_encode($encontro);
         }
+    }
+
+    function getEncounters()
+    {
+        $this->autoRender = false;
+        $encontros = $this->Encounters->find('all', array('conditions' => array('dnd_adventure_id' => $this->params['url']['idAventura'])));
+        return json_encode($encontros);
+    }
+
+    function getMonster()
+    {
+        $this->autoRender = false;
+        $monster = $this->Monsters->find('first', array('conditions' => array('id' => $this->params['url']['monsterId'])));
+        return json_encode($monster);
     }
 
     private function sprintf_array($string, $array)

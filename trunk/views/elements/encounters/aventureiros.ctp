@@ -25,10 +25,10 @@
     <table id="grupoHeader">
 
     </table>
-    <table id='xpThreshhold'>
+    <table id='xpThreshhold' class="alternate">
     </table>
 
-    <table id='adventurers'>
+    <table id='adventurers' class="alternate">
     </table>
 
     <div id="saveButtom"></div> 

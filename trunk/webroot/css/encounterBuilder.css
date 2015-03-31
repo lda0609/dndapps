@@ -113,21 +113,60 @@ h1 {
 }
 
 #msg {
-  border: 1px solid #CCC;
-  padding: 7px;
-  font-family: Arial, Verdana, Helvetica, sans-serif;
-  font-size: 13px;
-  color: #000000;
-  text-align: center;
-  margin-bottom: 0px;
+    border: 1px solid #CCC;
+    padding: 7px;
+    font-family: Arial, Verdana, Helvetica, sans-serif;
+    font-size: 13px;
+    color: #000000;
+    text-align: center;
+    margin-bottom: 0px;
 }
 
 .msg_erro {
-  color: #CC0000;
-  text-align: center;
+    color: #CC0000;
+    text-align: center;
 }
 
 .msg_sucesso {
-  color: #009900;
-  text-align: center;
+    color: #009900;
+    text-align: center;
+}
+.diff_easy {
+    background: #CC99FF;
+    color: #FFFFFF;
+}
+.diff_hard {
+    background: #FF9900;
+    color: #FFFFFF;
+}
+.diff_medium {
+    background: #4444FF;
+    color: #FFFFFF;
+}
+.diff_deadly {
+    background: #FF0000;
+    color: #FFFFFF;
+}
+
+.encounterCard tr td{
+    vertical-align: middle;
+}
+
+.connectedSortable { 
+    height: 1.5em; 
+    line-height: 1.2em; 
+}
+.ui-state-highlight { 
+    height: 1.5em; 
+    line-height: 1.2em; 
+}
+
+.encounterCard {
+    width:390px;
+    border-bottom: 0px; 
+    /*height: 600px;*/ 
+}
+.encounterCard tr td{
+    border-bottom: 0px; 
+    /*height: 600px;*/ 
 }

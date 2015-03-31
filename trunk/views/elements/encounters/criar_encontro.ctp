@@ -27,7 +27,7 @@
     <div class="fixed-table-container">
         <div class="header-background"> </div>
         <div class="fixed-table-container-inner">
-            <table id="tabResult">
+            <table id="tabResult" class="alternate">
                 <thead>
                     <tr>
                         <th width="20px"><div class="th-inner"></div></th>
