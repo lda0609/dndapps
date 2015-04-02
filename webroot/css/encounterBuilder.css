@@ -170,3 +170,23 @@ h1 {
     border-bottom: 0px; 
     /*height: 600px;*/ 
 }
+
+.unmarked {
+    -webkit-filter: opacity(10%);
+}
+
+.marked {
+    -webkit-filter: opacity(100%);
+}
+
+
+/*Filter styles*/
+.saturate {-webkit-filter: saturate(3);}
+.grayscale {-webkit-filter: grayscale(100%);}
+.contrast {-webkit-filter: contrast(160%);}
+.brightness {-webkit-filter: brightness(0.25);}
+.blur {-webkit-filter: blur(3px);}
+.invert {-webkit-filter: invert(100%);}
+.sepia {-webkit-filter: sepia(100%);}
+.huerotate {-webkit-filter: hue-rotate(180deg);}
+.rss.opacity {-webkit-filter: opacity(50%);}
