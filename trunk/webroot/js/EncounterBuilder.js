@@ -49,6 +49,11 @@ $('body').on('focus', '.datepicker', function () {
     $(".datepicker").datepicker();
 });
 
+
+//*************************************
+//FUNÇÕES PARA A ABA CONSULTA ENCONTROS
+//*************************************
+
 $("#btnLimparConsulta").click(function () {
     $('#tabResult > tbody:last').html('');
     $('#monsterName').val('');
@@ -84,8 +89,9 @@ $("#btnConsultar").click(function () {
         async: true
     }).done(function (data, textStatus, request) {
         $('#tabResult > tbody:last').html('');
+        var img_class = 'marked';
         $.each(eval(data.replace(/[\r\n]/, "")), function (key, monster) {
-            $('#tabResult > tbody:last').append('<tr id="monster' + monster['Monsters']['id'] + '"><td><a onclick="adicionarAoEncontro(\'' + monster['Monsters']['id'] + '\')"><img src="/dndapps/img/plus24px.png"></a></td><td id="tdMonster">' + monster['Monsters']['name'] + '</td><td id="tdType">' + monster['MonsterTypes'][0]['dnd_type_id'] + '</td><td id="tdCr">' + monster['Monsters']['cr'] + '</td><td id="tdSize">' + monster['Monsters']['size'] + '</td><td id="tdAlignment">' + monster['Monsters']['alignment'] + '</td><td id="tdPage">' + monster['Monsters']['page'] + '</td></tr>');
+            $('#tabResult > tbody:last').append('<tr id="monster' + monster['Monsters']['id'] + '"><td><a onclick="toggleFavorite(\'' + monster['Monsters']['id'] + '\')"><img height="24px" id="favorite' + monster['Monsters']['id'] + '" class="' + img_class + '" src="/dndapps/img/pentagram_off.png"></td><td><a onclick="adicionarAoEncontro(\'' + monster['Monsters']['id'] + '\')"><img src="/dndapps/img/plus24px.png"></a></td><td id="tdMonster">' + monster['Monsters']['name'] + '</td><td id="tdType">' + monster['MonsterTypes'][0]['dnd_type_id'] + '</td><td id="tdCr">' + monster['Monsters']['cr'] + '</td><td id="tdSize">' + monster['Monsters']['size'] + '</td><td id="tdAlignment">' + monster['Monsters']['alignment'] + '</td><td id="tdPage">' + monster['Monsters']['page'] + '</td></tr>');
         });
     });
 });
@@ -105,6 +111,21 @@ function excluirDoEncontro(monsterId) {
     $('#adjustedXP').html('');
     $('table#tabEncontro tr#' + monsterId).remove();
     $('.quantidade').change();
+}
+
+function toggleFavorite(MonsterId) {
+    console.log(MonsterId);
+    if ($('#favorite' + MonsterId).hasClass('unmarked')) {
+        console.log('if');
+        $('#favorite' + MonsterId).removeClass('unmarked');
+        $('#favorite' + MonsterId).attr('src', '/dndapps/img/pentagram_off.png')
+        console.log($('#favorite' + MonsterId).attr('src'));
+    } else {
+        console.log('else');
+        console.log($('#favorite' + MonsterId).attr('src'));
+        $('#favorite' + MonsterId).attr('src', '/dndapps/img/pentagram_on.png')
+        $('#favorite' + MonsterId).addClass('unmarked');
+    }
 }
 
 $('#tabEncontro').on('change', '.quantidade', function () {
@@ -203,7 +224,10 @@ $("#btnSalvarEncontro").click(function () {
         }
     }
 });
+
+//*******************************
 //Funções para montar a aba Grupo
+//*******************************
 function getDataAventura() {
 
     $.ajax({
@@ -221,7 +245,7 @@ function getDataAventura() {
         //teste
         $('#data option:last-child').attr('selected', 'selected');
         $('#data').change();
-        $('#t3').click();
+        $('#t2').click();
         //teste
     });
 }
@@ -436,6 +460,15 @@ $("#t3").click(function () {
             } else if (encontro['Encounters']['difficulty'] === 'Too Easy') {
                 diff_class = 'diff_easy';
             }
+
+            encounter_card = '<td class="encounterCard connectedSortable ui-state-default" id="pos' + contador + '"><table id="encounter' + encontro['Encounters']['id'] + '" ><thead><tr><td class="' + diff_class + '" colspan="3">' + encontro['Encounters']['title'] + '</td></tr></thead><tbody><tr><td width="36px"><img width="40px" src="/dndapps/img/Overstuffed_Treasure_Chest-icon.png"></td><td>' + encontro['Encounters']['treasure'] + '</td></tr></tbody></table></td>';
+            if (contador++ % 2 === 0) {
+                encounter_card_row += encounter_card;
+            } else {
+                encounter_card_row += encounter_card;
+                $('#listaEncontros > tbody:last').append('<tr>' + encounter_card_row + '</tr>');
+                encounter_card_row = '';
+            }
             var monsters = '';
             $.each(encontro['EncountersMonsters'], function (key, monster) {
                 $.ajax({
@@ -443,27 +476,17 @@ $("#t3").click(function () {
                     url: 'http://' + host + '/dndapps/encounters/getMonster',
                     type: 'GET',
                     data: {"monsterId": monster['dnd_monsters_id']},
-                    async: false
+                    async: true
                 }).done(function (monsterData, textStatus, request) {
-                    monsters += '<tr><td width="36px"><img width="36px" src="/dndapps/img/dragon-bullet-small2.png"></td><td><b>' + monsterData['Monsters']['name'] + ' (' + monster['quantidade'] + ')</b>, pag ' + monsterData['Monsters']['page'] + '</td></tr>';
-                    encounter_card = '<td><table class="encounterCard connectedSortable ui-state-default"><tbody><tr><td class="' + diff_class + '" colspan="3">' + encontro['Encounters']['title'] + '</td></tr>' + monsters + '<tr><td><img width="40px" src="/dndapps/img/Overstuffed_Treasure_Chest-icon.png"></td><td>' + encontro['Encounters']['treasure'] + '</td></tr></tbody></table></td>';
+                    monsters = '<tr><td width="36px"><img width="36px" src="/dndapps/img/dragon-bullet-small2.png"></td><td><b>' + monsterData['Monsters']['name'] + ' (' + monster['quantidade'] + ')</b>, pag ' + monsterData['Monsters']['page'] + '</td></tr>';
+                    $('#encounter' + encontro['Encounters']['id'] + ' > tbody').prepend('<tr>' + monsters + '</tr>');
+
                 });
             });
-            if (contador++ % 2 == 0) {
-                encounter_card_row += encounter_card;
-            } else {
-                encounter_card_row += encounter_card;
-                $('#listaEncontros > tbody:last').append('<tr>' + encounter_card_row + '</tr>');
-                encounter_card_row = '';
-            }
-
         });
         if (contador++ % 2 != 0) {
             $('#listaEncontros > tbody:last').append('<tr>' + encounter_card_row + '</tr>');
         }
         ativarSortable();
-
     });
-
-
 });

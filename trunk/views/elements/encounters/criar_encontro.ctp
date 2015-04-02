@@ -31,6 +31,7 @@
                 <thead>
                     <tr>
                         <th width="20px"><div class="th-inner"></div></th>
+                <th width="20px"><div class="th-inner"></div></th>
                 <th><div class="th-inner">Monster</div></th>
                 <th><div class="th-inner">Type</div></th>
                 <th><div class="th-inner">CR</div></th>
