@@ -20,6 +20,7 @@
     <div align="center">
         <button class="button-secondary pure-button" type="button" id="btnLimparConsulta">Limpar</button>
         <button class="pure-button pure-button-primary" type="button" id="btnConsultar">Consultar</button>
+        <button class="pure-button pure-button-primary button-warning" type="button" id="btnConsultarFavoritos">Favoritos</button>
     </div>
     <br>
 </div>

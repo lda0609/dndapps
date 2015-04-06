@@ -179,6 +179,9 @@ h1 {
     -webkit-filter: opacity(100%);
 }
 
+.ui-sortable-handle{
+    border-collapse: collapse;
+}
 
 /*Filter styles*/
 .saturate {-webkit-filter: saturate(3);}

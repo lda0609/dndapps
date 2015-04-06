@@ -51,7 +51,7 @@ $('body').on('focus', '.datepicker', function () {
 
 
 //*************************************
-//FUNÇÕES PARA A ABA CONSULTA ENCONTROS
+//FUNÇÕES PARA A ABA CRIAR ENCONTROS
 //*************************************
 
 $("#btnLimparConsulta").click(function () {
@@ -80,7 +80,8 @@ $("#btnConsultar").click(function () {
         "crMin": $("#crMin").val(),
         "crMax": $("#crMax").val(),
         "type": $("#type").val(),
-        "alignment": $("#alignment").val()
+        "alignment": $("#alignment").val(),
+        "favoritos": '0'
     };
     $.ajax({
         url: 'http://' + host + '/dndapps/monsters/search',
@@ -88,13 +89,39 @@ $("#btnConsultar").click(function () {
         data: callOptions,
         async: true
     }).done(function (data, textStatus, request) {
-        $('#tabResult > tbody:last').html('');
-        var img_class = 'marked';
-        $.each(eval(data.replace(/[\r\n]/, "")), function (key, monster) {
-            $('#tabResult > tbody:last').append('<tr id="monster' + monster['Monsters']['id'] + '"><td><a onclick="toggleFavorite(\'' + monster['Monsters']['id'] + '\')"><img height="24px" id="favorite' + monster['Monsters']['id'] + '" class="' + img_class + '" src="/dndapps/img/pentagram_off.png"></td><td><a onclick="adicionarAoEncontro(\'' + monster['Monsters']['id'] + '\')"><img src="/dndapps/img/plus24px.png"></a></td><td id="tdMonster">' + monster['Monsters']['name'] + '</td><td id="tdType">' + monster['MonsterTypes'][0]['dnd_type_id'] + '</td><td id="tdCr">' + monster['Monsters']['cr'] + '</td><td id="tdSize">' + monster['Monsters']['size'] + '</td><td id="tdAlignment">' + monster['Monsters']['alignment'] + '</td><td id="tdPage">' + monster['Monsters']['page'] + '</td></tr>');
-        });
+        showResult(data);
     });
 });
+
+$("#btnConsultarFavoritos").click(function () {
+    var callOptions = {
+        "favoritos": '1'
+    };
+    $.ajax({
+        url: 'http://' + host + '/dndapps/monsters/search',
+        type: 'GET',
+        data: callOptions,
+        async: true
+    }).done(function (data, textStatus, request) {
+        showResult(data);
+    });
+});
+
+function showResult(data) {
+    $('#tabResult > tbody:last').html('');
+    $.each(eval(data.replace(/[\r\n]/, "")), function (key, monster) {
+        var img_class = '';
+        var img_src = '/dndapps/img/pentagram_off.png';
+        if (monster['MonsterFavorites'] == '1') {
+            img_class = 'favorite';
+            img_src = '/dndapps/img/pentagram_on.png';
+        }
+        $('#tabResult > tbody:last').append('<tr id="monster' + monster['Monsters']['id'] + '"><td><a onclick="toggleFavorite(\'' + monster['Monsters']['id'] + '\')"><img height="24px" id="favorite' + monster['Monsters']['id'] + '" class="' + img_class + '" src="' + img_src + '"></td><td><a onclick="adicionarAoEncontro(\'' + monster['Monsters']['id'] + '\')"><img src="/dndapps/img/plus24px.png"></a></td><td id="tdMonster">' + monster['Monsters']['name'] + '</td><td id="tdType">' + monster['MonsterTypes'][0]['dnd_type_id'] + '</td><td id="tdCr">' + monster['Monsters']['cr'] + '</td><td id="tdSize">' + monster['Monsters']['size'] + '</td><td id="tdAlignment">' + monster['Monsters']['alignment'] + '</td><td id="tdPage">' + monster['Monsters']['page'] + '</td></tr>');
+
+    });
+
+}
+
 
 function adicionarAoEncontro(monsterId) {
     var monsterData = document.getElementById('monster' + monsterId);
@@ -115,16 +142,27 @@ function excluirDoEncontro(monsterId) {
 
 function toggleFavorite(MonsterId) {
     console.log(MonsterId);
-    if ($('#favorite' + MonsterId).hasClass('unmarked')) {
-        console.log('if');
-        $('#favorite' + MonsterId).removeClass('unmarked');
-        $('#favorite' + MonsterId).attr('src', '/dndapps/img/pentagram_off.png')
-        console.log($('#favorite' + MonsterId).attr('src'));
+    if ($('#favorite' + MonsterId).hasClass('favorite')) {
+        $.ajax({
+            url: 'http://' + host + '/dndapps/encounters/removeFavorite',
+            type: 'GET',
+            data: {"monsterId": MonsterId},
+            async: true
+        }).done(function (data, textStatus, request) {
+            console.log(data);
+            $('#favorite' + MonsterId).removeClass('favorite');
+            $('#favorite' + MonsterId).attr('src', '/dndapps/img/pentagram_off.png')
+        });
     } else {
-        console.log('else');
-        console.log($('#favorite' + MonsterId).attr('src'));
-        $('#favorite' + MonsterId).attr('src', '/dndapps/img/pentagram_on.png')
-        $('#favorite' + MonsterId).addClass('unmarked');
+        $.ajax({
+            url: 'http://' + host + '/dndapps/encounters/addFavorite',
+            type: 'GET',
+            data: {"monsterId": MonsterId},
+            async: true
+        }).done(function (data, textStatus, request) {
+            $('#favorite' + MonsterId).attr('src', '/dndapps/img/pentagram_on.png')
+            $('#favorite' + MonsterId).addClass('favorite');
+        });
     }
 }
 
@@ -425,7 +463,9 @@ $("#t2").click(function () {
     }
 });
 
-//Funções para montar a aba Aventura
+//*************************************
+//FUNÇÕES PARA A ABA CONSULTAR AVENTURA
+//*************************************
 
 $("#t3").click(function () {
     $('#listaEncontros > tbody:last').html('');
@@ -443,7 +483,6 @@ $("#t3").click(function () {
         data: callOptions,
         async: true
     }).done(function (data, textStatus, request) {
-//        console.log(data);
         var contador = 0;
         var encounter_card_row = '';
 
@@ -461,7 +500,7 @@ $("#t3").click(function () {
                 diff_class = 'diff_easy';
             }
 
-            encounter_card = '<td class="encounterCard connectedSortable ui-state-default" id="pos' + contador + '"><table id="encounter' + encontro['Encounters']['id'] + '" ><thead><tr><td class="' + diff_class + '" colspan="3">' + encontro['Encounters']['title'] + '</td></tr></thead><tbody><tr><td width="36px"><img width="40px" src="/dndapps/img/Overstuffed_Treasure_Chest-icon.png"></td><td>' + encontro['Encounters']['treasure'] + '</td></tr></tbody></table></td>';
+            encounter_card = '<td class="encounterCard connectedSortable ui-state-default" id="pos' + contador + '"><table id="encounter' + encontro['Encounters']['id'] + '" ><thead><tr><td class="' + diff_class + '" colspan="3">' + encontro['Encounters']['title'] + '</td><td class="' + diff_class + '" width="28px"><a onclick="excluirEncontro(\'' + encontro['Encounters']['id'] + '\')"><img width="28px" src="/dndapps/img/document_delete.png"></a></td></tr></thead><tbody><tr><td width="36px"><img width="40px" src="/dndapps/img/Overstuffed_Treasure_Chest-icon.png"></td><td>' + encontro['Encounters']['treasure'] + '</td></tr></tbody></table></td>';
             if (contador++ % 2 === 0) {
                 encounter_card_row += encounter_card;
             } else {
@@ -473,7 +512,7 @@ $("#t3").click(function () {
             $.each(encontro['EncountersMonsters'], function (key, monster) {
                 $.ajax({
                     dataType: "json",
-                    url: 'http://' + host + '/dndapps/encounters/getMonster',
+                    url: 'http://' + host + '/dndapps/monsters/getMonster',
                     type: 'GET',
                     data: {"monsterId": monster['dnd_monsters_id']},
                     async: true
@@ -490,3 +529,18 @@ $("#t3").click(function () {
         ativarSortable();
     });
 });
+
+function excluirEncontro(encounterId) {
+    console.log(encounterId);
+    $.ajax({
+        dataType: "json",
+        url: 'http://' + host + '/dndapps/encounters/deleteEncounter',
+        type: 'GET',
+        data: {"encounterId": encounterId},
+        async: true
+    }).done(function (data, textStatus, request) {
+        console.log(data);
+        $('#listaEncontros').html('<tbody></tbody>');
+        $("#t3").click();
+    });
+}

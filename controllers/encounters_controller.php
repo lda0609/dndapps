@@ -3,7 +3,7 @@
 class EncountersController extends AppController
 {
 
-    var $uses = array('Monsters', 'xpThresholds', 'Adventure', 'AdventurersPerAdventure', 'Encounters', 'EncountersMonsters');
+    var $uses = array('Monsters', 'xpThresholds', 'Adventure', 'AdventurersPerAdventure', 'Encounters', 'EncountersMonsters', 'MonsterFavorites');
     var $multiplier = array(
         '1' => 0.5,
         '2' => 1,
@@ -178,11 +178,46 @@ class EncountersController extends AppController
         return json_encode($encontros);
     }
 
-    function getMonster()
+    function deleteEncounter()
     {
         $this->autoRender = false;
-        $monster = $this->Monsters->find('first', array('conditions' => array('id' => $this->params['url']['monsterId'])));
-        return json_encode($monster);
+        if ($this->EncountersMonsters->deleteAll(array('dnd_encounters_id' => $this->params['url']['encounterId']))) {
+            if ($this->Encounters->delete(array('id' => $this->params['url']['encounterId']))) {
+                return json_encode('ok');
+            }
+        }
+        return json_encode('nok');
+    }
+
+    function addFavorite()
+    {
+        $this->autoRender = false;
+        $favorite['MonsterFavorites']['dnd_monsters_id'] = $this->params['url']['monsterId'];
+        $this->MonsterFavorites->save($favorite);
+        return json_encode('ok');
+    }
+
+    function removeFavorite()
+    {
+        $this->autoRender = false;
+        if ($this->MonsterFavorites->deleteAll(array('dnd_monsters_id' => $this->params['url']['monsterId'])))
+            return json_encode('ok');
+        else {
+            return json_encode('nok');
+        }
+    }
+
+    function getFavorites()
+    {
+//        $this->autoRender = false;
+        $favorites = $this->MonsterFavorites->find('list', array('fields' => 'dnd_monsters_id'));
+        $monsters = $this->Monsters->find('all', array('conditions' => array('id' => $favorites)));
+        debug($monsters);
+
+//        if ()
+//        return json_encode('ok'); else {
+//            return json_encode('nok');
+//        }
     }
 
     private function sprintf_array($string, $array)
