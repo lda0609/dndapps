@@ -3,7 +3,7 @@
 class MonstersController extends AppController
 {
 
-    var $uses = array('Monsters', 'MonsterType');
+    var $uses = array('Monsters', 'MonsterType', 'MonsterFavorites');
 //    var $helpers = array('Paginator');
     var $paginate = array(
         'limit' => 30,
@@ -122,24 +122,28 @@ class MonstersController extends AppController
     {
         $this->autoRender = false;
         $params = $this->params['url'];
+        $favorites = $this->MonsterFavorites->find('list', array('fields' => 'dnd_monsters_id'));
 
-        $conditions = array();
-        if (!empty($params['monsterName'])) {
-            $conditions['Monsters.name LIKE'] = '%' . $params['monsterName'] . '%';
+        if ($params['favoritos'] != '1') {
+            $conditions = array();
+            if (!empty($params['monsterName'])) {
+                $conditions['Monsters.name LIKE'] = '%' . $params['monsterName'] . '%';
+            }
+            if (!empty($params['crMin'])) {
+                $conditions['Monsters.cr >='] = $params['crMin'];
+            }
+            if (!empty($params['crMax'])) {
+                $conditions['Monsters.cr <='] = $params['crMax'];
+            }
+            if (!empty($params['type'])) {
+                $conditions['MonsterType.dnd_type_id'] = $params['type'];
+            }
+            if (!empty($params['alignment'])) {
+                $conditions['Monsters.alignment'] = $params['alignment'];
+            }
+        } else {
+            $conditions['Monsters.id'] = $favorites;
         }
-        if (!empty($params['crMin'])) {
-            $conditions['Monsters.cr >='] = $params['crMin'];
-        }
-        if (!empty($params['crMax'])) {
-            $conditions['Monsters.cr <='] = $params['crMax'];
-        }
-        if (!empty($params['type'])) {
-            $conditions['MonsterType.dnd_type_id'] = $params['type'];
-        }
-        if (!empty($params['alignment'])) {
-            $conditions['Monsters.alignment'] = $params['alignment'];
-        }
-
         $monsters = $this->Monsters->find('all', array(
             'joins' => array(
                 array('table' => 'monster_types',
@@ -153,11 +157,36 @@ class MonstersController extends AppController
             ),
             'conditions' => $conditions,
             'order' => 'cr'));
+
+
         foreach ($monsters as $key => $monster) {
             $monsters[$key]['MonsterTypes'][0]['dnd_type_id'] = $this->viewVars['dnd_monster_type'][$monster['MonsterTypes'][0]['dnd_type_id']];
+            if (in_array($monster['Monsters']['id'], $favorites)) {
+                $monsters[$key]['MonsterFavorites'] = '1';
+            } else {
+                $monsters[$key]['MonsterFavorites'] = '0';
+            }
         }
 
         return json_encode($monsters);
+    }
+
+    function getMonster()
+    {
+        $this->autoRender = false;
+        $monster = $this->Monsters->find('first', array('conditions' => array('id' => $this->params['url']['monsterId'])));
+        return json_encode($monster);
+    }
+
+    function teste()
+    {
+        $favorites = $this->MonsterFavorites->find('list', array('fields' => 'dnd_monsters_id'));
+        debug($favorites);
+        foreach ($favorites as $key => $value) {
+            if ($value['MonsterFavorites']['dnd_monsters_id']) {
+                
+            }
+        }
     }
 
 }
