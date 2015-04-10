@@ -22,9 +22,6 @@
 </div>
 
 <div id="conteudo_corpo">
-    <table id="grupoHeader">
-
-    </table>
     <table id='xpThreshhold' class="alternate">
     </table>
 

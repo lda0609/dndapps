@@ -207,19 +207,6 @@ class EncountersController extends AppController
         }
     }
 
-    function getFavorites()
-    {
-//        $this->autoRender = false;
-        $favorites = $this->MonsterFavorites->find('list', array('fields' => 'dnd_monsters_id'));
-        $monsters = $this->Monsters->find('all', array('conditions' => array('id' => $favorites)));
-        debug($monsters);
-
-//        if ()
-//        return json_encode('ok'); else {
-//            return json_encode('nok');
-//        }
-    }
-
     private function sprintf_array($string, $array)
     {
         $keys = array_keys($array);
