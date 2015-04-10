@@ -7,8 +7,6 @@ class MagicItemsController extends AppController
 
     function consulta()
     {
-//        debug($this->data);
-
         if (!empty($this->data)) {
             $conditions = array();
             if (!empty($this->data['MagicItems']['name'])) {
@@ -27,15 +25,6 @@ class MagicItemsController extends AppController
                 $conditions['MagicItems.cursed'] = $this->data['MagicItems']['cursed'];
             }
             $items = $this->MagicItems->find('all', array(
-//                'joins' => array(
-//                    array('table' => 'magic_armor_type',
-//                        'alias' => 'MagicArmorType',
-//                        'type' => 'LEFT',
-//                        'conditions' => array(
-//                            'MagicItems.id = MagicArmorType.dnd_magic_item_id',
-//                        )
-//                    )
-//                ),
                 'conditions' => $conditions,
                 'fields' => array(
                     'id',
@@ -44,10 +33,8 @@ class MagicItemsController extends AppController
                     'type',
                     'attunement',
                     'cursed',
-//                    'MagicArmorType.dnd_armors_id'
                     ),
                 'order' => 'MagicItems.id'));
-
             $this->set('items', $items);
         }
 
@@ -74,7 +61,5 @@ class MagicItemsController extends AppController
                 }
             }
         }
-
     }
-
 }

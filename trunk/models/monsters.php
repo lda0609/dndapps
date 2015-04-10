@@ -14,17 +14,6 @@ class Monsters extends AppModel
             'dependent' => ''
         ),
     );
-//        var $hasOne = array(
-//        'Xp' => array(
-//            'className' => 'Xp',
-//            'foreignKey' => 'xp_id',
-//            'conditions' => '',
-//            'order' => '',
-//            'limit' => '',
-//            'dependent' => ''
-//        ),
-//    );
-
 
     function getLista()
     {
