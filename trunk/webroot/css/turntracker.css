@@ -1,0 +1,34 @@
+input[type=number]{
+    width: 40px;
+} 
+
+.ui-progressbar {
+    height: 1em;
+}
+
+.ui-widget-header-red {
+    border: 1px solid #cc0000;
+    background: #cc0000 url("redmond/images/ui-bg_highlight-soft_15_cc0000_1x100.png") 50% 50% repeat-x; 
+    color: #ffffff;
+    font-weight: bold;
+}
+.ui-widget-content-red {
+    border: 1px solid #3A2323;
+    background: #fcfdfd url("redmond/images/ui-bg_flat_75_ffffff_40x100.png") 50% bottom repeat-x;
+    color: #222222;
+}
+
+.progress-label {
+    position: absolute;
+    left: 45%;
+    top: 0px;
+    font-weight: normal;
+    text-shadow: 1px 1px 0 #bbb;
+}
+.ui-progressbar {
+    position: relative;
+}
+
+
+
+

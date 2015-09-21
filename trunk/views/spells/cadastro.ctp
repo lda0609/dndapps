@@ -42,7 +42,7 @@ echo $this->Form->create('Spells');
         echo $this->Form->input('lvl', array(
             'type' => 'radio',
             'options' => array(0, 1, 2, 3, 4, 5, 6, 7, 8, 9),
-            'value' => 3,
+            'value' => 6,
         ));
         echo '</td></tr><tr><td>';
         echo $this->Form->input('casting_time', array('type' => 'text', 'width' => '500'));

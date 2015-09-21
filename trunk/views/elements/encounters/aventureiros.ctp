@@ -29,5 +29,6 @@
     </table>
 
     <div id="saveButtom"></div> 
+    <div id="divAtualizarAventura" align="right"></div>
 
 </div>
