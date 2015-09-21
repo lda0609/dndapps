@@ -114,18 +114,78 @@ class EncountersController extends AppController
         $retorno['adventurers'] = $AdventurersPerAdventure;
         $retorno['adjustedXpDay'] = $adjustedXpDay;
 
+        if ($this->params['url']['atualizaAventura'] === '1') {
+            $this->atualizaAventura($this->params['url']['idAventura'], $retorno);
+        }
         return json_encode($retorno);
     }
 
-    function getAventureDates()
+    private function atualizaAventura($adventureId, $dados)
     {
         $this->autoRender = false;
-        $data_adventures = $this->Adventure->find('list', array('fields' => 'date'));
+        $this->Encounters->unBindModel(array('hasMany' => array('EncountersMonsters')));
+        $encounters = $this->Encounters->find('all', array(
+            'conditions' => array(
+                'dnd_adventure_id' => $adventureId,
+            ),
+            'fields' => array('Encounters.id', 'Encounters.xp', 'Encounters.difficulty')
+        ));
+
+        foreach ($encounters as $key => $encounter) {
+            $sumMonsters = $this->EncountersMonsters->find('first', array(
+                'conditions' => array(
+                    'dnd_encounters_id' => $encounter['Encounters']['id'],
+                ),
+                'fields' => array('sum(EncountersMonsters.quantidade) AS encounter__total')
+            ));
+
+            $xp = $encounter['Encounters']['xp'];
+            $sumMonsters = $sumMonsters['encounter']['total'];
+
+            if ($sumMonsters == '1') {
+                $qtde = '1';
+            } elseif ($sumMonsters == '2') {
+                $qtde = '2';
+            } elseif ($sumMonsters <= '6') {
+                $qtde = '3-6';
+            } elseif ($sumMonsters <= '10') {
+                $qtde = '7-10';
+            } elseif ($sumMonsters <= '14') {
+                $qtde = '11-14';
+            } else {
+                $qtde = '15+';
+            }
+
+            if ($xp < $dados['xpMultiplier']['easy'][$qtde]) {
+                $new_difficulty = 'Too Easy';
+            } elseif ($xp < $dados['xpMultiplier']['medium'][$qtde]) {
+                $new_difficulty = 'Easy';
+            } elseif ($xp < $dados['xpMultiplier']['hard'][$qtde]) {
+                $new_difficulty = 'Medium';
+            } elseif ($xp < $dados['xpMultiplier']['deadly'][$qtde]) {
+                $new_difficulty = 'Hard';
+            } else {
+                $new_difficulty = 'Deadly';
+            }
+
+//            if ($new_difficulty != $encounter['Encounters']['difficulty']) {
+            $this->Encounters->id = $encounter['Encounters']['id'];
+            $updated_encounter['Encounters']['difficulty'] = $new_difficulty;
+            $updated_encounter['Encounters']['adjusted_xp'] = $encounter['Encounters']['xp'] * $this->multiplier[$qtde];
+            $this->Encounters->save($updated_encounter);
+//            }
+        }
+        return true;
+    }
+
+    function getAdventureDates()
+    {
+        $this->autoRender = false;
+        $data_adventures = $this->Adventure->find('list', array('fields' => array('Adventure.date')));
         foreach ($data_adventures as $key => $value) {
             $arr = sscanf($value, '%04d-%02d-%02d');
             $data_adventures[$key] = $this->sprintf_array('%3$02d/%2$02d/%1$04d', $arr);
         }
-//        $data_adventures = array_reverse($data_adventures, true);;
         return json_encode($data_adventures);
     }
 
@@ -207,7 +267,8 @@ class EncountersController extends AppController
         }
     }
 
-    private function sprintf_array($string, $array)
+    private
+            function sprintf_array($string, $array)
     {
         $keys = array_keys($array);
         $keysmap = array_flip($keys);

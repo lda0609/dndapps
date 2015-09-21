@@ -4,14 +4,12 @@ class CharactersController extends AppController
 {
 
     var $uses = array('CharacterProgression', 'Adventurers', 'AdventurersPerAdventure', 'Adventure', 'xpThresholds');
+    var $xp_threshold = [0, 300, 900, 2700, 6500, 14000, 23000, 34000, 48000, 64000, 85000, 100000, 120000, 140000, 165000, 195000, 225000, 265000, 305000, 355000];
 
     function index()
     {
         $data_adventures = $this->Adventure->find('list', array('fields' => 'date'));
         $this->set('data_adventures', $data_adventures);
-
-        debug($this->data);
-
 
         if (!empty($this->data)) {
 
@@ -95,9 +93,6 @@ class CharactersController extends AppController
                 }
             }
 
-
-
-
             for ($char = 1; $char <= 7; $char++) {
                 $AdventurersPerAdventure[$char] = $this->AdventurersPerAdventure->find('first', array(
                     'conditions' => array(
@@ -119,16 +114,6 @@ class CharactersController extends AppController
                 } else {
                     $AdventurersPerAdventure[$char]['AdventurersPerAdventure']['xp_inicial'] = 0;
                 }
-
-
-//                $pc[$char]['xp'] = $this->AdventurersPerAdventure->find('first', array(
-//                    'conditions' => array(
-//                        'dnd_adventure_id' => $this->data['Characters']['data'],
-//                        'dnd_adventurers_id' => $char,
-//                    ),
-//                    'fields' => array('xp_final')
-//                ));
-
                 $pc[$char] = $this->CharacterProgression->find('first', array(
                     'joins' => array(
                         array('table' => 'adventurers',
@@ -154,10 +139,7 @@ class CharactersController extends AppController
                 ));
                 $pc[$char] = array_merge($pc[$char], $AdventurersPerAdventure[$char]);
             }
-
             $adventurers = $this->Adventurers->find('all', array('order' => 'id'));
-
-//        debug($adventurers);
             $this->set('pc', $pc);
             $this->set(
                     'adventurers', $adventurers);
@@ -167,7 +149,29 @@ class CharactersController extends AppController
     function getListCharacters()
     {
         $this->autoRender = false;
-        return json_encode($this->Adventurers->find("all"));
+
+        $aventuraAnterior = $this->Adventure->find('list', array('fields' => 'id'));
+        $aventuraAnteriorId = max($aventuraAnterior);
+        $AdventurersPerAdventureAnterior = $this->AdventurersPerAdventure->find('all', array(
+            'conditions' => array(
+                'dnd_adventure_id' => $aventuraAnteriorId,
+            ),
+            'fields' => array('xp_final', 'dnd_adventurers_id')
+        ));
+        foreach ($AdventurersPerAdventureAnterior as $key => $value) {
+            $xpAnterior[$value['AdventurersPerAdventure']['dnd_adventurers_id']] = $value['AdventurersPerAdventure']['xp_final'];
+        }
+
+        $adventurers = $this->Adventurers->find("all");
+        foreach ($adventurers as $key => $value) {
+            $lvl = 0;
+            while ($xpAnterior[$value['Adventurers']['id']] >= $this->xp_threshold[$lvl]) {
+                $lvl++;
+            }
+            $adventurers[$key]['Adventurers']['lvl_inicial'] = $lvl;
+        }
+
+        return json_encode($adventurers);
     }
 
     function salvarGrupo()
@@ -205,13 +209,27 @@ class CharactersController extends AppController
     function atualizarXP()
     {
         $this->autoRender = false;
+        $aventuraAnterior = $this->Adventure->find('list', array('fields' => 'id'));
+        unset($aventuraAnterior[$this->params['url']['idAventura']]);
+        $aventuraAnteriorId = max($aventuraAnterior);
+        $AdventurersPerAdventureAnterior = $this->AdventurersPerAdventure->find('all', array(
+            'conditions' => array(
+                'dnd_adventure_id' => $aventuraAnteriorId,
+            ),
+            'fields' => array('xp_final', 'dnd_adventurers_id')
+        ));
+        foreach ($AdventurersPerAdventureAnterior as $key => $value) {
+            $xpAnterior[$value['AdventurersPerAdventure']['dnd_adventurers_id']] = $value['AdventurersPerAdventure']['xp_final'];
+        }
         foreach ($this->params['url']['xp'] as $key => $value) {
             $AdventurerPerAdventure = $this->AdventurersPerAdventure->find('first', array('conditions' => array(
                     'dnd_adventure_id' => $this->params['url']['idAventura'],
                     'dnd_adventurers_id' => $key + 1
             )));
-            $AdventurerPerAdventure['AdventurersPerAdventure']['xp_final'] = $value;
-//            return json_encode($AdventurerPerAdventure);
+            if (empty($value)) {
+                $value = 0;
+            }
+            $AdventurerPerAdventure['AdventurersPerAdventure']['xp_final'] = $xpAnterior[$key + 1] + $value;
             $this->AdventurersPerAdventure->save($AdventurerPerAdventure);
         }
         return json_encode('ok');

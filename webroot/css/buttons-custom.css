@@ -26,3 +26,22 @@
 .button-reset {
     background: rgb(245,245,102); /* this is an orange */
 }
+
+.button-damage {
+    padding: .5em .5em;
+    background: rgb(202, 60, 60); /* this is a maroon */
+}
+
+.button-heal {
+    padding: .5em .5em;
+    background: rgb(28, 184, 65); /* this is a green */
+}
+
+.button-hptemp {
+    padding: .5em .5em;
+    background: rgb(66, 184, 221); /* this is a light blue */
+}
+
+.button-img {
+    padding: .2em .2em;
+}

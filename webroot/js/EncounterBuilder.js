@@ -1,9 +1,9 @@
 $.mask.masks.numero3 = {mask: '999'};
 $.mask.masks.numero6 = {mask: '999999'};
-
+var players = '';
 $(function () {
     $("#tabs").tabs({
-        disabled: [1, 2]
+        disabled: [1, 2, 3]
     });
 });
 jQuery(function ($) {
@@ -141,7 +141,6 @@ function excluirDoEncontro(monsterId) {
 }
 
 function toggleFavorite(MonsterId) {
-    console.log(MonsterId);
     if ($('#favorite' + MonsterId).hasClass('favorite')) {
         $.ajax({
             url: 'http://' + host + '/dndapps/encounters/removeFavorite',
@@ -149,9 +148,8 @@ function toggleFavorite(MonsterId) {
             data: {"monsterId": MonsterId},
             async: true
         }).done(function (data, textStatus, request) {
-            console.log(data);
             $('#favorite' + MonsterId).removeClass('favorite');
-            $('#favorite' + MonsterId).attr('src', '/dndapps/img/pentagram_off.png')
+            $('#favorite' + MonsterId).attr('src', '/dndapps/img/pentagram_off.png');
         });
     } else {
         $.ajax({
@@ -160,7 +158,7 @@ function toggleFavorite(MonsterId) {
             data: {"monsterId": MonsterId},
             async: true
         }).done(function (data, textStatus, request) {
-            $('#favorite' + MonsterId).attr('src', '/dndapps/img/pentagram_on.png')
+            $('#favorite' + MonsterId).attr('src', '/dndapps/img/pentagram_on.png');
             $('#favorite' + MonsterId).addClass('favorite');
         });
     }
@@ -184,7 +182,7 @@ $('#tabEncontro').on('change', '.quantidade', function () {
     });
     $('#totalEncontro').html(total);
 
-    if (xpThreshold != '') {
+    if (xpThreshold !== '') {
         var totalMonsters = 0;
         var listMonsters = $('.quantidade').map(function () {
             return $(this).val();
@@ -227,13 +225,13 @@ $('#tabEncontro').on('change', '.quantidade', function () {
 $("#btnSalvarEncontro").click(function () {
 
     var idAventura = $('#data').val();
-    if (idAventura == '') {
+    if (idAventura === '') {
         alert('Data da Aventura deve ser selecionada');
     } else {
         var monsterId = $('.encounterMonster').map(function () {
             return $(this).attr('id');
         }).get();
-        if (monsterId == '') {
+        if (monsterId === '') {
             alert('Encontro está vazio');
         } else {
             var monsterQtde = $('.quantidade').map(function () {
@@ -256,8 +254,6 @@ $("#btnSalvarEncontro").click(function () {
                 async: true
             }).done(function (data, textStatus, request) {
                 $("#msg").show();
-                console.log(data);
-
             });
         }
     }
@@ -270,7 +266,7 @@ function getDataAventura() {
 
     $.ajax({
         dataType: "json",
-        url: 'http://' + host + '/dndapps/encounters/getAventureDates',
+        url: 'http://' + host + '/dndapps/encounters/getAdventureDates',
         type: 'GET',
         async: true
     }).done(function (data, textStatus, request) {
@@ -281,14 +277,18 @@ function getDataAventura() {
         $('#data').html(options);
 
         //teste
-//        $('#data option:last-child').attr('selected', 'selected');
-//        $('#data').change();
-//        $('#t3').click();
+        $('#data option:last-child').attr('selected', 'selected');
+        $('#data').change();
+        $('#t4').click();
         //teste
     });
 }
 
-$("#data").change(function () {
+$('#data').change(function () {
+    mostraInfoGrupo(0);
+});
+
+function mostraInfoGrupo(atualizaAventura) {
     if ($("#data").val() === "") {
         $('#XPDay').html('');
         $('#xpThreshhold').html('<thead></thead><tbody></tbody>');
@@ -297,7 +297,8 @@ $("#data").change(function () {
     } else {
         $("#tabs").tabs("option", "disabled", []);
         var callOptions = {
-            "idAventura": $("#data").val()
+            "idAventura": $("#data").val(),
+            "atualizaAventura": atualizaAventura
         };
         $.ajax({
             dataType: "json",
@@ -306,6 +307,7 @@ $("#data").change(function () {
             data: callOptions,
             async: true
         }).done(function (data, textStatus, request) {
+            players = data['adventurers'];
             var countAdventurer = 0;
             multiplierIndex = data['multiplierIndex'];
             xpThreshold = data['xpMultiplier'];
@@ -324,7 +326,7 @@ $("#data").change(function () {
             $('#adventurers').html('<thead></thead><tbody></tbody>');
             $('#adventurers > thead:last').append('<tr><th width="40px"></th><th>Name</th><th>Race</th><th>Class</th><th>Player</th><th>Level Inicial</th><th>XP Final</th></tr>');
             $.each(data['adventurers'], function (key, adventurer) {
-                if (adventurer['AdventurersPerAdventure']['xp_final'] == null) {
+                if (adventurer['AdventurersPerAdventure']['xp_final'] === null) {
                     xp_final = '<input type="text" id="xp_final' + adventurer['Adventurers']['id'] + '" class="xp_final" alt="numero6" size="8" maxlength="6">';
                     $('#saveButtom').html('<div align="center" class="pure-control-group"><button class="pure-button pure-button-primary" type="button" id="btnAtualizarXP">Atualizar XP</button></div>');
                 } else {
@@ -332,7 +334,7 @@ $("#data").change(function () {
                 }
                 $('#adventurers > tbody:last').append('<tr id="aventureiro' + adventurer['Adventurers']['id'] + '" class="saveonclick"><td id="img' + adventurer['Adventurers']['id'] + '"><a onclick="toggleAusencia(\'' + adventurer['Adventurers']['id'] + '\')"><img height="38px" src="/dndapps/img/green-dragon.png"></a></td><td>' + adventurer['Adventurers']['name'] + '</td><td>' + adventurer['Adventurers']['race'] + '</td><td>' + dnd_classes[adventurer['Adventurers']['class']] + '</td><td>' + adventurer['Adventurers']['player'] + '</td><td>' + adventurer['AdventurersPerAdventure']['lvl_inicial'] + '</td><td>' + xp_final + '</td></tr>');
 
-                if (adventurer['AdventurersPerAdventure']['ausente'] == '1') {
+                if (adventurer['AdventurersPerAdventure']['ausente'] === '1') {
                     $('#aventureiro' + adventurer['Adventurers']['id']).addClass('ausencia');
                     $('#img' + adventurer['Adventurers']['id']).html('<a onclick="toggleAusencia(\'' + adventurer['Adventurers']['id'] + '\')"><img height="38px" src="/dndapps/img/pink-paw-print.png"></a>');
                 } else {
@@ -343,7 +345,9 @@ $("#data").change(function () {
             $.data(document.body, "countAdventurer", countAdventurer);
         });
     }
-});
+}
+
+
 $("#btnNovaAventura").click(function () {
     $('#XPDay').html('');
     $('#xpThreshhold').html('<thead></thead><tbody></tbody>');
@@ -360,7 +364,11 @@ $("#btnNovaAventura").click(function () {
         $.each(data, function (key, adventurer) {
             var select = '<select class="selectLvl id="lvl' + adventurer['Adventurers']['id'] + '">';
             for (var count = 1; count <= 20; count++) {
-                select += '<option value="' + count + '">' + count + '</option>';
+                if (count === adventurer['Adventurers']['lvl_inicial']) {
+                    select += '<option selected="selected" value="' + count + '">' + count + '</option>';
+                } else {
+                    select += '<option value="' + count + '">' + count + '</option>';
+                }
             }
             select += '</select>';
             $('#adventurers > tbody:last').append('<tr id="aventureiro' + adventurer['Adventurers']['id'] + '"><td id="img' + adventurer['Adventurers']['id'] + '"><a onclick="toggleAusencia(\'' + adventurer['Adventurers']['id'] + '\')"><img height="38px" src="/dndapps/img/green-dragon.png"></a></td><td>' + adventurer['Adventurers']['name'] + '</td><td>' + adventurer['Adventurers']['race'] + '</td><td>' + dnd_classes[adventurer['Adventurers']['class']] + '</td><td>' + adventurer['Adventurers']['player'] + '</td><td>' + select + '</td></tr>');
@@ -368,13 +376,15 @@ $("#btnNovaAventura").click(function () {
         $('#saveButtom').html('<div align="center"><button class="pure-button button-warning" type="button" id="btnVoltar">Voltar</button> <button class="pure-button pure-button-primary" type="button" id="btnSalvarAventura">Salvar Aventura</button></div>');
     });
 });
+
 $('body').on('click', '#btnVoltar', function () {
     $('#adventurers').html('');
     $('#saveButtom').html('');
     $('#grupo1').show();
     $('#grupo2').hide();
-    $('#data').change();
+    mostraInfoGrupo(0);
 });
+
 $('body').on('click', '#btnSalvarAventura', function () {
     var values = $('.selectLvl').map(function () {
         return $(this).val();
@@ -395,7 +405,7 @@ $('body').on('click', '#btnSalvarAventura', function () {
         async: true
     }).done(function (data, textStatus, request) {
 
-        if (data == 'ok') {
+        if (data === 'ok') {
             $('#btnVoltar').click();
             getDataAventura();
         } else {
@@ -403,11 +413,11 @@ $('body').on('click', '#btnSalvarAventura', function () {
         }
     });
 });
+
 $('body').on('click', '#btnAtualizarXP', function () {
     var values = $('.xp_final').map(function () {
         return $(this).val();
     }).get();
-    console.log($('#data').val());
     var callOptions = {
         "idAventura": $('#data').val(),
         "xp": values
@@ -419,15 +429,12 @@ $('body').on('click', '#btnAtualizarXP', function () {
         data: callOptions,
         async: true
     }).done(function (data, textStatus, request) {
-        console.log(data);
-
-        if (data == 'ok') {
-            console.log('ade');
-        } else {
+        if (data !== 'ok') {
             alert('deu pau!');
         }
     });
 });
+
 function toggleAusencia(adventurerId) {
     if ($('#aventureiro' + adventurerId).hasClass('ausencia')) {
         $('#aventureiro' + adventurerId).removeClass('ausencia');
@@ -453,7 +460,7 @@ function toggleAusencia(adventurerId) {
             async: true
         }).done(function (data, textStatus, request) {
             if (data === 'ok') {
-                $("#data").change();
+                mostraInfoGrupo(1);
             } else {
                 alert('deu pau!');
             }
@@ -462,7 +469,7 @@ function toggleAusencia(adventurerId) {
 }
 
 $("#t2").click(function () {
-    if ($('#data').val() == '') {
+    if ($('#data').val() === '') {
         alert('Data da Aventura deve ser selecionada');
     }
 });
@@ -473,7 +480,7 @@ $("#t2").click(function () {
 
 $("#t3").click(function () {
     $('#listaEncontros > tbody:last').html('');
-    if ($('#data').val() == '') {
+    if ($('#data').val() === '') {
         alert('Data da Aventura deve ser selecionada');
     } else {
         var callOptions = {
@@ -530,7 +537,7 @@ $("#t3").click(function () {
                 xp += Number(encontro['Encounters']['xp']);
                 adjustedXp += Number(encontro['Encounters']['adjusted_xp']);
             });
-            if (contador++ % 2 != 0) {
+            if (contador++ % 2 !== 0) {
                 $('#listaEncontros > tbody:last').append('<tr>' + encounter_card_row + '</tr>');
             }
             ativarSortable();
@@ -542,6 +549,12 @@ $("#t3").click(function () {
     }
 });
 
+$("#t4").click(function () {
+    if ($('#data').val() === '') {
+        alert('Data da Aventura deve ser selecionada');
+    }
+});
+
 function excluirEncontro(encounterId) {
     $.ajax({
         dataType: "json",
@@ -550,7 +563,6 @@ function excluirEncontro(encounterId) {
         data: {"encounterId": encounterId},
         async: true
     }).done(function (data, textStatus, request) {
-        console.log(data);
         $('#listaEncontros').html('<tbody></tbody>');
         $("#t3").click();
     });

@@ -14,6 +14,7 @@
 
 
 </style>
+<script src="http://code.jquery.com/jquery-2.0.0.js"></script>
 
 
 <?php
@@ -43,13 +44,17 @@ foreach ($spellList as $lvl => $spellListForLevel) {
             $ritual = '';
         }
         if ($value['Spells']['cleric_domain']) {
-            $cleric_domain = ' &#8226; Domain Spell';
+            $complemento = ' &#8226; Domain Spell';
+        }if ($value['Spells']['warlock_patron']) {
+            $complemento = ' &#8226; Patron Spell';
+        }if ($value['Spells']['druid_circle']) {
+            $complemento = ' &#8226; Druid Circle';
         } else {
-            $cleric_domain = '';
+            $complemento = '';
         }
         ?>
         <tr>
-            <th colspan="2"><?php echo $value['Spells']['name'] . ' (' . $value['Spells']['school'] . ')' . $ritual . $cleric_domain; ?></th>
+            <th colspan="2"><?php echo $value['Spells']['name'] . ' (' . $value['Spells']['school'] . ')' . $ritual . $complemento; ?></th>
         </tr>
         <tr>
             <td width="32%">
@@ -64,6 +69,30 @@ foreach ($spellList as $lvl => $spellListForLevel) {
             switch ($class) {
                 case 'Cleric':
                     if (in_array($value['Spells']['name'], array('Inflict Wounds', 'Thunderwave', 'Continual Flame', 'Hold Person', 'Silence', 'Zone of Truth', 'Bestow Curse', 'Glyph of Warding', 'Remove Curse')))
+                        echo '</table><div class="pageBreak"></div><table class="spells">';
+                    break;
+                case 'Druid':
+                    if (in_array($value['Spells']['name'], array(
+                        'Goodberry', 
+                        'Thunderwave', 
+                        'Dust Devil', 
+                        'Flaming Sphere', 
+                        'Locate Object', 
+                        'Warding Wind', 
+                        'Dispel Magic', 
+                        'Plant Growth', 
+                        'Wall of Water', 
+                        'Wind Wall', 
+                        'Conjure Minor Elementals', 
+                        'Control Water', 
+                        'Giant Insect', 
+                        'Watery Sphere', 
+                        'Control Winds',
+                        'Mass Cure Wounds',
+                        'Scrying', 
+                       
+                        
+                        )))
                         echo '</table><div class="pageBreak"></div><table class="spells">';
                     break;
                 case 'Ranger':
@@ -98,3 +127,10 @@ foreach ($spellList as $lvl => $spellListForLevel) {
         echo '</table>';
     }
     ?>
+
+<script type="text/javascript">
+     $(document).ready(function () {
+        $("#header").hide('');
+        $("#footer").hide();
+    });
+</script>

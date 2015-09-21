@@ -1,14 +1,17 @@
 <?php
 
-class SpellsController extends AppController {
+class SpellsController extends AppController
+{
 
     var $uses = array('Spells', 'SpellsClasses');
 
-    function index() {
+    function index()
+    {
         
     }
 
-    function cadastro($classe = null) {
+    function cadastro($classe = null)
+    {
         if (is_null($classe)) {
             if (!empty($this->data)) {
                 if ($this->Spells->save($this->data)) {
@@ -16,7 +19,6 @@ class SpellsController extends AppController {
                 } else {
                     $this->flash($this->data['Spells']['name'] . ' - erro ao gravar');
                 }
-//                $this->render('cadastro');
             }
         } else {
             if (empty($this->data)) {
@@ -33,6 +35,19 @@ class SpellsController extends AppController {
                         ));
                         $this->set('classSpells', $classSpells);
                         $this->set('classId', '3');
+                        break;
+                    case 'druid':
+                    case '4':
+                        $spellList = $this->Spells->find('list', array(
+                            'fields' => array('Spells.id', 'Spells.name'),
+                            'order' => array('lvl', 'name'),
+                        ));
+                        $classSpells = $this->SpellsClasses->find('list', array(
+                            'fields' => array('dnd_spells_id'),
+                            'conditions' => array('dnd_classes_id' => 4)
+                        ));
+                        $this->set('classSpells', $classSpells);
+                        $this->set('classId', '4');
                         break;
                     case 'ranger':
                     case '8':
@@ -61,6 +76,19 @@ class SpellsController extends AppController {
                         ));
                         $this->set('classSpells', $classSpells);
                         $this->set('classId', '10');
+                        break;
+                    case 'warlock':
+                    case '11':
+                        $spellList = $this->Spells->find('list', array(
+                            'fields' => array('Spells.id', 'Spells.name'),
+                            'order' => array('lvl', 'name'),
+                        ));
+                        $classSpells = $this->SpellsClasses->find('list', array(
+                            'fields' => array('dnd_spells_id'),
+                            'conditions' => array('dnd_classes_id' => 11)
+                        ));
+                        $this->set('classSpells', $classSpells);
+                        $this->set('classId', '11');
                         break;
                     case 'wizard':
                     case '12':
@@ -98,7 +126,8 @@ class SpellsController extends AppController {
         }
     }
 
-    function consulta($classe = 'null', $shortlist = 0) {
+    function consulta($classe = 'null', $shortlist = 0)
+    {
         $this->set('shortlist', $shortlist);
         switch ($classe) {
             case 'cleric':
@@ -110,6 +139,22 @@ class SpellsController extends AppController {
                     'SpellsClasses.dnd_classes_id' => $class_id,
                 );
                 $this->set('class', 'Cleric');
+                break;
+            case 'druid':
+            case '4':
+                $class_id = '4';
+                $lvl_ini = 1;
+                $lvl_fim = 6;
+                if ($shortlist) {
+                    $conditions = array(
+                        'SpellsClasses.dnd_classes_id' => $class_id,
+                        'Spells.id' => array('191', '207', '3', '205'));
+                } else {
+                    $conditions = array(
+                        'SpellsClasses.dnd_classes_id' => $class_id,
+                    );
+                }
+                $this->set('class', 'Druid');
                 break;
             case 'ranger':
             case '8':
@@ -136,6 +181,16 @@ class SpellsController extends AppController {
                     );
                 }
                 $this->set('class', 'Sorcerer');
+                break;
+            case 'wizard':
+            case '11':
+                $class_id = '11';
+                $lvl_ini = 0;
+                $lvl_fim = 3;
+                $conditions = array(
+                    'SpellsClasses.dnd_classes_id' => $class_id,
+                );
+                $this->set('class', 'Warlock');
                 break;
             case 'wizard':
             case '12':
@@ -179,14 +234,18 @@ class SpellsController extends AppController {
                     'Spells.description',
                     'Spells.ritual',
                     'Spells.cleric_domain',
+                    'Spells.warlock_patron',
+                    'Spells.druid_circle',
                 ),
                 'order' => array('Spells.name'),
             ));
         }
+        debug($spellList);
         $this->set('spellList', $spellList);
     }
 
-    function saveClassSpells() {
+    function saveClassSpells()
+    {
         $spellsClasses = $this->SpellsClasses->find('list', array(
             'conditions' => array('dnd_classes_id' => $this->data['spells']['classId']),
             'fields' => array('dnd_spells_id'),
