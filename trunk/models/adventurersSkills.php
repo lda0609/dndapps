@@ -15,5 +15,3 @@ class AdventurersSkills extends AppModel
     );
 
 }
-
-?>

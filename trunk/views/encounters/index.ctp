@@ -1,4 +1,7 @@
 <?php echo $this->element('css'); ?>
+<link rel="stylesheet" href="/<?php echo APP_DIR ?>/css/encounterBuilder.css" type="text/css"/> 
+<link rel="stylesheet" href="/<?php echo APP_DIR ?>/css/turntracker.css" type="text/css"/> 
+
 <script src="/<?php echo APP_DIR ?>/js/jquery-1.11.2.min.js"></script>
 <script src="/<?php echo APP_DIR ?>/js/jquery-ui.js"></script>
 <script src="/<?php echo APP_DIR ?>/js/meiomask.min.js"></script>

@@ -22,3 +22,9 @@
         </table>
     </div>
 </div>
+<div id="dialog" title="Confirmar Exclusão">
+    <p>Tem certeza que estas criaturas são indignas dessa aventura?</p>
+</div>
+<div style="display: none;">
+    <button id="opener">Open Dialog</button>
+</div>
