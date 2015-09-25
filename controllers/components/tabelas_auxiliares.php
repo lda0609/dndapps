@@ -96,6 +96,13 @@ class TabelasAuxiliaresComponent extends Object
             Cache::write('dnd_skills', $dnd_skills);
         }
         $controller->set('dnd_skills', $dnd_skills);
+
+        if (($dnd_alignment_players = Cache::read('dnd_alignment_players')) === false) {
+            $controller->loadModel('Alignment');
+            $dnd_alignment_players = $controller->Alignment->getLista();
+            Cache::write('dnd_alignment_players', $dnd_alignment_players);
+        }
+        $controller->set('dnd_alignment_players', $dnd_alignment_players);
     }
 
 }

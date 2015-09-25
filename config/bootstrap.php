@@ -56,5 +56,6 @@ Inflector::rules('plural', array('rules' => array(), 'irregular' => array(), 'un
     'adventurers_per_adventure', 
     'magic_armor_type', 
     'magicItem', 
-    'character_progression'
+    'character_progression',
+    'alignment',
     )));

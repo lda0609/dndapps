@@ -19,15 +19,12 @@ class MonstersController extends AppController
 
     function monsters()
     {
-
         if (!empty($this->data)) {
-
             $monsterType = $this->MonsterType->find('list', array(
                 'conditions' => array('dnd_monsters_id' => $this->data['monsters']['monster']),
                 'fields' => array('dnd_type_id'),
                 'order' => 'dnd_type_id'));
             $this->set('monsterType', $monsterType);
-
             $this->set('monster', $this->data['monsters']['monster']);
             $this->render('monster_type');
         }
@@ -82,41 +79,41 @@ class MonstersController extends AppController
         $this->redirect('update');
     }
 
-    function consulta()
-    {
-        if (!empty($this->data)) {
-            $conditions = array();
-            if (!empty($this->data['Monsters']['name'])) {
-                $conditions['Monsters.name LIKE'] = '%' . $this->data['Monsters']['name'] . '%';
-            }
-            if (!empty($this->data['Monsters']['CRMin'])) {
-                $conditions['Monsters.cr >='] = $this->data['Monsters']['CRMin'];
-            }
-            if (!empty($this->data['Monsters']['CRMax'])) {
-                $conditions['Monsters.cr <='] = $this->data['Monsters']['CRMax'];
-            }
-            if (!empty($this->data['Monsters']['Type'])) {
-                $conditions['MonsterType.dnd_type_id'] = $this->data['Monsters']['Type'];
-            }
-            if (!empty($this->data['Monsters']['Alignment'])) {
-                $conditions['Monsters.alignment'] = $this->data['Monsters']['alignment'];
-            }
-            $monsters = $this->Monsters->find('all', array(
-                'joins' => array(
-                    array('table' => 'monster_types',
-                        'alias' => 'MonsterType',
-                        'type' => 'LEFT',
-                        'conditions' => array(
-                            'Monsters.id = MonsterType.dnd_monsters_id',
-                        )
-                    )
-                ),
-                'conditions' => $conditions,
-                'order' => 'cr'));
-
-            $this->set('monsters', $monsters);
-        }
-    }
+//    function consulta()
+//    {
+//        if (!empty($this->data)) {
+//            $conditions = array();
+//            if (!empty($this->data['Monsters']['name'])) {
+//                $conditions['Monsters.name LIKE'] = '%' . $this->data['Monsters']['name'] . '%';
+//            }
+//            if (!empty($this->data['Monsters']['CRMin'])) {
+//                $conditions['Monsters.cr >='] = $this->data['Monsters']['CRMin'];
+//            }
+//            if (!empty($this->data['Monsters']['CRMax'])) {
+//                $conditions['Monsters.cr <='] = $this->data['Monsters']['CRMax'];
+//            }
+//            if (!empty($this->data['Monsters']['Type'])) {
+//                $conditions['MonsterType.dnd_type_id'] = $this->data['Monsters']['Type'];
+//            }
+//            if (!empty($this->data['Monsters']['Alignment'])) {
+//                $conditions['Monsters.alignment'] = $this->data['Monsters']['alignment'];
+//            }
+//            $monsters = $this->Monsters->find('all', array(
+//                'joins' => array(
+//                    array('table' => 'monster_types',
+//                        'alias' => 'MonsterType',
+//                        'type' => 'LEFT',
+//                        'conditions' => array(
+//                            'Monsters.id = MonsterType.dnd_monsters_id',
+//                        )
+//                    )
+//                ),
+//                'conditions' => $conditions,
+//                'order' => 'cr'));
+//
+//            $this->set('monsters', $monsters);
+//        }
+//    }
 
     function search()
     {

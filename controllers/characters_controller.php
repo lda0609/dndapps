@@ -3,147 +3,70 @@
 class CharactersController extends AppController
 {
 
-    var $uses = array('CharacterProgression', 'Adventurers', 'AdventurersPerAdventure', 'Adventure', 'xpThresholds');
+    var $uses = array('Alignment', 'CharacterProgression', 'Adventurers', 'AdventurersPerAdventure', 'Adventure');
     var $xp_threshold = [0, 300, 900, 2700, 6500, 14000, 23000, 34000, 48000, 64000, 85000, 100000, 120000, 140000, 165000, 195000, 225000, 265000, 305000, 355000];
 
     function index()
     {
-        $data_adventures = $this->Adventure->find('list', array('fields' => 'date'));
-        $this->set('data_adventures', $data_adventures);
 
-        if (!empty($this->data)) {
+//        Configure::write('debug', 2);
+//        $Alignment = $this->Alignment->find('list', array('fields'=>'shortname'));
+//        debug($Alignment);
+//        $characterProgression = $this->CharacterProgression->find('all', array(
+//            'conditions' => array(
+//                'dnd_adventurers_id' => '1',
+//                'lvl' => '5',
+//        )));
+//
+//        $AdventurersPerAdventure = $this->AdventurersPerAdventure->find('all', array(
+//            'joins' => array(
+//                array('table' => 'adventurers',
+//                    'alias' => 'Adventurers',
+//                    'type' => 'LEFT',
+//                    'conditions' => array(
+//                        'Adventurers.id = AdventurersPerAdventure.dnd_adventurers_id',
+//                    )
+//                )
+//            ),
+//            'conditions' => array('AdventurersPerAdventure.dnd_adventure_id' => 9),
+//            'fields' => array('dnd_adventure_id', 'dnd_adventurers_id', 'lvl_inicial', 'xp_final', 'ausente', 'Adventurers.id', 'Adventurers.name', 'Adventurers.race', 'Adventurers.class', 'Adventurers.player', 'Adventurers.alignment'),
+//            'order' => 'AdventurersPerAdventure.id',
+//        ));
+//        debug($AdventurersPerAdventure);
+//
+//        $this->set('characterProgression', $characterProgression);
+//
+//        debug($characterProgression);
+    }
 
-            if (isset($this->data['Characters']['valueXP1'])) {
-                if (!empty($this->data['Characters']['valueXP1'])) {
-                    $AdvAtualizado = $this->AdventurersPerAdventure->find('first', array(
-                        'conditions' => array(
-                            'dnd_adventure_id' => $this->data['Characters']['data'],
-                            'dnd_adventurers_id' => 1,
-                        ),
-                        'fields' => array('id')
-                    ));
-                    $AdvAtualizado['AdventurersPerAdventure']['xp_final'] = $this->data['Characters']['valueXP1'];
-                    $this->AdventurersPerAdventure->save($AdvAtualizado);
-                }
-                if (!empty($this->data['Characters']['valueXP2'])) {
-                    $AdvAtualizado = $this->AdventurersPerAdventure->find('first', array(
-                        'conditions' => array(
-                            'dnd_adventure_id' => $this->data['Characters']['data'],
-                            'dnd_adventurers_id' => 2,
-                        ),
-                        'fields' => array('id')
-                    ));
-                    $AdvAtualizado['AdventurersPerAdventure']['xp_final'] = $this->data['Characters']['valueXP2'];
-                    $this->AdventurersPerAdventure->save($AdvAtualizado);
-                }
-                if (!empty($this->data['Characters']['valueXP3'])) {
-                    $AdvAtualizado = $this->AdventurersPerAdventure->find('first', array(
-                        'conditions' => array(
-                            'dnd_adventure_id' => $this->data['Characters']['data'],
-                            'dnd_adventurers_id' => 3,
-                        ),
-                        'fields' => array('id')
-                    ));
-                    $AdvAtualizado['AdventurersPerAdventure']['xp_final'] = $this->data['Characters']['valueXP3'];
-                    $this->AdventurersPerAdventure->save($AdvAtualizado);
-                }
-                if (!empty($this->data['Characters']['valueXP4'])) {
-                    $AdvAtualizado = $this->AdventurersPerAdventure->find('first', array(
-                        'conditions' => array(
-                            'dnd_adventure_id' => $this->data['Characters']['data'],
-                            'dnd_adventurers_id' => 4,
-                        ),
-                        'fields' => array('id')
-                    ));
-                    $AdvAtualizado['AdventurersPerAdventure']['xp_final'] = $this->data['Characters']['valueXP4'];
-                    $this->AdventurersPerAdventure->save($AdvAtualizado);
-                }
-                if (!empty($this->data['Characters']['valueXP5'])) {
-                    $AdvAtualizado = $this->AdventurersPerAdventure->find('first', array(
-                        'conditions' => array(
-                            'dnd_adventure_id' => $this->data['Characters']['data'],
-                            'dnd_adventurers_id' => 5,
-                        ),
-                        'fields' => array('id')
-                    ));
-                    $AdvAtualizado['AdventurersPerAdventure']['xp_final'] = $this->data['Characters']['valueXP5'];
-                    $this->AdventurersPerAdventure->save($AdvAtualizado);
-                }
-                if (!empty($this->data['Characters']['valueXP6'])) {
-                    $AdvAtualizado = $this->AdventurersPerAdventure->find('first', array(
-                        'conditions' => array(
-                            'dnd_adventure_id' => $this->data['Characters']['data'],
-                            'dnd_adventurers_id' => 6,
-                        ),
-                        'fields' => array('id')
-                    ));
-                    $AdvAtualizado['AdventurersPerAdventure']['xp_final'] = $this->data['Characters']['valueXP6'];
-                    $this->AdventurersPerAdventure->save($AdvAtualizado);
-                }
-                if (!empty($this->data['Characters']['valueXP7'])) {
-                    $AdvAtualizado = $this->AdventurersPerAdventure->find('first', array(
-                        'conditions' => array(
-                            'dnd_adventure_id' => $this->data['Characters']['data'],
-                            'dnd_adventurers_id' => 7,
-                        ),
-                        'fields' => array('id')
-                    ));
-                    $AdvAtualizado['AdventurersPerAdventure']['xp_final'] = $this->data['Characters']['valueXP7'];
-                    $this->AdventurersPerAdventure->save($AdvAtualizado);
-                }
-            }
-
-            for ($char = 1; $char <= 7; $char++) {
-                $AdventurersPerAdventure[$char] = $this->AdventurersPerAdventure->find('first', array(
+    function getAdventurersFromDate()
+    {
+        $this->autoRender = false;
+        $adventurers = $this->AdventurersPerAdventure->find('all', array(
+            'joins' => array(
+                array('table' => 'adventurers',
+                    'alias' => 'Adventurers',
+                    'type' => 'LEFT',
                     'conditions' => array(
-                        'dnd_adventure_id' => $this->data['Characters']['data'],
-                        'dnd_adventurers_id' => $char,
-                    ),
-                    'fields' => array('lvl_inicial', 'xp_final')
-                ));
+                        'Adventurers.id = AdventurersPerAdventure.dnd_adventurers_id',
+                    )
+                )
+            ),
+            'conditions' => array('AdventurersPerAdventure.dnd_adventure_id' => $this->params['url']['idAventura']),
+            'fields' => array('dnd_adventure_id', 'dnd_adventurers_id', 'lvl_inicial', 'xp_final', 'ausente', 'Adventurers.id', 'Adventurers.name', 'Adventurers.race', 'Adventurers.class', 'Adventurers.player', 'Adventurers.alignment', 'Adventurers.background'),
+            'order' => 'AdventurersPerAdventure.id',
+        ));
 
-                if ($this->data['Characters']['data'] > 1) {
-                    $AdventurersPerAdventureAnterior[$char] = $this->AdventurersPerAdventure->find('first', array(
-                        'conditions' => array(
-                            'dnd_adventure_id' => $this->data['Characters']['data'] - 1,
-                            'dnd_adventurers_id' => $char,
-                        ),
-                        'fields' => array('lvl_inicial', 'xp_final')
-                    ));
-                    $AdventurersPerAdventure[$char]['AdventurersPerAdventure']['xp_inicial'] = $AdventurersPerAdventureAnterior[$char]['AdventurersPerAdventure']['xp_final'];
-                } else {
-                    $AdventurersPerAdventure[$char]['AdventurersPerAdventure']['xp_inicial'] = 0;
-                }
-                $pc[$char] = $this->CharacterProgression->find('first', array(
-                    'joins' => array(
-                        array('table' => 'adventurers',
-                            'alias' => 'Adventurers',
-                            'type' => 'LEFT',
-                            'conditions' => array(
-                                'Adventurers.id = CharacterProgression.dnd_adventurers_id',
-                            )
-                        )
-                    ),
-                    'conditions' => array(
-                        'dnd_adventurers_id' => $char,
-                        'lvl' => $AdventurersPerAdventure[$char]['AdventurersPerAdventure']['lvl_inicial'],
-                    ),
-                    'fields' => array(
-                        'CharacterProgression.*',
-                        'Adventurers.name',
-                        'Adventurers.race',
-                        'Adventurers.class',
-                        'Adventurers.player',
-                        'Adventurers.background',
-                    ),
-                ));
-                $pc[$char] = array_merge($pc[$char], $AdventurersPerAdventure[$char]);
-            }
-            $adventurers = $this->Adventurers->find('all', array('order' => 'id'));
-            $this->set('pc', $pc);
-            $this->set(
-                    'adventurers', $adventurers);
+        foreach ($adventurers as $key => $value) {
+            $characterProgression = $this->CharacterProgression->find('first', array(
+                'conditions' => array(
+                    'dnd_adventurers_id' => $value['AdventurersPerAdventure']['dnd_adventurers_id'],
+                    'lvl' => $value['AdventurersPerAdventure']['lvl_inicial'],
+            )));
+
+            $adventurers[$key]['CharacterProgression'] = $characterProgression['CharacterProgression'];
         }
+        return json_encode($adventurers);
     }
 
     function getListCharacters()
@@ -182,11 +105,11 @@ class CharactersController extends AppController
         if (!empty($data) && checkdate($data[1], $data[0], $data[2])) {
             $adventure['Adventure']['date'] = $this->params['url']['dataAventura'];
             if ($this->Adventure->save($adventure)) {
-                $adventure = $this->Adventure->find('first', array('conditions' => array('date' => $this->params['url']['dataAventura'])));
+//                $adventure = $this->Adventure->find('first', array('conditions' => array('date' => $this->params['url']['dataAventura'])));
 
                 foreach ($this->params['url']['level'] as $key => $level) {
                     $adventurersPerAdventure = array();
-                    $adventurersPerAdventure['AdventurersPerAdventure']['dnd_adventure_id'] = $adventure['Adventure']['id'];
+                    $adventurersPerAdventure['AdventurersPerAdventure']['dnd_adventure_id'] = $this->Adventure->id;
                     $adventurersPerAdventure['AdventurersPerAdventure']['dnd_adventurers_id'] = $key + 1;
                     $adventurersPerAdventure['AdventurersPerAdventure']['lvl_inicial'] = $level;
                     $adventurersPerAdventure['AdventurersPerAdventure']['ausente'] = 0;
@@ -235,14 +158,66 @@ class CharactersController extends AppController
         return json_encode('ok');
     }
 
-    function notes()
+    function saveCharacter()
     {
-        
+        $this->autoRender = false;
+
+        $character = ($this->params['url']['adventurer']);
+        $adventurer['Adventurers'] = $character['Adventurers'];
+        $progression['CharacterProgression'] = $character['CharacterProgression'];
+        if ($this->Adventurers->save($adventurer)) {
+            $progression['CharacterProgression']['dnd_adventurers_id'] = $this->Adventurers->id;
+            if ($this->CharacterProgression->save($progression)) {
+                return json_encode('ok');
+            } else {
+                return json_encode('nok 2');
+            }
+        } else {
+            return json_encode('nok 1');
+        }
     }
 
-    function atualizacao()
+    function getCharactersAllLevels()
     {
-        
+        $this->autoRender = false;
+
+        $adventurers = $this->Adventurers->find('all');
+        $retorno = array();
+        foreach ($adventurers as $key => $adventurer) {
+            $characterProgression = $this->CharacterProgression->find('all', array(
+                'conditions' => array(
+                    'dnd_adventurers_id' => $adventurer['Adventurers']['id']
+                ),
+            ));
+            $adventurers[$key]['CharacterProgression'] = $characterProgression;
+            foreach ($characterProgression as $key2 => $charProgression) {
+                $temp['CharacterProgressionId'] = $charProgression['CharacterProgression']['id'];
+                $temp['name'] = $adventurer['Adventurers']['name'];
+                $temp['lvl'] = $charProgression['CharacterProgression']['lvl'];
+                array_push($retorno, $temp);
+            }
+        }
+
+        return json_encode($retorno);
+    }
+
+    function getCharacterDetails()
+    {
+        $this->autoRender = false;
+
+        $characterProgression = $this->CharacterProgression->find('first', array(
+            'conditions' => array(
+                'id' => $this->params['url']['CharacterProgressionId'],
+            ),
+        ));
+        $adventurers = $this->Adventurers->find('first', array(
+            'conditions' => array(
+                'id' => $characterProgression['CharacterProgression']['dnd_adventurers_id'],
+        )));
+
+        $retorno['CharacterProgression'] = $characterProgression['CharacterProgression'];
+        $retorno['Adventurers'] = $adventurers['Adventurers'];
+        return json_encode($retorno);
     }
 
 }

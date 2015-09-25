@@ -32,3 +32,9 @@
     <div id="divAtualizarAventura" align="right"></div>
 
 </div>
+<div id="confirmaXP" title="Confirmar Alteração XP">
+    <p>A atualização é definitiva para todos os personagens. Campos vazios serão considerados como zero XP. </p>
+</div>
+<div style="display: none;">
+    <button id="confirmaXPopener">Open Dialog</button>
+</div>

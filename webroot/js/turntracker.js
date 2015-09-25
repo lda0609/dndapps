@@ -1,24 +1,34 @@
-$(".sortable").sortable();
 $(".hpModifier").attr('disabled', true);
 $("#divTurnTracker").hide();
 
-var activePlayers = [];
+var allFighters = [];
 
 function loadPlayers() {
     $("#divTurnTracker").show();
     configPlayers();
     turnTracker();
 }
-function loadEncounter() {
+function loadEncounter(monsterList) {
+    $("#divTurnTracker").show();
+    $.each(monsterList, function (key, monster) {
+        temp = {}
+        temp['id'] = 'm' + key;
+        temp['nome'] = monster['name'];
+        temp['HPMax'] = monster['hp'];
+        temp['HPTemp'] = 0;
+        temp['HPAtual'] = temp['HPMax'];
+        temp['iniciativa'] = 0;
+        allFighters.push(temp);
+    });
+    turnTracker();
 }
 
 function limparTracker() {
+    allFighters = [];
     $('#tableTracker > tbody').html('');
 }
 function configPlayers() {
-    activePlayers = [];
     $.each(players, function (key, player) {
-        console.log(player)
         if (player['AdventurersPerAdventure']['ausente'] === '0') {
             temp = {}
             temp['id'] = 'p' + player['Adventurers']['id'];
@@ -27,19 +37,21 @@ function configPlayers() {
             temp['HPTemp'] = 0;
             temp['HPAtual'] = temp['HPMax'];
             temp['iniciativa'] = 0;
-            activePlayers.push(temp);
+            allFighters.push(temp);
         }
     });
 }
 function turnTracker() {
     $('#tableTracker > tbody').html('');
-
     $('#tableTracker').append('<tbody id="tbodyTracker" class="sortable"></tbody>');
-    console.log(activePlayers)
-    $.each(activePlayers, function (key, values) {
+    $.each(allFighters, function (key, values) {
         var corHPAtual = '';
         var HPTemp = '';
 
+        var corNome = 'blue';
+        if (values['id'].substring(0, 1) === 'm') {
+            corNome = 'red';
+        }
         if (values['HPAtual'] < values['HPMax']) {
             corHPAtual = 'red';
         }
@@ -50,19 +62,20 @@ function turnTracker() {
         var init = '<td><input class="initValue" type="number" min="-10" max="40" value="' + values['iniciativa'] + '"></input></td>';
         var combat = '<td><input id="hpModifier' + values['id'] + '" type="number" class="hpModifier"></td>';
 
-        $('#tableTracker > tbody:last').append('<tr id="' + values['id'] + '">' + init + '<td><font color="blue">' + values['nome'] + '</font></td><td width="300"><div class="progressbar" id="progressbar' + values['id'] + '"><div class="progress-label">' + hp + '</div></div></td>' + combat + '</tr> ');
-
+        $('#tableTracker > tbody:last').append('<tr id="' + values['id'] + '">' + init + '<td><font color="' + corNome + '">' + values['nome'] + '</font></td><td width="300"><div class="progressbar" id="progressbar' + values['id'] + '"><div class="progress-label">' + hp + '</div></div></td>' + combat + '</tr> ');
         $(function () {
             $("#progressbar" + values['id']).progressbar({
-                max: values['HPMax'],
-                value: values['HPAtual']
+                max: Number(values['HPMax']),
+                value: Number(values['HPAtual'])
             });
         });
-
-        if (values['HPAtual'] / values['HPMax'] <= 0.5) {
-            $("#progressbar" + values['id']).addClass('ui-widget-header-red ui-widget-content-red');
-            $("#progressbar" + values['id']).removeClass('ui-widget-header ui-widget-content');
-        }
+    });
+    $(function () {
+        $(".sortable").sortable({
+            stop: function (event, ui) {
+                ajustarLista();
+            },
+        });
     });
     checkLocks();
 }
@@ -89,30 +102,30 @@ function hpModifier(modifier) {
     console.log(hpMap);
     $.each(hpMap, function (key, value) {
         if (value['hpMod'] !== 0) {
-            $.each(activePlayers, function (key2, player) {
+            console.log(allFighters);
+            $.each(allFighters, function (key2, player) {
                 if (value['playerId'] === player['id']) {
                     if (modifier === 1) {
-
-                        if (activePlayers[key].HPTemp > 0) {
-                            activePlayers[key].HPTemp -= value['hpMod'];
-                            if (activePlayers[key].HPTemp < 0) {
-                                activePlayers[key].HPAtual += activePlayers[key].HPTemp;
-                                activePlayers[key].HPTemp = 0;
+                        if (allFighters[key].HPTemp > 0) {
+                            allFighters[key].HPTemp -= value['hpMod'];
+                            if (allFighters[key].HPTemp < 0) {
+                                allFighters[key].HPAtual += allFighters[key].HPTemp;
+                                allFighters[key].HPTemp = 0;
                             }
                         } else {
-                            activePlayers[key].HPAtual -= value['hpMod'];
+                            allFighters[key].HPAtual -= value['hpMod'];
                         }
-                        if (activePlayers[key].HPAtual < 0) {
-                            activePlayers[key].HPAtual = 0;
+                        if (allFighters[key].HPAtual < 0) {
+                            allFighters[key].HPAtual = 0;
                         }
                     } else if (modifier === 2) {
-                        activePlayers[key].HPAtual += value['hpMod'];
-                        if (activePlayers[key].HPAtual > activePlayers[key].HPMax) {
-                            activePlayers[key].HPAtual = activePlayers[key].HPMax;
+                        allFighters[key].HPAtual += value['hpMod'];
+                        if (allFighters[key].HPAtual > allFighters[key].HPMax) {
+                            allFighters[key].HPAtual = allFighters[key].HPMax;
                         }
                     } else if (modifier === 3) {
-                        if (value['hpMod'] > activePlayers[key].HPTemp) {
-                            activePlayers[key].HPTemp = value['hpMod'];
+                        if (value['hpMod'] > allFighters[key].HPTemp) {
+                            allFighters[key].HPTemp = value['hpMod'];
                         }
                     }
                 }
@@ -129,9 +142,9 @@ $("#btnOdenar").click(function () {
 
     $.each(init, function (key, playerInit) {
         console.log(playerInit);
-        $.each(activePlayers, function (key2, player) {
+        $.each(allFighters, function (key2, player) {
             if (player.id == playerInit.id) {
-                activePlayers[key2].iniciativa = playerInit.iniciativa;
+                allFighters[key2].iniciativa = playerInit.iniciativa;
             }
         });
     });
@@ -141,23 +154,40 @@ $("#btnOdenar").click(function () {
 });
 
 function ordenarPorIniciativa() {
-    var APlen = activePlayers.length;
+    var APlen = allFighters.length;
     var j = 0;
     var swapped = true;
     while (swapped) {
         swapped = false;
         j++;
         for (i = 0; i < APlen - j; i++) {
-            if (activePlayers[i]['iniciativa'] < activePlayers[i + 1]['iniciativa']) {
-                temp = activePlayers[i];
-                activePlayers[i] = activePlayers[i + 1];
-                activePlayers[i + 1] = temp;
+            if (allFighters[i]['iniciativa'] < allFighters[i + 1]['iniciativa']) {
+                temp = allFighters[i];
+                allFighters[i] = allFighters[i + 1];
+                allFighters[i + 1] = temp;
                 swapped = true;
             }
         }
     }
 }
 
+function ajustarLista() {
+    var idMap = $('.hpModifier').map(function () {
+        return [{"playerId": $(this).closest('tr').attr('id')}];
+    }).get();
+    temp = [];
+    $.each(idMap, function (key, value) {
+        $.each(allFighters, function (key2, value2) {
+            if (value['playerId'] === value2['id']) {
+//                console.log(value2);
+                temp.push(value2);
+            }
+        });
+    });
+    allFighters = temp;
+//    console.log(allFighters);
+//    console.log(temp);
+}
 
 $("#toggleLockInit").click(function () {
     if ($(this).attr('class') === 'unlocked') {
@@ -196,3 +226,4 @@ function checkLocks() {
     }
 
 }
+

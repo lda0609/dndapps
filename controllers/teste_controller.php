@@ -7,24 +7,20 @@ class TesteController extends AppController
 
     function index()
     {
-        Configure::write('debug', 2);
-        $this->Encounters->unBindModel(array('hasMany' => array('EncountersMonsters')));
-        $encounters = $this->Encounters->find('all', array(
-            'conditions' => array(
-                'dnd_adventure_id' => '9',
-            ),
-            'fields' => array('Encounters.id', 'Encounters.xp', 'Encounters.difficulty')
-        ));
+        $this->autoRender = false;
+        $encontros = $this->Encounters->find('first', array('conditions' => array('id' => '51')));
 
-        $sumMonsters = $this->EncountersMonsters->find('first', array(
-            'conditions' => array(
-                'dnd_encounters_id' => '51',
-            ),
-            'fields' => array('sum(EncountersMonsters.quantidade) AS encounter__total')
-        ));
-
-        debug($encounters);
-        debug($sumMonsters);
+        $cont = 0;
+        foreach ($encontros['EncountersMonsters'] as $key => $encounterMonster) {
+            debug($encounterMonster);
+            $monster = $this->Monsters->find('first', array('conditions' => array('id' => $encounterMonster['dnd_monsters_id'])));
+            for ($i = 1; $i <= $encounterMonster['quantidade']; $i++) {
+                $monsterList[$cont]['name'] = $monster['Monsters']['name'] . ' (' . $i . ')';
+                $monsterList[$cont]['hp'] = $monster['Monsters']['hp'];
+                $cont++;
+            }
+        }
+        debug($monsterList);
     }
 
 }

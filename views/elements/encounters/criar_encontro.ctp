@@ -37,6 +37,7 @@
                 <th><div class="th-inner">Type</div></th>
                 <th><div class="th-inner">CR</div></th>
                 <th><div class="th-inner">Size</div></th>
+                <th><div class="th-inner">HP</div></th>
                 <th><div class="th-inner">Alignment</div></th>
                 <th><div class="th-inner">Page</div></th>
                 </tr>
@@ -76,8 +77,9 @@
                 <th>Monster</th>
                 <th width="40px">Qtde</th>
                 <th>CR</th>
-                <th>Page</th>
+                <th>HP</th>
                 <th>XP</th>
+                <th>Page</th>
             </tr>
         </thead>
         <tbody>

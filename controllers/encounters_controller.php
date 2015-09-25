@@ -225,17 +225,42 @@ class EncountersController extends AppController
                 $monstros[$key]['EncountersMonsters']['quantidade'] = $this->params['url']['monsterQtde'][$key];
             }
             $this->EncountersMonsters->saveAll($monstros);
-            return json_encode('ok');
+
+            //update com o id no campo ordem
+            $encontro['Encounters']['ordem'] = $this->Encounters->id;
+            $this->Encounters->save($encontro);
+
+            return json_encode($this->Encounters->id);
         } else {
             return json_encode($encontro);
         }
     }
 
-    function getEncounters()
+    function getAllEncounters()
     {
         $this->autoRender = false;
-        $encontros = $this->Encounters->find('all', array('conditions' => array('dnd_adventure_id' => $this->params['url']['idAventura'])));
+        $encontros = $this->Encounters->find('all', array(
+            'conditions' => array('dnd_adventure_id' => $this->params['url']['idAventura']),
+            'order' => 'ordem'));
         return json_encode($encontros);
+    }
+
+    function getEncounter()
+    {
+        $this->autoRender = false;
+        $encontros = $this->Encounters->find('first', array('conditions' => array('id' => $this->params['url']['encounterId'])));
+
+        $cont = 0;
+        foreach ($encontros['EncountersMonsters'] as $key => $encounterMonster) {
+            $monster = $this->Monsters->find('first', array('conditions' => array('id' => $encounterMonster['dnd_monsters_id'])));
+            for ($i = 1; $i <= $encounterMonster['quantidade']; $i++) {
+                $monsterList[$cont]['name'] = $monster['Monsters']['name'] . ' (' . $i . ')';
+                $monsterList[$cont]['hp'] = $monster['Monsters']['hp'];
+                $cont++;
+            }
+        }
+
+        return json_encode($monsterList);
     }
 
     function deleteEncounter()
