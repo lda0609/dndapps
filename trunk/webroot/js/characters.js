@@ -85,7 +85,18 @@ function showCharactersCards(data) {
 
 
 $('#btnGravar').click(function () {
+    salvarPersonagem('saveCharacter');
+});
 
+$('#btnLevelUp').click(function () {
+    salvarPersonagem('characterLevelUp');
+});
+
+$('#btnAlterar').click(function () {
+    salvarPersonagem('editCharacter');
+});
+
+function salvarPersonagem(funcao) {
     var adventurer = {}
     adventurer['Adventurers'] = {}
     adventurer['CharacterProgression'] = {}
@@ -107,26 +118,27 @@ $('#btnGravar').click(function () {
     adventurer['CharacterProgression']['initiative'] = $('#init').val();
     adventurer['CharacterProgression']['speed'] = $('#speed').val();
     adventurer['CharacterProgression']['hit_point_max'] = $('#hp').val();
-    console.log(adventurer);
 
     var callOptions = {
         "adventurer": adventurer,
     };
+    console.log(adventurer);
     $.ajax({
         dataType: "json",
-        url: 'http://' + host + '/dndapps/characters/saveCharacter',
+        url: 'http://' + host + '/dndapps/characters/' + funcao,
         type: 'GET',
         data: callOptions,
         async: true
     }).done(function (data, textStatus, request) {
         console.log(data);
         if (data === 'ok') {
+            getCharactersAllLevels();
             $("#msg_inclusao").show();
         } else {
             alert('Erro na gravação dos dados');
         }
     });
-});
+}
 
 
 function getCharactersAllLevels() {

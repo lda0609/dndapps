@@ -8,9 +8,10 @@ function loadPlayers() {
     configPlayers();
     turnTracker();
 }
-function loadEncounter(monsterList) {
+
+function loadEncounter(encounter) {
     $("#divTurnTracker").show();
-    $.each(monsterList, function (key, monster) {
+    $.each(encounter['monsters'], function (key, monster) {
         temp = {}
         temp['id'] = 'm' + key;
         temp['nome'] = monster['name'];
@@ -20,6 +21,8 @@ function loadEncounter(monsterList) {
         temp['iniciativa'] = 0;
         allFighters.push(temp);
     });
+
+    $("#divInformation").html(encounter['information']);
     turnTracker();
 }
 
@@ -27,6 +30,7 @@ function limparTracker() {
     allFighters = [];
     $('#tableTracker > tbody').html('');
 }
+
 function configPlayers() {
     $.each(players, function (key, player) {
         if (player['AdventurersPerAdventure']['ausente'] === '0') {
@@ -41,6 +45,7 @@ function configPlayers() {
         }
     });
 }
+
 function turnTracker() {
     $('#tableTracker > tbody').html('');
     $('#tableTracker').append('<tbody id="tbodyTracker" class="sortable"></tbody>');
