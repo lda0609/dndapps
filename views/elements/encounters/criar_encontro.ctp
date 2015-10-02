@@ -64,8 +64,11 @@
     <form class="pure-form">
         <table>
             <tr>
-                <td><label for="tituloEncontro">Título do Encontro</label><input id="tituloEncontro" type="text"></td>
-                <td><label for="tesouro">Tesouro</label><input id="tesouro" type="text"></td>
+                <td><input placeholder="Título do Encontro" id="tituloEncontro" type="text"></td>
+                <td><input placeholder="Tesouro"  id="tesouro" type="text"></td>
+            </tr>
+            <tr>
+                <td colspan="2"><input placeholder="Informações Adicionais"  id="information" type="text"></td>
             </tr>
         </table>
     </form>

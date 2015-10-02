@@ -217,6 +217,7 @@ class EncountersController extends AppController
         $encontro['Encounters']['treasure'] = $this->params['url']['tesouro'];
         $encontro['Encounters']['adjusted_xp'] = $this->params['url']['adjustedXP'];
         $encontro['Encounters']['difficulty'] = $this->params['url']['difficulty'];
+        $encontro['Encounters']['information'] = $this->params['url']['information'];
 
         if ($this->Encounters->save($encontro)) {
             foreach ($this->params['url']['monsterId'] as $key => $monsterId) {
@@ -254,11 +255,12 @@ class EncountersController extends AppController
         foreach ($encontros['EncountersMonsters'] as $key => $encounterMonster) {
             $monster = $this->Monsters->find('first', array('conditions' => array('id' => $encounterMonster['dnd_monsters_id'])));
             for ($i = 1; $i <= $encounterMonster['quantidade']; $i++) {
-                $monsterList[$cont]['name'] = $monster['Monsters']['name'] . ' (' . $i . ')';
-                $monsterList[$cont]['hp'] = $monster['Monsters']['hp'];
+                $monsterList['monsters'][$cont]['name'] = $monster['Monsters']['name'] . ' (' . $i . ')';
+                $monsterList['monsters'][$cont]['hp'] = $monster['Monsters']['hp'];
                 $cont++;
             }
         }
+        $monsterList['information'] = $encontros['Encounters']['information'];
 
         return json_encode($monsterList);
     }

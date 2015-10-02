@@ -65,6 +65,7 @@ $("#btnLimparEncontro").click(function () {
     $('#adjustedXP').html('');
     $('#tituloEncontro').val('');
     $('#tesouro').val('');
+    $('#information').val('');
     $('#msg').hide();
 });
 
@@ -238,7 +239,8 @@ $("#btnSalvarEncontro").click(function () {
                 "adjustedXP": $('#adjustedXP').html(),
                 "difficulty": $('#diff').html(),
                 "tituloEncontro": $('#tituloEncontro').val(),
-                "tesouro": $('#tesouro').val()
+                "tesouro": $('#tesouro').val(),
+                "information": $('#information').val()
             };
             $.ajax({
                 url: 'http://' + host + '/dndapps/encounters/saveEncounter',
@@ -380,11 +382,18 @@ $('body').on('click', '#btnSalvarAventura', function () {
     var ausencia = $('.ausencia').map(function () {
         return $(this).attr('id');
     }).get();
+    var aventureirosID = $('#adventurers tr').map(function () {
+        return $(this).attr('id');
+    }).get();
+
+    console.log(aventureirosID);
     var callOptions = {
         "dataAventura": $('#dataAventura').val(),
         "level": values,
-        "ausencia": ausencia
+        "ausencia": ausencia,
+        "aventureirosID": aventureirosID
     };
+    console.log(callOptions);
     $.ajax({
         dataType: "json",
         url: 'http://' + host + '/dndapps/characters/salvarGrupo',
@@ -431,9 +440,14 @@ function AtualizacaoXPconfirmada() {
     var values = $('.xp_final').map(function () {
         return $(this).val();
     }).get();
+    var aventureirosID = $('#adventurers tr').map(function () {
+        return $(this).attr('id');
+    }).get();
+
     var callOptions = {
         "idAventura": $('#data').val(),
-        "xp": values
+        "xp": values,
+        "aventureirosID": aventureirosID,
     };
     $.ajax({
         dataType: "json",
@@ -531,8 +545,9 @@ $("#t3").click(function () {
 
                 var img_excluir = '<td class="' + diff_class + '" width="28px"><a onclick="excluirEncontro(\'' + encontro['Encounters']['id'] + '\')"><img width="28px" src="/dndapps/img/document_delete.png" title="Exclui encontro" class="clickable"></a></td>';
                 var img_turntracker = '<td class="' + diff_class + '" width="28px"><p align="center"><a onclick="enviarEncontroParaTracker(\'' + encontro['Encounters']['id'] + '\')"><img width="28px" src="/dndapps/img/attack4.png" title="Carrega encontro no Turn Tracker" class="clickable"></a></p></td>';
+                var tbody = '<tbody><tr><td width="36px"><img width="40px" src="/dndapps/img/Overstuffed_Treasure_Chest-icon.png"></td><td colspan="3">' + encontro['Encounters']['treasure'] + '</td></tr><tr><td width="36px"><img width="40px" src="/dndapps/img/xp-icon.png"></td><td colspan="3">' + encontro['Encounters']['xp'] + '/' + encontro['Encounters']['adjusted_xp'] + '</td></tr><tr><td width="36px"><img width="40px" src="/dndapps/img/information.png"></td><td colspan="3">' + encontro['Encounters']['information'] + '</td></tr></tbody>'
 
-                encounter_card = '<td class="encounterCard connectedSortable ui-state-default" id="pos' + contador + '"><table id="encounter' + encontro['Encounters']['id'] + '" ><thead><tr>' + img_turntracker + '<td class="' + diff_class + '" colspan="2">' + encontro['Encounters']['title'] + '</td>' + img_excluir + '</tr></thead><tbody><tr><td width="36px"><img width="40px" src="/dndapps/img/Overstuffed_Treasure_Chest-icon.png"></td><td colspan="3">' + encontro['Encounters']['treasure'] + '</td></tr><tr><td width="36px"><img width="40px" src="/dndapps/img/xp-icon.png"></td><td colspan="3">' + encontro['Encounters']['xp'] + '/' + encontro['Encounters']['adjusted_xp'] + '</td></tr></tbody></table></td>';
+                encounter_card = '<td class="encounterCard connectedSortable ui-state-default" id="pos' + contador + '"><table id="encounter' + encontro['Encounters']['id'] + '" ><thead><tr>' + img_turntracker + '<td class="' + diff_class + '" colspan="2">' + encontro['Encounters']['title'] + '</td>' + img_excluir + '</tr></thead>' + tbody + '</table></td>';
                 if (contador++ % 2 === 0) {
                     encounter_card_row += encounter_card;
                 } else {
