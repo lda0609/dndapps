@@ -1,9 +1,39 @@
 #content {
+    /*width: 860px;*/
+    background-color: #003D4C;  
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+#footer, #header {
+    display: none;
+}
+
+#tabs {
     width: 860px;
     display: block;
     margin-left: auto;
     margin-right: auto;
 }
+
+table tr td{
+    border-bottom: 0px;
+}
+
+#table_body {
+    border: 0px;
+    border-collapse: collapse;
+    border-bottom: 0px;
+}
+#td_tabs {
+    width: 885px;
+}
+
+#td_left_size, #td_right_size {
+    background-color: #003D4C;  
+}
+
 
 #msg {
     border: 1px solid #CCC;
@@ -24,3 +54,23 @@
     color: #009900;
     text-align: center;
 }
+
+.clickable { 
+    cursor: pointer; 
+}
+
+/*Filter styles*/
+
+.button-disabled {
+    -webkit-filter: opacity(30%);
+}
+
+.saturate {-webkit-filter: saturate(3);}
+.grayscale {-webkit-filter: grayscale(100%);}
+.contrast {-webkit-filter: contrast(160%);}
+.brightness {-webkit-filter: brightness(0.25);}
+.blur {-webkit-filter: blur(3px);}
+.invert {-webkit-filter: invert(100%);}
+.sepia {-webkit-filter: sepia(100%); }
+.huerotate {-webkit-filter: hue-rotate(180deg);}
+.opacity {-webkit-filter: opacity(50%);}

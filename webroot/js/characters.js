@@ -1,5 +1,3 @@
-$("#header").hide();
-$("#footer").hide();
 $("#msg_inclusao").hide();
 $("#msg_lvlup").hide();
 $("#btnAlterar").hide();

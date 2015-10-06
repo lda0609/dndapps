@@ -1,6 +1,16 @@
 <div id="divMenuTracker">
-    <a onclick="loadPlayers()"><img height="60px" src="/dndapps/img/adventurer.jpg" title="Adicionar Aventureiros" class="clickable"></a>
-    <a onclick="limparTracker()"><img height="70px" src="/dndapps/img/dragon.jpg" title="Limpar Encontro" class="clickable"></a>
+    <table>
+        <tr>
+            <td class="button-menu"><a onclick="loadPlayers()"><img id="imgLoadPlayers" height="60px" src="/dndapps/img/adventurer.jpg" title="Adicionar Aventureiros" class="clickable"></a></td>
+            <td class="button-menu"><a onclick="startCombat()"><img id="imgStartCombat" height="60px" src="/dndapps/img/combat.png" title="Iniciar Combate" class="clickable button-disabled"></a></td>
+            <td class="button-menu"><a onclick="nextTurn()"><img id="imgNextTurn" height="60px" src="/dndapps/img/red_next.png" title="Próximo Turno" class="clickable button-disabled"></a></td>
+            <td class="button-menu"><a onclick="limparTracker()"><img id="imgLimparTracker" height="60px" src="/dndapps/img/red_stop_playback.png" title="Parar Encontro" class="clickable button-disabled"></a></td>
+            <td class="button-menu"></td>
+            <td></td>
+        </tr>
+    </table>
+
+
 </div>
 
 <div id="divTurnTracker">
@@ -11,11 +21,9 @@
                 <th align="center">Player</th>
                 <th align="center">HP alternativo</th>
                 <th align="center">HP mod <a id="toggleLockHPMod" class="locked" href="#"><i class="fa fa-lock"></i></a></th>
-
-            <tr>
+            </tr>
         </thead>
-
-
+        <tbody id="tbodyTracker" class="sortable"></tbody>
     </table>
     <div id="divInformation">
 
