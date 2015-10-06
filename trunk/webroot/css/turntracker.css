@@ -29,6 +29,35 @@ input[type=number]{
     position: relative;
 }
 
+.button-menu {
+    width:100px;
+}
 
+#tableTracker {
+    /*border: 1px solid #ff0000;*/
+    border-collapse: collapse;
+}
 
+.currentTurn td{
+    background-color:lightblue;
+}
 
+.selectedCharacter{
+    border: 1px solid #ff0000;
+}
+
+.name_PC {
+    color: blue;
+}
+
+.name_NPC {
+    color: red;
+}
+
+.conditions:hover{
+    background-color: rgb(189, 214, 125);
+}
+
+.hasCondition{
+    background-color: rgb(189, 214, 125);
+}

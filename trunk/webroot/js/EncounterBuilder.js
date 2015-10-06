@@ -1,6 +1,3 @@
-$("#header").hide();
-$("#footer").hide();
-
 $.mask.masks.numero3 = {mask: '999'};
 $.mask.masks.numero6 = {mask: '999999'};
 var players = '';
@@ -270,6 +267,11 @@ function getDataAventura() {
             options += '<option value="' + key + '">' + dataAventura + '</option>';
         });
         $('#data').html(options);
+        //teste
+        $('#data option:last-child').attr('selected', 'selected');
+        $('#data').change();
+        $('#t4').click();
+        //teste
     });
 }
 
