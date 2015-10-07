@@ -77,10 +77,7 @@ function showCharactersCards(data) {
     }
 }
 
-
-
 // Tab Inclusão de novo personagem
-
 
 $('#btnGravar').click(function () {
     salvarPersonagem('saveCharacter');
@@ -117,10 +114,15 @@ function salvarPersonagem(funcao) {
     adventurer['CharacterProgression']['speed'] = $('#speed').val();
     adventurer['CharacterProgression']['hit_point_max'] = $('#hp').val();
 
+    var values = $('.skill').map(function () {
+        if ($(this).val() !== '') {
+            return [{'dnd_skills_id': $(this).attr("id"), 'modifier': $(this).val()}];
+        }
+    }).get();
+    adventurer['AdventurersSkills'] = values;
     var callOptions = {
         "adventurer": adventurer,
     };
-    console.log(adventurer);
     $.ajax({
         dataType: "json",
         url: 'http://' + host + '/dndapps/characters/' + funcao,
@@ -132,6 +134,7 @@ function salvarPersonagem(funcao) {
         if (data === 'ok') {
             getCharactersAllLevels();
             $("#msg_inclusao").show();
+            $('#btnLimpar').click();
         } else {
             alert('Erro na gravação dos dados');
         }
@@ -155,7 +158,6 @@ function getCharactersAllLevels() {
 }
 
 $('#personagensGravados').change(function () {
-    console.log($('#personagensGravados').val());
     var callOptions = {
         "CharacterProgressionId": $('#personagensGravados').val(),
     };
@@ -187,6 +189,11 @@ $('#personagensGravados').change(function () {
             $('#speed').val(data['CharacterProgression'].speed);
             $('#hp').val(data['CharacterProgression'].hit_point_max);
 
+            $('.skill').val('');
+            $.each(data['AdventurersSkills'], function (key, skill) {
+                $('#' + skill.dnd_skills_id).val(skill.modifier);
+            });
+
 
             $("#btnGravar").hide();
             $("#btnAlterar").show();
@@ -196,6 +203,16 @@ $('#personagensGravados').change(function () {
         $("#btnGravar").show();
         $("#btnAlterar").hide();
         $("#btnLevelUp").hide();
-
+        $('#btnLimpar').click();
     }
+});
+$('#btnLimpar').click(function () {
+    $('.attribute_field option[value="6"]').attr('selected', 'selected');
+    $('#class option[value="Barbarian"]').attr('selected', 'selected');
+    $('#level option[value="1"]').attr('selected', 'selected');
+    $('#alignment option[value="1"]').attr('selected', 'selected');
+    $('.field').val('');
+    $('.skill').val('');
+
+
 });
