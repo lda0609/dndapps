@@ -32,16 +32,19 @@ function loadEncounter(encounter) {
 }
 
 function nextTurn() {
-    var nextRow = $('.currentTurn').closest('tr').next('tr');
-    $('.currentTurn').removeClass('currentTurn');
-    if (nextRow.length !== 0) {
-        $(nextRow).addClass('currentTurn');
-    } else {
-        $("#tableTracker tbody > tr:first").addClass('currentTurn');
+
+    if (!$("#imgNextTurn").hasClass('button-disabled')) {
+        var nextRow = $('.currentTurn').closest('tr').next('tr');
+        $('.currentTurn').removeClass('currentTurn');
+        if (nextRow.length !== 0) {
+            $(nextRow).addClass('currentTurn');
+        } else {
+            $("#tableTracker tbody > tr:first").addClass('currentTurn');
+        }
+        var id = $('.currentTurn').attr("id");
+        fighter = getFighterById(id);
+        load_side_frame(fighter, 'td_left_size');
     }
-    var id = $('.currentTurn').attr("id");
-    fighter = getFighterById(id);
-    load_side_frame(fighter, 'td_left_size');
 }
 
 
@@ -60,6 +63,10 @@ function limparTracker() {
     $("#toggleLockInit").addClass('unlocked');
     $("#toggleLockInit").html('<i class="fa fa-unlock-alt"></i>');
     $(".hpModifier").attr('disabled', true);
+    $('#td_left_size').html('');
+    $('#td_right_size').html('');
+    $("#divTurnTracker").hide();
+
 }
 
 function configPlayers() {
@@ -108,7 +115,7 @@ function turnTracker() {
     $.each(allFighters, function (key, values) {
         var corHPAtual = '';
         var HPTemp = '';
-
+        var hp_stat = '<td></td>';
         var className = 'name_PC';
         if (values['id'].substring(0, 1) === 'm') {
             className = 'name_NPC';
@@ -119,11 +126,17 @@ function turnTracker() {
         if (values['HPTemp'] > 0) {
             HPTemp = '<font color="blue"> (' + values['HPTemp'] + ')';
         }
+        if (values['HPAtual'] <= 0) {
+            hp_stat = '<td width="20px" class="selectable"><img width="20px" src="/dndapps/img/skull.png"></td>';
+        } else if (values['HPAtual'] <= values['HPMax'] / 2) {
+            hp_stat = '<td width="20px" class="selectable"><img width="20px" src="/dndapps/img/blood.png"></td>';
+        }
+
         var hp = '<font color="' + corHPAtual + '">' + values['HPAtual'] + '</font>/' + values['HPMax'] + HPTemp;
         var init = '<td><input class="initValue" type="number" min="-10" max="40" value="' + values['iniciativa'] + '"></input></td>';
         var combat = '<td><input id="hpModifier' + values['id'] + '" type="number" class="hpModifier"></td>';
 
-        $('#tableTracker > tbody:last').append('<tr id="' + values['id'] + '">' + init + '<td class="selectable"><font class="' + className + '">' + values['name'] + '</font></td><td width="300" class="selectable"><div class="progressbar" id="progressbar' + values['id'] + '"><div class="progress-label">' + hp + '</div></div></td>' + combat + '</tr> ');
+        $('#tableTracker > tbody:last').append('<tr id="' + values['id'] + '">' + init + '<td class="selectable"><font class="' + className + '">' + values['name'] + '</font></td>' + hp_stat + '<td width="300" class="selectable"><div class="progressbar" id="progressbar' + values['id'] + '"><div class="progress-label">' + hp + '</div></div></td>' + combat + '</tr> ');
         $(function () {
             $("#progressbar" + values['id']).progressbar({
                 max: Number(values['HPMax']),
@@ -167,7 +180,6 @@ function hpModifier(modifier) {
     }).get();
     $.each(hpMap, function (key, value) {
         if (value['hpMod'] !== 0) {
-            console.log(allFighters);
             $.each(allFighters, function (key2, player) {
                 if (value['playerId'] === player['id']) {
                     if (modifier === 1) {
@@ -334,10 +346,10 @@ function load_side_frame(fighter, side) {
         rows += '<tr><td>CON</td><td>' + fighter.details.con + '</td><td>INT</td><td>' + fighter.details.int + '</td></tr>';
         rows += '<tr><td>WIS</td><td>' + fighter.details.wis + '</td><td>CHA</td><td>' + fighter.details.cha + '</td></tr>';
     }
-    var content = '<table>' + rows + '</table>';
+    var content = '<table class=tracker-side-frame>' + rows + '</table>';
 
     conditions = ['Blinded', 'Charmed', 'Deafened', 'Exhaustion', 'Frightened', 'Grappled', 'Incapacitated', 'Invisible', 'Paralyzed', 'Petrified', 'Poisoned', 'Prone', 'Restrained', 'Stunned', 'Unconscious']
-    html_conditions = '<table class="' + side + '"><tr>';
+    html_conditions = '<table class="' + side + ' tracker-side-frame"><tr>';
     var cont = 1;
     console.log(fighter.conditions);
     $.each(conditions, function (key, condition) {
@@ -370,8 +382,18 @@ $('body').on('click', '.conditions', function () {
                 fighter.conditions.splice(index, 1);
             }
         }
+    } else {
+        var id = $('.selectedCharacter').attr("id");
+        fighter = getFighterById(id);
+        if ($(this).hasClass('hasCondition')) {
+            fighter.conditions.push(condition);
+        } else {
+            var index = fighter.conditions.indexOf(condition);
+            if (index > -1) {
+                fighter.conditions.splice(index, 1);
+            }
+        }
     }
-    console.log(fighter.conditions);
 });
 
 function getFighterById(id) {
@@ -383,3 +405,44 @@ function getFighterById(id) {
     });
     return retorno;
 }
+
+//shortcuts
+
+// define a handler
+function doc_keyUp(e) {
+
+    // this would test for whichever key is 40 and the ctrl key at the same time
+    console.log(e.keyCode)
+    if (e.altKey) {
+        switch (e.keyCode) {
+            case 49: //1
+                $("#btnDamage").click();
+                break;
+            case 50: //2
+                $("#btnHeal").click();
+                break;
+            case 51: //3
+                $("#btnHPTemp").click();
+                break;
+            case 78: //N
+            case 192: //N
+                nextTurn();
+                break;
+            case 65: //A
+                loadPlayers();
+                break;
+            case 83: //S
+                startCombat();
+                break;
+            case 79: //O
+                $("#btnOdenar").click();
+                break;
+            case 80: //P
+                limparTracker();
+                break;
+            default:
+        }
+    }
+}
+// register the handler 
+document.addEventListener('keyup', doc_keyUp, false);

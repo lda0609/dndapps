@@ -44,6 +44,9 @@ $('body').on('focus', '.datepicker', function () {
 //*************************************
 //FUNÇÕES PARA A ABA CRIAR ENCONTROS
 //*************************************
+$("#t1").click(function () {
+    $('.tracker-side-frame').hide();
+});
 
 $("#btnLimparConsulta").click(function () {
     $('#tabResult > tbody:last').html('');
@@ -52,7 +55,6 @@ $("#btnLimparConsulta").click(function () {
     $('#crMax option[value=""]').attr('selected', 'selected');
     $('#type option[value=""]').attr('selected', 'selected');
     $('#alignment option[value=""]').attr('selected', 'selected');
-
 });
 
 $("#btnLimparEncontro").click(function () {
@@ -502,6 +504,7 @@ function toggleAusencia(adventurerId) {
 }
 
 $("#t2").click(function () {
+    $('.tracker-side-frame').hide();
     if ($('#data').val() === '') {
         alert('Data da Aventura deve ser selecionada');
     }
@@ -512,6 +515,7 @@ $("#t2").click(function () {
 //*************************************
 
 $("#t3").click(function () {
+    $('.tracker-side-frame').hide();
     $('#listaEncontros > tbody:last').html('');
     if ($('#data').val() === '') {
         alert('Data da Aventura deve ser selecionada');
@@ -578,8 +582,6 @@ $("#t3").click(function () {
             if (contador++ % 2 !== 0) {
                 $('#listaEncontros > tbody:last').append('<tr>' + encounter_card_row + '</tr>');
             }
-//            ativarSortable();
-
             var countAdventurer = Number($.data(document.body, "countAdventurer"));
 
             $('#AventuraXP').html(xp + '/' + parseInt(xp / countAdventurer));
@@ -589,6 +591,7 @@ $("#t3").click(function () {
 });
 
 $("#t4").click(function () {
+    $('.tracker-side-frame').show();
     if ($('#data').val() === '') {
         alert('Data da Aventura deve ser selecionada');
     }
