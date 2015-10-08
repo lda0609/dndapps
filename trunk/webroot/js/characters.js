@@ -150,6 +150,7 @@ function getCharactersAllLevels() {
         type: 'GET',
         async: true
     }).done(function (data, textStatus, request) {
+        console.log(data);
         $.each(data, function (key, adventurer) {
             options += '<option value="' + adventurer['CharacterProgressionId'] + '">' + adventurer['name'] + ' - lvl ' + adventurer['lvl'] + '</option>';
         });
@@ -213,6 +214,9 @@ $('#btnLimpar').click(function () {
     $('#alignment option[value="1"]').attr('selected', 'selected');
     $('.field').val('');
     $('.skill').val('');
+    $("#btnGravar").show();
+    $("#btnAlterar").hide();
+    $("#btnLevelUp").hide();
 
 
 });

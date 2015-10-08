@@ -7,6 +7,8 @@
 <script>
     var dnd_xp = JSON.parse('<?php echo json_encode($dnd_xp); ?>');
     var dnd_classes = JSON.parse('<?php echo json_encode($dnd_classes); ?>');
+    var dnd_skills = JSON.parse('<?php echo json_encode($dnd_skills); ?>');
+    var dnd_alignment_players = JSON.parse('<?php echo json_encode($dnd_alignment_players); ?>');
 </script>
 
 <table id="table_body">

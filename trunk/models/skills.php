@@ -17,7 +17,7 @@ class Skills extends AppModel
 
     function getLista()
     {
-        return $this->find('list', array('fields' => 'name', 'order' => 'id'));
+        return $this->find('list', array('fields' => 'name', 'order' => 'name'));
     }
 
 }

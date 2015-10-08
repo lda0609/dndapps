@@ -113,10 +113,10 @@
                     <tr>
                         <?php
                         $rows = '';
+                        $cont=1;
                         foreach ($dnd_skills as $key => $skill) {
                             $rows .= '<tr><td>' . $skill . '</td><td><input id="' . $key . '" type="number" class="skill"></td></tr>';
-
-                            if ($key % 6 == 0) {
+                            if ($cont++ % 6 == 0) {
                                 $column = '<td><table>' . $rows . '</table></td>';
                                 echo $column;
                                 $rows = '';
@@ -131,8 +131,8 @@
 
     <div align="center">
         <button class="pure-button pure-button-primary" type="button" id="btnGravar">Gravar Novo</button>
-        <button class="pure-button button-secondary" type="button" id="btnAlterar">Alterar Atual</button>
-        <button class="pure-button button-warning" type="button" id="btnLevelUp">Level Up</button>
-        <button class="pure-button pure-button-primary" type="button" id="btnLimpar">Limpar</button>
+        <button class="pure-button button-warning" type="button" id="btnAlterar">Alterar Atual</button>
+        <button class="pure-button button-error" type="button" id="btnLevelUp">Level Up</button>
+        <button class="pure-button button-secondary" type="button" id="btnLimpar">Limpar</button>
     </div>
 </div>
