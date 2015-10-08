@@ -2,7 +2,7 @@ $(".hpModifier").attr('disabled', true);
 $("#divTurnTracker").hide();
 
 var allFighters = [];
-
+var combatRound = 1;
 function loadPlayers() {
     if (!$("#imgLoadPlayers").hasClass('button-disabled')) {
         $("#divTurnTracker").show();
@@ -32,7 +32,6 @@ function loadEncounter(encounter) {
 }
 
 function nextTurn() {
-
     if (!$("#imgNextTurn").hasClass('button-disabled')) {
         var nextRow = $('.currentTurn').closest('tr').next('tr');
         $('.currentTurn').removeClass('currentTurn');
@@ -41,12 +40,24 @@ function nextTurn() {
         } else {
             $("#tableTracker tbody > tr:first").addClass('currentTurn');
         }
-        var id = $('.currentTurn').attr("id");
+        id = $('.currentTurn').attr("id");
         fighter = getFighterById(id);
+        if ($('.currentTurn').hasClass('firstTurn')) {
+            $('#combat-log').append('<br><font class="log-title">ROUND ' + combatRound++ + ' - FIGHT!</font><br>');
+        }
         load_side_frame(fighter, 'td_left_size');
+        $('#combat-log').append('<font class="log-title"><i class="fa fa-hourglass-start"></i> ' + fighter.name + ' Turn</font><br>');
+        combat_log_anchor();
     }
 }
 
+function combat_log_anchor() {
+    var out = document.getElementById("combat-log");
+    var isScrolledToBottom = (out.scrollHeight - out.clientHeight) <= out.scrollTop + 60;
+    if (isScrolledToBottom) {
+        out.scrollTop = out.scrollHeight - out.clientHeight;
+    }
+}
 
 function limparTracker() {
     allFighters = [];
@@ -65,8 +76,9 @@ function limparTracker() {
     $(".hpModifier").attr('disabled', true);
     $('#td_left_size').html('');
     $('#td_right_size').html('');
-    $("#divTurnTracker").hide();
-
+    $('#combat-log').html('');
+    $("#combat-log-frame").hide();
+    combatTurn = 0;
 }
 
 function configPlayers() {
@@ -189,29 +201,39 @@ function hpModifier(modifier) {
             $.each(allFighters, function (key2, player) {
                 if (value['playerId'] === player['id']) {
                     if (modifier === 1) {
+                        $('#combat-log').append('<font class="log-name">' + allFighters[key].name + '</font> tinha ' + allFighters[key].HPAtual + ' de HP e levou <font class="log-damage">' + value['hpMod'] + '</font> de dano. <br>');
                         if (allFighters[key].HPTemp > 0) {
+                            $('#combat-log').append('<font class="log-name">' + allFighters[key].name + '</font> tinha ' + allFighters[key].HPTemp + ' de HP temporário. <br>');
                             allFighters[key].HPTemp -= value['hpMod'];
                             if (allFighters[key].HPTemp < 0) {
-                                allFighters[key].HPAtual += allFighters[key].HPTemp;
+                                allFighters[key].HPAtual = Number(allFighters[key].HPAtual);
+                                allFighters[key].HPAtual += Number(allFighters[key].HPTemp);
                                 allFighters[key].HPTemp = 0;
                             }
                         } else {
                             allFighters[key].HPAtual -= value['hpMod'];
                         }
+                        $('#combat-log').append('<font class="log-name">' + allFighters[key].name + '</font> está com ' + allFighters[key].HPAtual + ' de HP. <br>');
                         if (allFighters[key].HPAtual < 0) {
                             allFighters[key].HPAtual = 0;
+                            $('#combat-log').append('<font class="log-name">' + allFighters[key].name + '</font> morreu.<br>');
                         }
                     } else if (modifier === 2) {
+                        $('#combat-log').append('<font class="log-name">' + allFighters[key].name + '</font> tinha ' + allFighters[key].HPAtual + ' HP e curou <font class="log-heal">' + value['hpMod'] + '</font> HP. <br>');
                         allFighters[key].HPAtual += value['hpMod'];
                         if (allFighters[key].HPAtual > allFighters[key].HPMax) {
                             allFighters[key].HPAtual = allFighters[key].HPMax;
                         }
+                        $('#combat-log').append('<font class="log-name">' + allFighters[key].name + '</font> está com ' + allFighters[key].HPAtual + ' de HP. <br>');
                     } else if (modifier === 3) {
+                        $('#combat-log').append('<font class="log-name">' + allFighters[key].name + '</font> tinha ' + allFighters[key].HPTemp + ' HP temporário e ganhou <font class="log-hp-temp">' + value['hpMod'] + '</font> HP temporário. <br>');
                         if (value['hpMod'] > allFighters[key].HPTemp) {
                             allFighters[key].HPTemp = value['hpMod'];
                         }
+                        $('#combat-log').append('<font class="log-name">' + allFighters[key].name + '</font> está com ' + allFighters[key].HPTemp + ' HP temporário. <br>');
                     }
                 }
+                combat_log_anchor();
             });
         }
     });
@@ -307,6 +329,7 @@ function checkLocks() {
 
 function startCombat() {
     if (!$("#imgStartCombat").hasClass('button-disabled')) {
+
         $("#imgStartCombat").addClass('button-disabled');
         $("#imgNextTurn").removeClass('button-disabled');
         $("#imgLimparTracker").removeClass('button-disabled');
@@ -321,9 +344,14 @@ function startCombat() {
         $(".hpModifier").attr('disabled', false);
         $("#tableTracker tbody > tr").removeClass('currentTurn');
         $("#tableTracker tbody > tr:first").addClass('currentTurn');
+        $("#tableTracker tbody > tr:first").addClass('firstTurn');
         var id = $('.currentTurn').attr("id");
         fighter = getFighterById(id);
         load_side_frame(fighter, 'td_left_size');
+        $('#td_footer').html('<div id="combat-log-frame"><div id="combat-log" class="scrollit tracker-side-frame"></div><hr class="hr-blood"></div>');
+        $('#combat-log').append('<font class="log-title">ROUND ' + combatRound++ + ' - FIGHT!</font><br>');
+        $('#combat-log').append('<font class="log-title"><i class="fa fa-hourglass-start"></i> ' + fighter.name + ' Turn</font><br>');
+        combat_log_anchor();
     }
 }
 
@@ -345,8 +373,6 @@ function load_side_frame(fighter, side) {
     if (fighter['id'].substring(0, 1) === 'm') {
         rows += '<tr><td class="name_NPC card-name">' + fighter.name + '<hr class="hr-monster-card"></td></tr>';
     } else {
-        console.log(fighter)
-
         //monta tabela com atributos
         rows += '<tr><td colspan="6" class="name_PC"><font class="card-name">' + fighter.name + '</font><br><font class="card-details">' + fighter.background + ' ' + fighter.class + ', ' + fighter.alignment + '</font><hr class="hr-paper-flip"></td></tr>';
         rows += '<tr><td class="label">AC</td><td>' + fighter.details.ac + '</td><td class="label">SPD</td><td>' + fighter.details.speed + '</td><td class="label">Init</td><td>' + fighter.details.initiative + '</td></tr>';
@@ -354,7 +380,6 @@ function load_side_frame(fighter, side) {
         rows += '<tr><td class="label">INT</td><td>' + fighter.details.int + '</td><td class="label">WIS</td><td>' + fighter.details.wis + '</td><td class="label">CHA</td><td>' + fighter.details.cha + '</td></tr>';
 
         //monta tabela com skills
-        console.log(fighter['AdventurersSkills']);
         html_skills = '<font class="card-name">Skills </font><hr class="hr-paper-flip"><table class="' + side + ' tracker-side-frame"><tr>';
         var cont = 1;
         $.each(fighter['AdventurersSkills'], function (key, skill) {
@@ -437,7 +462,6 @@ function getFighterById(id) {
 function doc_keyUp(e) {
 
     // this would test for whichever key is 40 and the ctrl key at the same time
-    console.log(e.keyCode)
     if (e.altKey) {
         switch (e.keyCode) {
             case 49: //1

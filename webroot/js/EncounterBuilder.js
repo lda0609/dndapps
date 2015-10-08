@@ -592,6 +592,7 @@ $("#t3").click(function () {
 
 $("#t4").click(function () {
     $('.tracker-side-frame').show();
+
     if ($('#data').val() === '') {
         alert('Data da Aventura deve ser selecionada');
     }
