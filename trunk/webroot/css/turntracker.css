@@ -102,7 +102,61 @@ input[type=number]{
     background-image:url('/dndapps/img/hr3_fabienne-curty.gif');
 }
 
+.hr-blood {
+    display:block;
+    border:0px;
+    height:100px;
+    background-image:url('/dndapps/img/hr-tobias-goth2.png');
+}
+
 .label {
     font-weight: bold;
     width: 40px;
+}
+
+.log-name {
+    color:blue;
+}
+
+.log-damage {
+    font-weight: bold;
+    color:rgb(202, 60, 60);
+}
+
+.log-heal {
+    font-weight: bold;
+    color:rgb(28, 184, 65);
+}
+
+.log-hp-temp {
+    font-weight: bold;
+    color:rgb(66, 184, 221);
+}
+
+.log-title {
+    font-weight: bold;
+    color:black;
+}
+
+/*.scroll_tabela{
+    margin-top: 3px;
+    margin-bottom: 3px;
+    border-top: 1px solid #C0C0C0;
+    border-left: 1px solid #C0C0C0;
+    border-right: 1px solid #C0C0C0;
+    border-bottom: 1px solid #C0C0C0;
+    float: none;
+    border-collapse: collapse;
+}
+
+.scroll_tabela td {
+    padding: 3px;
+    color: #000000;
+    font-size: 11px;
+}*/
+
+.scrollit{
+    overflow:auto;
+    height:200px;
+    background-color: white; 
 }

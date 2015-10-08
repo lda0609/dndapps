@@ -30,7 +30,7 @@ table tr td{
     width: 885px;
 }
 
-#td_left_size, #td_right_size {
+#td_left_size, #td_right_size, #td_footer, .td_footer {
     background-color: #003D4C;  
 }
 

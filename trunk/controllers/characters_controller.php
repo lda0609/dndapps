@@ -233,7 +233,6 @@ class CharactersController extends AppController
         $this->autoRender = false;
 
         $adventurers = $this->Adventurers->find('all', array('order' => 'id'));
-//        return json_encode($adventurers);
         $retorno = array();
         foreach ($adventurers as $key => $adventurer) {
             $characterProgression = $this->CharacterProgression->find('all', array(
@@ -242,7 +241,6 @@ class CharactersController extends AppController
                 ),
                 'order' => 'id',
             ));
-//            $adventurers[$key]['CharacterProgression'] = $characterProgression;
             foreach ($characterProgression as $key2 => $charProgression) {
                 $temp['CharacterProgressionId'] = $charProgression['CharacterProgression']['id'];
                 $temp['name'] = $adventurer['Adventurers']['name'];
@@ -250,7 +248,6 @@ class CharactersController extends AppController
                 array_push($retorno, $temp);
             }
         }
-//        ksort($retorno);
         return json_encode($retorno);
     }
 

@@ -42,6 +42,11 @@
         <td id="td_right_size"  width="25%">
         </td>
     </tr>
+    <tr>
+        <td colspan="1" id="td_footer"></td>
+        <td colspan="1" class="td_footer"></td>
+        <td colspan="1" class="td_footer" ></td>
+    </tr>
 </table>
 
 <script src="/<?php echo APP_DIR ?> /js/EncounterBuilder.js"></script>
