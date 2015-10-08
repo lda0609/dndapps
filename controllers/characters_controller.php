@@ -35,8 +35,13 @@ class CharactersController extends AppController
                     'dnd_adventurers_id' => $value['AdventurersPerAdventure']['dnd_adventurers_id'],
                     'lvl' => $value['AdventurersPerAdventure']['lvl_inicial'],
             )));
-
             $adventurers[$key]['CharacterProgression'] = $characterProgression['CharacterProgression'];
+
+            $AdventurersSkills = $this->AdventurersSkills->find('all', array(
+                'conditions' => array(
+                    'dnd_adventurers_id' => $value['AdventurersPerAdventure']['dnd_adventurers_id']
+            )));
+            $adventurers[$key]['AdventurersSkills'] = $AdventurersSkills;
         }
         return json_encode($adventurers);
     }
@@ -227,15 +232,17 @@ class CharactersController extends AppController
     {
         $this->autoRender = false;
 
-        $adventurers = $this->Adventurers->find('all');
+        $adventurers = $this->Adventurers->find('all', array('order' => 'id'));
+//        return json_encode($adventurers);
         $retorno = array();
         foreach ($adventurers as $key => $adventurer) {
             $characterProgression = $this->CharacterProgression->find('all', array(
                 'conditions' => array(
                     'dnd_adventurers_id' => $adventurer['Adventurers']['id']
                 ),
+                'order' => 'id',
             ));
-            $adventurers[$key]['CharacterProgression'] = $characterProgression;
+//            $adventurers[$key]['CharacterProgression'] = $characterProgression;
             foreach ($characterProgression as $key2 => $charProgression) {
                 $temp['CharacterProgressionId'] = $charProgression['CharacterProgression']['id'];
                 $temp['name'] = $adventurer['Adventurers']['name'];
@@ -243,7 +250,7 @@ class CharactersController extends AppController
                 array_push($retorno, $temp);
             }
         }
-        ksort($retorno);
+//        ksort($retorno);
         return json_encode($retorno);
     }
 

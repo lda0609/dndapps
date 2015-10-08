@@ -9,10 +9,8 @@
             <td></td>
         </tr>
     </table>
-
-
 </div>
-
+<hr class="hr-top">
 <div id="divTurnTracker">
     <table id="tableTracker" class="pure-table">
         <thead>
@@ -28,9 +26,13 @@
     <div id="divInformation">
 
     </div>
+    <hr class="hr-bottom">
+
     <br>
-    <span title="alt-o"><button id="btnOdenar" class="pure-button pure-button-primary">Ordenar por iniciativa</button></span>
-    <span title="alt-1"><button id="btnDamage" class="pure-button button-damage">Damage</button></span>
-    <span title="alt-2"><button id="btnHeal" class="pure-button button-heal"><i class="fa fa-medkit"> Heal</i></button></span>
-    <span title="alt-3"><button id="btnHPTemp" class="pure-button button-hptemp">HP Temp</button></span>
+    <span title="alt-o"><button id="btnOdenar" class="pure-button pure-button-primary clickable"><i class="fa fa-sort-numeric-desc"> Ordenar por iniciativa</i></button></span>
+    <p align="center">
+        <span title="alt-1"><button id="btnDamage" class="pure-button button-damage clickable"><i class="fa fa-bomb"> Damage</i></button></span>
+        <span title="alt-2"><button id="btnHeal" class="pure-button button-heal clickable"><i class="fa fa-medkit"> Heal</i></button></span>
+        <span title="alt-3"><button id="btnHPTemp" class="pure-button button-hptemp clickable"><i class="fa fa-shield"> HP Temp</i></button></span>
+    </p>
 </div>

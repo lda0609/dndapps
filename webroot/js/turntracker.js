@@ -82,24 +82,30 @@ function configPlayers() {
         async: true
     }).done(function (data, textStatus, request) {
         $.each(data, function (key, player) {
+            console.log(data)
             if (player['AdventurersPerAdventure']['ausente'] === '0') {
                 temp = {};
                 temp['details'] = {};
                 temp['conditions'] = [];
                 temp['id'] = 'p' + player['Adventurers']['id'];
                 temp['name'] = player['Adventurers']['name'];
+                temp['class'] = dnd_classes[player['Adventurers']['class']];
+                temp['alignment'] = dnd_alignment_players[player['Adventurers']['alignment']];
+                temp['background'] = player['Adventurers']['background'];
                 temp['HPMax'] = player['CharacterProgression']['hit_point_max'];
                 temp['HPTemp'] = 0;
                 temp['HPAtual'] = temp['HPMax'];
                 temp['iniciativa'] = 0;
                 temp['details']['ac'] = player['CharacterProgression']['ac'];
                 temp['details']['speed'] = player['CharacterProgression']['speed'];
+                temp['details']['initiative'] = player['CharacterProgression']['initiative'];
                 temp['details']['str'] = player['CharacterProgression']['strength'];
                 temp['details']['dex'] = player['CharacterProgression']['dextery'];
                 temp['details']['con'] = player['CharacterProgression']['constitution'];
                 temp['details']['int'] = player['CharacterProgression']['intelligence'];
                 temp['details']['wis'] = player['CharacterProgression']['wisdom'];
                 temp['details']['cha'] = player['CharacterProgression']['charisma'];
+                temp['AdventurersSkills'] = player['AdventurersSkills'];
                 allFighters.push(temp);
             }
         });
@@ -334,24 +340,38 @@ $('body').on('click', '.selectable', function () {
 });
 
 function load_side_frame(fighter, side) {
-    var className = 'name_PC';
     var rows = '';
+    var html_skills = '';
     if (fighter['id'].substring(0, 1) === 'm') {
-        className = 'name_NPC';
-        rows += '<tr><td class="' + className + '">' + fighter.name + '</td></tr>';
+        rows += '<tr><td class="name_NPC card-name">' + fighter.name + '<hr class="hr-monster-card"></td></tr>';
     } else {
-        rows += '<tr><td colspan="4" class="' + className + '">' + fighter.name + '</td></tr>';
-        rows += '<tr><td>AC</td><td>' + fighter.details.ac + '</td><td>SPD</td><td>' + fighter.details.speed + '</td></tr>';
-        rows += '<tr><td>STR</td><td>' + fighter.details.str + '</td><td>DEX</td><td>' + fighter.details.dex + '</td></tr>';
-        rows += '<tr><td>CON</td><td>' + fighter.details.con + '</td><td>INT</td><td>' + fighter.details.int + '</td></tr>';
-        rows += '<tr><td>WIS</td><td>' + fighter.details.wis + '</td><td>CHA</td><td>' + fighter.details.cha + '</td></tr>';
+        console.log(fighter)
+
+        //monta tabela com atributos
+        rows += '<tr><td colspan="6" class="name_PC"><font class="card-name">' + fighter.name + '</font><br><font class="card-details">' + fighter.background + ' ' + fighter.class + ', ' + fighter.alignment + '</font><hr class="hr-paper-flip"></td></tr>';
+        rows += '<tr><td class="label">AC</td><td>' + fighter.details.ac + '</td><td class="label">SPD</td><td>' + fighter.details.speed + '</td><td class="label">Init</td><td>' + fighter.details.initiative + '</td></tr>';
+        rows += '<tr><td class="label">STR</td><td>' + fighter.details.str + '</td><td class="label">DEX</td><td>' + fighter.details.dex + '</td><td class="label">CON</td><td>' + fighter.details.con + '</td></tr>';
+        rows += '<tr><td class="label">INT</td><td>' + fighter.details.int + '</td><td class="label">WIS</td><td>' + fighter.details.wis + '</td><td class="label">CHA</td><td>' + fighter.details.cha + '</td></tr>';
+
+        //monta tabela com skills
+        console.log(fighter['AdventurersSkills']);
+        html_skills = '<font class="card-name">Skills </font><hr class="hr-paper-flip"><table class="' + side + ' tracker-side-frame"><tr>';
+        var cont = 1;
+        $.each(fighter['AdventurersSkills'], function (key, skill) {
+            html_skills += '<td class="label"> ' + dnd_skills[skill['AdventurersSkills']['dnd_skills_id']] + '</td><td> ' + skill['AdventurersSkills']['modifier'] + '</td>';
+            if (cont++ % 3 === 0) {
+                html_skills += '</tr><tr>';
+            }
+        });
+        html_skills += '</table>';
+
     }
     var content = '<table class=tracker-side-frame>' + rows + '</table>';
 
+    //monta tabela com conditions
     conditions = ['Blinded', 'Charmed', 'Deafened', 'Exhaustion', 'Frightened', 'Grappled', 'Incapacitated', 'Invisible', 'Paralyzed', 'Petrified', 'Poisoned', 'Prone', 'Restrained', 'Stunned', 'Unconscious']
-    html_conditions = '<table class="' + side + ' tracker-side-frame"><tr>';
+    html_conditions = '<font class="card-name">Conditions </font> <hr class="hr-paper-flip"><table class="' + side + ' tracker-side-frame"><tr>';
     var cont = 1;
-    console.log(fighter.conditions);
     $.each(conditions, function (key, condition) {
         var hasCondition = '';
         if (fighter.conditions.indexOf(condition) > -1) {
@@ -363,15 +383,20 @@ function load_side_frame(fighter, side) {
         }
     });
     html_conditions += '</table>';
-    $('#' + side).html(content + html_conditions);
+
+    //renderiza a tabela na tela
+    $('#' + side).html('<table><tr><td>' + content + '</td></tr><tr><td>' + html_skills + '</td></tr><tr><td>' + html_conditions);
 }
 
 $('body').on('click', '.conditions', function () {
     var condition = $(this).attr('name');
     var side = $(this).closest('table').attr("class");
-    $(this).toggleClass('hasCondition');
-
-    if (side === 'td_left_size') {
+    if ($('.currentTurn').attr("id") === $('.selectedCharacter').attr("id")) {
+        $('[name="' + condition + '"]').toggleClass('hasCondition');
+    } else {
+        $(this).toggleClass('hasCondition');
+    }
+    if ($(this).closest('table').hasClass("td_left_size")) {
         var id = $('.currentTurn').attr("id");
         fighter = getFighterById(id);
         if ($(this).hasClass('hasCondition')) {

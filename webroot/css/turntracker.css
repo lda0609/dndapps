@@ -54,10 +54,55 @@ input[type=number]{
     color: red;
 }
 
+.card-name {
+    font-size: 22px;
+    font-weight: bold;
+    font-family: -webkit-body;
+}
+.card-details {
+    font-size: 13px;
+    font-style: italic;
+    font-family: sans-serif;
+    color: black;
+}
+
 .conditions:hover{
     background-color: rgb(189, 214, 125);
 }
 
 .hasCondition{
     background-color: rgb(189, 214, 125);
+}
+
+.hr-top {
+    display:block;
+    border:0px;
+    height:55px;
+    background-image:url('/dndapps/img/hr-darren-northcott.png');
+}
+
+.hr-bottom {
+    display:block;
+    border:0px;
+    height:35px;
+    background:url('/dndapps/img/hr-stephan-hilbelink2.png') no-repeat center;
+}
+
+.hr-paper-flip {
+    display:block;
+    border:0px;
+    height:35px;
+    background-image:url('/dndapps/img/hr-alex-holt-3-flip.png');
+}
+
+.hr-monster-card {
+    display:block;
+    border:0px;
+    height:75px;
+    background-image:url('/dndapps/img/hr3_fabienne-curty.gif');
+}
+
+.label {
+    font-weight: bold;
+    width: 40px;
 }
