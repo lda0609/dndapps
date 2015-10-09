@@ -15,7 +15,7 @@
     <table id="tableTracker" class="pure-table">
         <thead>
             <tr>
-                <th align="center">Init <a id="toggleLockInit" class="unlocked" href="#"><i class="fa fa-unlock-alt"></i></a></th>
+                <th align="center">Init<a id="toggleLockInit" class="unlocked" href="#"><i class="fa fa-unlock-alt"></i></a></th>
                 <th align="center" colspan="2">Player</th>
                 <th align="center">HP</th>
                 <th align="center">HP mod<a id="toggleLockHPMod" class="locked" href="#"><i class="fa fa-lock"></i></a></th>

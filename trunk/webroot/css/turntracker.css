@@ -105,7 +105,7 @@ input[type=number]{
 .hr-blood {
     display:block;
     border:0px;
-    height:100px;
+    height:75px;
     background-image:url('/dndapps/img/hr-tobias-goth2.png');
 }
 
