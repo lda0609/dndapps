@@ -78,7 +78,7 @@ function limparTracker() {
     $('#td_right_size').html('');
     $('#combat-log').html('');
     $("#combat-log-frame").hide();
-    combatTurn = 0;
+    combatRound = 1;
 }
 
 function configPlayers() {
@@ -94,7 +94,6 @@ function configPlayers() {
         async: true
     }).done(function (data, textStatus, request) {
         $.each(data, function (key, player) {
-            console.log(data)
             if (player['AdventurersPerAdventure']['ausente'] === '0') {
                 temp = {};
                 temp['details'] = {};
@@ -135,8 +134,11 @@ function turnTracker() {
         var HPTemp = '';
         var hp_stat = '<td></td>';
         var className = 'name_PC';
+        var monsterGroup = '';
         if (values['id'].substring(0, 1) === 'm') {
             className = 'name_NPC';
+            var res = values['name'].split(" (");
+            monsterGroup = 'monster-group ' + res[0];
         }
         if (values['HPAtual'] < values['HPMax']) {
             corHPAtual = 'red';
@@ -151,7 +153,7 @@ function turnTracker() {
         }
 
         var hp = '<font color="' + corHPAtual + '">' + values['HPAtual'] + '</font>/' + values['HPMax'] + HPTemp;
-        var init = '<td><input class="initValue" type="number" min="-10" max="40" value="' + values['iniciativa'] + '"></input></td>';
+        var init = '<td><input class="initValue ' + monsterGroup + '" type="number" min="-10" max="40" value="' + values['iniciativa'] + '"></input></td>';
         var combat = '<td><input id="hpModifier' + values['id'] + '" type="number" class="hpModifier"></td>';
 
         $('#tableTracker > tbody:last').append('<tr id="' + values['id'] + '">' + init + '<td class="selectable"><font class="' + className + '">' + values['name'] + '</font></td>' + hp_stat + '<td width="300" class="selectable"><div class="progressbar" id="progressbar' + values['id'] + '"><div class="progress-label">' + hp + '</div></div></td>' + combat + '</tr> ');
@@ -238,6 +240,19 @@ function hpModifier(modifier) {
         }
     });
 }
+
+
+$('body').on('change', '.initValue', function () {
+    if ($(this).hasClass('monster-group')) {
+        var listaClasses = $(this).attr('class').split(" ");
+        var monsterGroup = '';
+        for (i = 2; i < listaClasses.length; i++) {
+            monsterGroup += '.' + listaClasses[i];
+        }
+        $(monsterGroup).val($(this).val());
+        $('.myClass, .myOtherClass').removeClass('theclass');
+    }
+});
 
 $("#btnOdenar").click(function () {
 
@@ -348,7 +363,7 @@ function startCombat() {
         var id = $('.currentTurn').attr("id");
         fighter = getFighterById(id);
         load_side_frame(fighter, 'td_left_size');
-        $('#td_footer').html('<div id="combat-log-frame"><div id="combat-log" class="scrollit tracker-side-frame"></div><hr class="hr-blood"></div>');
+        $('#td_footer').html('<div id="combat-log-frame" class="tracker-side-frame"><div id="combat-log" class="scrollit"></div><hr class="hr-blood"></div>');
         $('#combat-log').append('<font class="log-title">ROUND ' + combatRound++ + ' - FIGHT!</font><br>');
         $('#combat-log').append('<font class="log-title"><i class="fa fa-hourglass-start"></i> ' + fighter.name + ' Turn</font><br>');
         combat_log_anchor();
@@ -366,7 +381,6 @@ $('body').on('click', '.selectable', function () {
     console.log(fighter);
     load_side_frame(fighter, 'td_right_size');
 });
-
 function load_side_frame(fighter, side) {
     var rows = '';
     var html_skills = '';
@@ -395,7 +409,7 @@ function load_side_frame(fighter, side) {
 
     //monta tabela com conditions
     conditions = ['Blinded', 'Charmed', 'Deafened', 'Exhaustion', 'Frightened', 'Grappled', 'Incapacitated', 'Invisible', 'Paralyzed', 'Petrified', 'Poisoned', 'Prone', 'Restrained', 'Stunned', 'Unconscious']
-    html_conditions = '<font class="card-name">Conditions </font> <hr class="hr-paper-flip"><table class="' + side + ' tracker-side-frame"><tr>';
+    html_conditions = '<font class="card-name">Conditions </font> <hr class="hr-paper-flip"><table class="' + side + '"><tr>';
     var cont = 1;
     $.each(conditions, function (key, condition) {
         var hasCondition = '';
@@ -410,7 +424,7 @@ function load_side_frame(fighter, side) {
     html_conditions += '</table>';
 
     //renderiza a tabela na tela
-    $('#' + side).html('<table><tr><td>' + content + '</td></tr><tr><td>' + html_skills + '</td></tr><tr><td>' + html_conditions);
+    $('#' + side).html('<div class="tracker-side-frame"><table><tr><td>' + content + '</td></tr><tr><td>' + html_skills + '</td></tr><tr><td>' + html_conditions + '</div>');
 }
 
 $('body').on('click', '.conditions', function () {

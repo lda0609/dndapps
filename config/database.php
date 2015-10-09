@@ -84,6 +84,7 @@ class DATABASE_CONFIG
         'login' => 'postgres',
         'password' => '12qwaszx',
         'database' => 'postgres',
+//        'database' => 'oneshot',
         'schema' => 'dnd',
         'prefix' => 'dnd_',
         'encoding' => 'utf8'
