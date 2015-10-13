@@ -43,9 +43,9 @@
         </td>
     </tr>
     <tr>
-        <td colspan="1" id="td_footer"></td>
-        <td colspan="1" class="td_footer"></td>
-        <td colspan="1" class="td_footer" ></td>
+        <td colspan id="td_footer" class="td_footer"></td>
+        <td colspan id="td_footer_info" class="td_footer"></td>
+        <td colspan class="td_footer" ></td>
     </tr>
 </table>
 

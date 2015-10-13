@@ -15,6 +15,7 @@ function loadPlayers() {
 
 function loadEncounter(encounter) {
     $("#divTurnTracker").show();
+    console.log(encounter);
     $.each(encounter['monsters'], function (key, monster) {
         temp = {}
         temp['conditions'] = [];
@@ -26,7 +27,7 @@ function loadEncounter(encounter) {
         temp['iniciativa'] = 0;
         allFighters.push(temp);
     });
-    $("#divInformation").html(encounter['information']);
+    $("#td_footer_info").html('<table><tr><th>Combat Information</th></tr><tr><td>' + encounter['information'] + '</td></tr></table>');
     $("#imgStartCombat").removeClass('button-disabled');
     turnTracker();
 }
@@ -76,7 +77,8 @@ function limparTracker() {
     $(".hpModifier").attr('disabled', true);
     $('#td_left_size').html('');
     $('#td_right_size').html('');
-    $('#combat-log').html('');
+    $('.td_footer').html('');
+//    $('#combat-log').html('');
     $("#combat-log-frame").hide();
     combatRound = 1;
 }
@@ -363,7 +365,7 @@ function startCombat() {
         var id = $('.currentTurn').attr("id");
         fighter = getFighterById(id);
         load_side_frame(fighter, 'td_left_size');
-        $('#td_footer').html('<div id="combat-log-frame" class="tracker-side-frame"><div id="combat-log" class="scrollit"></div><hr class="hr-blood"></div>');
+        $('#td_footer').html('<table><tr><th>Combat Log</th></tr><tr><td><div id="combat-log-frame" class="tracker-side-frame"><div id="combat-log" class="scrollit"></div><hr class="hr-blood"></div></td></tr></table>');
         $('#combat-log').append('<font class="log-title">ROUND ' + combatRound++ + ' - FIGHT!</font><br>');
         $('#combat-log').append('<font class="log-title"><i class="fa fa-hourglass-start"></i> ' + fighter.name + ' Turn</font><br>');
         combat_log_anchor();
