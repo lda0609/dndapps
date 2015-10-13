@@ -46,6 +46,7 @@ $('body').on('focus', '.datepicker', function () {
 //*************************************
 $("#t1").click(function () {
     $('.tracker-side-frame').hide();
+    $('.td_footer').hide();
 });
 
 $("#btnLimparConsulta").click(function () {
@@ -270,9 +271,9 @@ function getDataAventura() {
         });
         $('#data').html(options);
         //teste
-        $('#data option:last-child').attr('selected', 'selected');
-        $('#data').change();
-        $('#t4').click();
+//        $('#data option:last-child').attr('selected', 'selected');
+//        $('#data').change();
+//        $('#t4').click();
         //teste
     });
 }
@@ -505,6 +506,7 @@ function toggleAusencia(adventurerId) {
 
 $("#t2").click(function () {
     $('.tracker-side-frame').hide();
+    $('.td_footer').hide();
     if ($('#data').val() === '') {
         alert('Data da Aventura deve ser selecionada');
     }
@@ -516,6 +518,7 @@ $("#t2").click(function () {
 
 $("#t3").click(function () {
     $('.tracker-side-frame').hide();
+    $('.td_footer').hide();
     $('#listaEncontros > tbody:last').html('');
     if ($('#data').val() === '') {
         alert('Data da Aventura deve ser selecionada');
@@ -592,6 +595,7 @@ $("#t3").click(function () {
 
 $("#t4").click(function () {
     $('.tracker-side-frame').show();
+    $('.td_footer').show();
 
     if ($('#data').val() === '') {
         alert('Data da Aventura deve ser selecionada');
