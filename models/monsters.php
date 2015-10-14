@@ -20,6 +20,14 @@ class Monsters extends AppModel
         return $this->find('list', array('fields' => 'name', 'order' => 'name'));
     }
 
+    function getMonster($id = null)
+    {
+        if (!is_null($id)) {
+            return $this->find('first', array('conditions' => array('id' => $id)));
+        }
+        return false;
+    }
+
 }
 
 ?>
