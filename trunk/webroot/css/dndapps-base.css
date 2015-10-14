@@ -59,6 +59,20 @@ table tr td{
     cursor: pointer; 
 }
 
+.align_center {
+    text-align: center;
+}
+
+.plus:hover .fa-plus:before {
+    content: "\f0fe";
+}
+
+.minus:hover .fa-minus:before {
+    content: "\f146";
+}
+
+
+
 /*Filter styles*/
 
 .button-disabled {

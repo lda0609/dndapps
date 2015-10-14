@@ -41,10 +41,10 @@ class EncountersController extends AppController
         $this->set('dnd_classes', $this->viewVars['dnd_classes']);
     }
 
-    function getAdventurers()
+    function getAdventurers($idAventura, $atualizaAventura = null)
     {
         $this->autoRender = false;
-        $xpTable = $this->xpThresholds->find('all');
+
         $AdventurersPerAdventure = $this->AdventurersPerAdventure->find('all', array(
             'joins' => array(
                 array('table' => 'adventurers',
@@ -55,29 +55,22 @@ class EncountersController extends AppController
                     )
                 )
             ),
-            'conditions' => array('AdventurersPerAdventure.dnd_adventure_id' => $this->params['url']['idAventura']),
+            'conditions' => array('AdventurersPerAdventure.dnd_adventure_id' => $idAventura),
             'fields' => array('dnd_adventure_id', 'dnd_adventurers_id', 'lvl_inicial', 'xp_final', 'ausente', 'Adventurers.id', 'Adventurers.name', 'Adventurers.race', 'Adventurers.class', 'Adventurers.player'),
             'order' => 'AdventurersPerAdventure.id',
         ));
 
-        $AdventurersPerAdventurePresentes = $this->AdventurersPerAdventure->find('all', array(
-            'joins' => array(
-                array('table' => 'adventurers',
-                    'alias' => 'Adventurers',
-                    'type' => 'LEFT',
-                    'conditions' => array(
-                        'Adventurers.id = AdventurersPerAdventure.dnd_adventurers_id',
-                    )
-                )
-            ),
-            'conditions' => array('AdventurersPerAdventure.dnd_adventure_id' => $this->params['url']['idAventura'], 'AdventurersPerAdventure.ausente' => '0'),
-            'fields' => array('dnd_adventure_id', 'dnd_adventurers_id', 'lvl_inicial', 'xp_final', 'ausente', 'Adventurers.id', 'Adventurers.name', 'Adventurers.race', 'Adventurers.class', 'Adventurers.player'),
-            'order' => 'AdventurersPerAdventure.id',
-        ));
+        //getAdventurersPresentes($idAventura){}
+        foreach ($AdventurersPerAdventure as $key => $value) {
+            if ($value['AdventurersPerAdventure']['ausente'] == '0') {
+                $AdventurersPerAdventurePresentes[] = $AdventurersPerAdventure[$key];
+            }
+        }
 
         $groupLvl = 0;
         $adjustedXpDay = $xpThreshold['deadly'] = $xpThreshold['hard'] = $xpThreshold['medium'] = $xpThreshold['easy'] = 0;
 
+        $xpTable = $this->xpThresholds->find('all');
         foreach ($AdventurersPerAdventurePresentes as $key => $adventurer) {
             $groupLvl += $adventurer['AdventurersPerAdventure']['lvl_inicial'];
             $xp = $xpTable[$adventurer['AdventurersPerAdventure']['lvl_inicial'] - 1]['xpThresholds'];
@@ -114,8 +107,8 @@ class EncountersController extends AppController
         $retorno['adventurers'] = $AdventurersPerAdventure;
         $retorno['adjustedXpDay'] = $adjustedXpDay;
 
-        if ($this->params['url']['atualizaAventura'] === '1') {
-            $this->atualizaAventura($this->params['url']['idAventura'], $retorno);
+        if ($atualizaAventura === '1') {
+            $this->atualizaAventura($idAventura, $retorno);
         }
         return json_encode($retorno);
     }
@@ -168,13 +161,72 @@ class EncountersController extends AppController
                 $new_difficulty = 'Deadly';
             }
 
-//            if ($new_difficulty != $encounter['Encounters']['difficulty']) {
             $this->Encounters->id = $encounter['Encounters']['id'];
             $updated_encounter['Encounters']['difficulty'] = $new_difficulty;
             $updated_encounter['Encounters']['adjusted_xp'] = $encounter['Encounters']['xp'] * $this->multiplier[$qtde];
             $this->Encounters->save($updated_encounter);
-//            }
         }
+        return true;
+    }
+
+    private function atualizaEncontro($encounterId, $dados)
+    {
+
+        $sumMonsters = $this->EncountersMonsters->find('first', array(
+            'conditions' => array(
+                'dnd_encounters_id' => $encounterId,
+            ),
+            'fields' => array('sum(EncountersMonsters.quantidade) AS encounter__total')
+        ));
+
+        $EncountersMonsters = $this->EncountersMonsters->find('all', array(
+            'conditions' => array(
+                'dnd_encounters_id' => $encounterId,
+            ),
+        ));
+        $xp = 0;
+        foreach ($EncountersMonsters as $key => $value) {
+            $monster = $this->Monsters->find('first', array(
+                'conditions' => array(
+                    'id' => $value['EncountersMonsters']['dnd_monsters_id'],
+                ),
+                'fields' => array('cr')
+            ));
+            $xp += $value['EncountersMonsters']['quantidade'] * $this->viewVars['dnd_xp'][$monster['Monsters']['cr']];
+        }
+
+        $sumMonsters = $sumMonsters['encounter']['total'];
+        if ($sumMonsters == '1') {
+            $qtde = '1';
+        } elseif ($sumMonsters == '2') {
+            $qtde = '2';
+        } elseif ($sumMonsters <= '6') {
+            $qtde = '3-6';
+        } elseif ($sumMonsters <= '10') {
+            $qtde = '7-10';
+        } elseif ($sumMonsters <= '14') {
+            $qtde = '11-14';
+        } else {
+            $qtde = '15+';
+        }
+
+        if ($xp < $dados['xpMultiplier']['easy'][$qtde]) {
+            $new_difficulty = 'Too Easy';
+        } elseif ($xp < $dados['xpMultiplier']['medium'][$qtde]) {
+            $new_difficulty = 'Easy';
+        } elseif ($xp < $dados['xpMultiplier']['hard'][$qtde]) {
+            $new_difficulty = 'Medium';
+        } elseif ($xp < $dados['xpMultiplier']['deadly'][$qtde]) {
+            $new_difficulty = 'Hard';
+        } else {
+            $new_difficulty = 'Deadly';
+        }
+
+        $this->Encounters->id = $encounterId;
+        $updated_encounter['Encounters']['difficulty'] = $new_difficulty;
+        $updated_encounter['Encounters']['xp'] = $xp;
+        $updated_encounter['Encounters']['adjusted_xp'] = $xp * $this->multiplier[$qtde];
+        $this->Encounters->save($updated_encounter);
         return true;
     }
 
@@ -241,16 +293,30 @@ class EncountersController extends AppController
     {
         $this->autoRender = false;
         $encontros = $this->Encounters->find('all', array(
-            'conditions' => array('dnd_adventure_id' => $this->params['url']['idAventura']),
+            'conditions' => array('dnd_adventure_id' => '9'),
             'order' => 'ordem'));
+
+        foreach ($encontros as $key => $encontro) {
+            $encontros[$key]['EncountersMonsters'] = $this->ordenarEncontro($encontros[$key]['EncountersMonsters']);
+        }
+        foreach ($encontros as $key => $encontro) {
+            foreach ($encontro['EncountersMonsters'] as $key2 => $monster) {
+                $MonsterData = $this->Monsters->getMonster($monster['dnd_monsters_id']);
+                $encontros[$key]['EncountersMonsters'][$key2]['name'] = $MonsterData['Monsters']['name'];
+                $encontros[$key]['EncountersMonsters'][$key2]['page'] = $MonsterData['Monsters']['page'];
+            }
+        }
         return json_encode($encontros);
     }
 
     function getEncounter()
     {
         $this->autoRender = false;
-        $encontros = $this->Encounters->find('first', array('conditions' => array('id' => $this->params['url']['encounterId'])));
-
+        $encontros = $this->Encounters->find('first', array(
+            'conditions' => array(
+                'id' => $this->params['url']['encounterId']
+            )
+        ));
         $cont = 0;
         foreach ($encontros['EncountersMonsters'] as $key => $encounterMonster) {
             $monster = $this->Monsters->find('first', array('conditions' => array('id' => $encounterMonster['dnd_monsters_id'])));
@@ -261,8 +327,20 @@ class EncountersController extends AppController
             }
         }
         $monsterList['information'] = $encontros['Encounters']['information'];
-
         return json_encode($monsterList);
+    }
+
+    function editEncounter()
+    {
+        $this->autoRender = false;
+
+        $this->EncountersMonsters->id = $this->params['url']['encounterMonsterId'];
+        $EncountersMonsters['EncountersMonsters']['quantidade'] = $this->params['url']['quantidade'];
+        $this->EncountersMonsters->save($EncountersMonsters);
+
+        $dados = json_decode($this->getAdventurers($this->params['url']['idAventura']), true);
+        $this->atualizaEncontro($this->params['url']['encounterId'], $dados);
+        return json_encode('ok');
     }
 
     function deleteEncounter()
@@ -294,14 +372,33 @@ class EncountersController extends AppController
         }
     }
 
-    private
-            function sprintf_array($string, $array)
+    private function sprintf_array($string, $array)
     {
         $keys = array_keys($array);
         $keysmap = array_flip($keys);
         $values = array_values($array);
         array_unshift($values, $string);
         return call_user_func_array('sprintf', $values);
+    }
+
+    private function ordenarEncontro($encontro)
+    {
+        $APlen = count($encontro);
+        $j = 0;
+        $swapped = true;
+        while ($swapped) {
+            $swapped = false;
+            $j++;
+            for ($i = 0; $i < $APlen - $j; $i++) {
+                if ($encontro[$i]['id'] > $encontro[$i + 1]['id']) {
+                    $temp = $encontro[$i];
+                    $encontro[$i] = $encontro[$i + 1];
+                    $encontro[$i + 1] = $temp;
+                    $swapped = true;
+                }
+            }
+        }
+        return $encontro;
     }
 
 }

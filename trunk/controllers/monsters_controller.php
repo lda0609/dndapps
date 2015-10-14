@@ -132,7 +132,7 @@ class MonstersController extends AppController
             if (!empty($params['crMax'])) {
                 $conditions['Monsters.cr <='] = $params['crMax'];
             }
-            if (!empty($params['type'])) {
+            if (!empty($params['type']) || $params['type'] == '0') {
                 $conditions['MonsterType.dnd_type_id'] = $params['type'];
             }
             if (!empty($params['alignment'])) {
@@ -166,13 +166,6 @@ class MonstersController extends AppController
         }
 
         return json_encode($monsters);
-    }
-
-    function getMonster()
-    {
-        $this->autoRender = false;
-        $monster = $this->Monsters->find('first', array('conditions' => array('id' => $this->params['url']['monsterId'])));
-        return json_encode($monster);
     }
 
     function teste()
