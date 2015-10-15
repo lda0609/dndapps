@@ -293,7 +293,7 @@ class EncountersController extends AppController
     {
         $this->autoRender = false;
         $encontros = $this->Encounters->find('all', array(
-            'conditions' => array('dnd_adventure_id' => '9'),
+            'conditions' => array('dnd_adventure_id' => $this->params['url']['idAventura']),
             'order' => 'ordem'));
 
         foreach ($encontros as $key => $encontro) {

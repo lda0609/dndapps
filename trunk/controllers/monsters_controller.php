@@ -165,18 +165,40 @@ class MonstersController extends AppController
             }
         }
 
+        $monsters = $this->limparResultado($monsters);
         return json_encode($monsters);
+    }
+
+    function limparResultado($monsters)
+    {
+        $this->autoRender = false;
+        $list_ids = array();
+        foreach ($monsters as $key => $monster) {
+            if (!in_array($monster['Monsters']['id'], $list_ids)) {
+                $list_ids[] = $monster['Monsters']['id'];
+            } else {
+                unset($monsters[$key]);
+            }
+        }
+        return array_values($monsters);
     }
 
     function teste()
     {
-        $favorites = $this->MonsterFavorites->find('list', array('fields' => 'dnd_monsters_id'));
-        debug($favorites);
-        foreach ($favorites as $key => $value) {
-            if ($value['MonsterFavorites']['dnd_monsters_id']) {
-                
-            }
-        }
+        $this->autoRender = false;
+        $monsters = $this->Monsters->find('all', array(
+            'joins' => array(
+                array('table' => 'monster_types',
+                    'alias' => 'MonsterType',
+                    'type' => 'LEFT',
+                    'conditions' => array(
+                        'Monsters.id = MonsterType.dnd_monsters_id',
+                    ),
+                    'order' => 'id'
+                )
+            ),
+            'conditions' => $conditions,
+            'order' => 'cr'));
     }
 
 }
