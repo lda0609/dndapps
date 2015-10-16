@@ -212,6 +212,7 @@ $('#btnLimpar').click(function () {
     $('#class option[value="Barbarian"]').attr('selected', 'selected');
     $('#level option[value="1"]').attr('selected', 'selected');
     $('#alignment option[value="1"]').attr('selected', 'selected');
+    $('#personagensGravados option[value=""]').attr('selected', 'selected');
     $('.field').val('');
     $('.skill').val('');
     $("#btnGravar").show();
