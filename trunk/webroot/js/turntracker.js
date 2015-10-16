@@ -42,6 +42,7 @@ function nextTurn() {
             $("#tableTracker tbody > tr:first").addClass('currentTurn');
         }
         id = $('.currentTurn').attr("id");
+        $("#tableTracker tbody > tr:first").addClass('firstTurn');
         fighter = getFighterById(id);
         if ($('.currentTurn').hasClass('firstTurn')) {
             $('#combat-log').append('<br><font class="log-title">ROUND ' + combatRound++ + ' - FIGHT!</font><br>');
