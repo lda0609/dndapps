@@ -396,15 +396,31 @@ function load_side_frame(fighter, side) {
         rows += '<tr><td class="label">STR</td><td>' + fighter.details.str + '</td><td class="label">DEX</td><td>' + fighter.details.dex + '</td><td class="label">CON</td><td>' + fighter.details.con + '</td></tr>';
         rows += '<tr><td class="label">INT</td><td>' + fighter.details.int + '</td><td class="label">WIS</td><td>' + fighter.details.wis + '</td><td class="label">CHA</td><td>' + fighter.details.cha + '</td></tr>';
 
-        //monta tabela com skills
+        //monta tabela com skill
         html_skills = '<font class="card-name">Skills </font><hr class="hr-paper-flip"><table class="' + side + ' tracker-side-frame"><tr>';
         var cont = 1;
+        var passive_perception = 10;
+        var hasPerception = false;
         $.each(fighter['AdventurersSkills'], function (key, skill) {
             html_skills += '<td class="label"> ' + dnd_skills[skill['AdventurersSkills']['dnd_skills_id']] + '</td><td> ' + skill['AdventurersSkills']['modifier'] + '</td>';
             if (cont++ % 3 === 0) {
                 html_skills += '</tr><tr>';
             }
+            if (skill['AdventurersSkills']['dnd_skills_id'] === '13') {
+                hasPerception = true;
+                passive_perception = passive_perception + Number(skill['AdventurersSkills']['modifier']);
+            }
+
         });
+        if (!hasPerception) {
+            bonus_wisdom = Math.floor((Number(fighter.details.wis) - 10) / 2);
+            console.log(bonus_wisdom);
+
+            passive_perception += bonus_wisdom;
+        }
+
+
+        html_skills += '<tr><td colspan="3"><strong>Passive Perception</strong></td><td>' + passive_perception + '</td></tr>';
         html_skills += '</table>';
 
     }
