@@ -27,7 +27,7 @@ function getDataAventura() {
         });
         $('#data').html(options);
 
-        $("#t2").click(); //teste
+//        $("#t2").click(); //teste
 
     });
 }
