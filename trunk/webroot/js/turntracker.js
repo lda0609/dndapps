@@ -15,11 +15,12 @@ function loadPlayers() {
 
 function loadEncounter(encounter) {
     $("#divTurnTracker").show();
-    console.log(encounter);
+    count = allFighters.length;
+    
     $.each(encounter['monsters'], function (key, monster) {
         temp = {}
         temp['conditions'] = [];
-        temp['id'] = 'm' + key;
+        temp['id'] = 'm' + count++;
         temp['name'] = monster['name'];
         temp['HPMax'] = monster['hp'];
         temp['HPTemp'] = 0;
@@ -30,6 +31,9 @@ function loadEncounter(encounter) {
     $("#td_footer_info").html('<table><tr><th>Combat Information</th></tr><tr><td>' + encounter['information'] + '</td></tr></table>');
     $("#imgStartCombat").removeClass('button-disabled');
     turnTracker();
+
+
+
 }
 
 function nextTurn() {
@@ -55,9 +59,11 @@ function nextTurn() {
 
 function combat_log_anchor() {
     var out = document.getElementById("combat-log");
-    var isScrolledToBottom = (out.scrollHeight - out.clientHeight) <= out.scrollTop + 60;
-    if (isScrolledToBottom) {
-        out.scrollTop = out.scrollHeight - out.clientHeight;
+    if (out !== null) {
+        var isScrolledToBottom = (out.scrollHeight - out.clientHeight) <= out.scrollTop + 60;
+        if (isScrolledToBottom) {
+            out.scrollTop = out.scrollHeight - out.clientHeight;
+        }
     }
 }
 
@@ -414,8 +420,6 @@ function load_side_frame(fighter, side) {
         });
         if (!hasPerception) {
             bonus_wisdom = Math.floor((Number(fighter.details.wis) - 10) / 2);
-            console.log(bonus_wisdom);
-
             passive_perception += bonus_wisdom;
         }
 

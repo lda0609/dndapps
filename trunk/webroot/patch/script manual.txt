@@ -1,0 +1,2 @@
+CREATE TABLE dnd.dnd_patch (id integer,version text);
+INSERT INTO dnd.dnd_patch VALUES (1, '0.0');

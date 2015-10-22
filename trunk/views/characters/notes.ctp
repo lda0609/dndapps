@@ -15,8 +15,8 @@
         padding: 2px;
     }
     .classes {
-    font-size: 90%;
-        
+        font-size: 90%;
+
     }
 
 
@@ -257,18 +257,35 @@
             </td>
         </tr>
         <tr>
+            <td width="20%">
+                Channel Divinity
+            </td>
+            <td>
+                At 2nd level, you gain the ability to channel divine
+                energy directly from your deity, using that energy to fuel
+                magical effects. You start with two such effects: Turn
+                Undead and an effect determined by your domain.
+                <br>When you use your Channel Divinity, you choose
+                which effect to create. You must then finish a short or
+                long rest to use your Channel Divinity again.
+                <br>Beginning at 6th level, you can use your Channel
+                Divinity twice between rests, and beginning at 18th level,
+                you can use it three times between rests. When you finish
+                a short or long rest, you regain your expended uses.
+            </td>
+        </tr>
+
+        <tr>
             <td>
                 Channel Divinity: Turn Undead
             </td>
-
             <td>
-                Refresh at Short Rest.
-                <br> As an action, you present your holy symbol and speak a
+                As an action, you present your holy symbol and speak a
                 prayer censuring the undead. Each undead that can see
                 or hear you within 30 feet of you must make a Wisdom
                 saving throw. If the creature fails its saving throw, it is
                 turned for 1 minute or until it takes any damage.
-                A turned creature must spend its turns trying to move
+                <br>A turned creature must spend its turns trying to move
                 as far away from you as it can, and it can't willingly
                 move to a space within 30 feet of you. lt also can't take
                 reactions. For its action, it can use only the Dash action
@@ -276,15 +293,31 @@
                 moving. If there's nowhere to move, the creature can use
                 the Dodge action.
             </td>
-
         </tr>
+        <tr>
+            <td>
+                Destroy Undead
+            </td>
+            <td>
+                Starting at 5th level, when an undead fails its saving
+                throw against your Turn Undead feature, the creature is
+                instantly destroyed if its challenge rating is at or below a
+                certain threshold, as shown in the Destroy Undead table.
+                <br>Cleric Level - Destroys Undead of CR ...
+                <br>5th  - 1/2 or lower
+                <br>8th  - 1 or lower
+                <br>11th - 2 or lower
+                <br>14th - 3 or lower
+                <br>17th - 4 or lower
+            </td>
+        </tr>
+
         <tr>
             <td>
                 Channel Divinity: Destructive Wrath (Tempest)
             </td>
             <td>
-                Refresh at Short Rest.
-                <br> Starting at 2nd level, you can use your Channel Divinity
+                Starting at 2nd level, you can use your Channel Divinity
                 to wield the power of the storm with unchecked ferocity.
                 When you roll lightning or thunder damage, you can
                 use your Channel Divinity to deal maximum damage,
@@ -313,7 +346,6 @@
                 Channel Divinity: Guided Strike (War)
             </td>
             <td>
-                Refresh at Short Rest.
                 <br> Starting at 2nd level, you can use your Channel Divinity
                 to strike with supernatural accuracy. When you make
                 an attack roll, you can use your Channel Divinity to gain
@@ -390,6 +422,18 @@
         </tr>
         <tr>
             <td>
+                Extra Attack
+            </td>
+            <td>
+                Beginning at 5th level, you can attack twice, instead of
+                once, whenever you take the Attack action on your turn.
+                <br>The number of attacks increases to three when you
+                reach 11th level in this c1ass and to four when you reach
+                20th level in this c1ass
+            </td>
+        </tr>
+        <tr>
+            <td>
                 Martial Archetype: Battle Master
             </td>
             <td>
@@ -423,14 +467,8 @@
                 to the attack's damage roll, and if the target is Large or
                 smaller, it must make a Strength saving throw, On a
                 failed save, you knock the target prone.
-
-
             </td>
         </tr>
-
-
-
-
     </table>
 </div>
 
@@ -513,6 +551,16 @@
                 extra damage only once per turn.
             </td>
         </tr>
+        <tr>
+            <td>
+                Extra Attack
+            </td>
+            <td>
+                Beginning at 5th level, you can attack twice, instead of
+                once, whenever you take the Attack action on your turn.
+            </td>
+        </tr>
+
     </table>
 </div>
 
@@ -612,6 +660,16 @@
                 In addition, when you make a running jump, the
                 distance you cover increases by a number of feet equal
                 to your Dexterity modifier
+            </td>
+        </tr>
+        <tr>
+            <td>
+                Uncanny Dodge
+            </td>
+            <td>
+                Starting at 5th level, when an attacker that you can see
+                hits you with an attack, you can use your reaction to
+                halve the attack's damage against you.
             </td>
         </tr>
     </table>

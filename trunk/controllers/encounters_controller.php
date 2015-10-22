@@ -304,6 +304,7 @@ class EncountersController extends AppController
                 $MonsterData = $this->Monsters->getMonster($monster['dnd_monsters_id']);
                 $encontros[$key]['EncountersMonsters'][$key2]['name'] = $MonsterData['Monsters']['name'];
                 $encontros[$key]['EncountersMonsters'][$key2]['page'] = $MonsterData['Monsters']['page'];
+                $encontros[$key]['EncountersMonsters'][$key2]['book'] = $MonsterData['Monsters']['book'];
             }
         }
         return json_encode($encontros);

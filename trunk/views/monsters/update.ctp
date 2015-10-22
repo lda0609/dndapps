@@ -1,9 +1,11 @@
 <?php
-echo $this->Form->create('monster', array('action' => 'save'));
+echo $this->Form->create('Monsters', array('action' => 'update'));
+debug($monster);
+debug($monsterType);
 ?>
 
 <div align="center">
-    <?php echo $this->Form->button('Consultar', array('type' => 'submit')); ?>
+    <?php echo $this->Form->button('Atualizar', array('type' => 'submit')); ?>
 </div>
 
 <h1><?php echo $dnd_monsters[$monster['Monsters']['id']] . ' - ' . $monster['Monsters']['id'] . ' - page ' . $monster['Monsters']['page']; ?></h1>
@@ -12,6 +14,7 @@ echo $this->Form->create('monster', array('action' => 'save'));
         <?php
         echo '<td>';
         echo $this->Form->input('monsterType', array(
+            'name' => 'data[MonsterTypes][dnd_type_id]',
             'type' => 'select',
             'multiple' => 'checkbox',
             'options' => $dnd_monster_type,
@@ -32,7 +35,7 @@ echo $this->Form->create('monster', array('action' => 'save'));
             'value' => $monster['Monsters']['alignment'],
         ));
         echo '</td>';
-        echo $this->Form->hidden('monster', array('value' => $monster['Monsters']['id']));
+        echo $this->Form->hidden('id', array('value' => $monster['Monsters']['id']));
         ?>
 
     </tr>

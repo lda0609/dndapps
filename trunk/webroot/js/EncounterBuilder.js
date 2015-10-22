@@ -532,11 +532,11 @@ $("#t3").click(function () {
             data: callOptions,
             async: true
         }).done(function (data, textStatus, request) {
+            console.log(data)
             var contador = 0;
             var encounter_card_row = '';
             var xp = 0;
             var adjustedXp = 0;
-            console.log(data);
             $.each(data, function (key, encontro) {
                 var diff_class = 'diff_unknown';
                 if (encontro['Encounters']['difficulty'] === 'Deadly') {
@@ -555,7 +555,7 @@ $("#t3").click(function () {
                 var img_turntracker = '<td class="align_center ' + diff_class + '" width="28px"><a onclick="enviarEncontroParaTracker(\'' + encontro['Encounters']['id'] + '\')"><img width="28px" src="/dndapps/img/attack4.png" title="Carrega encontro no Turn Tracker" class="clickable"></a></td>';
                 var monsters = '';
                 $.each(encontro['EncountersMonsters'], function (key, monster) {
-                    monsters += '<tr id="monster' + monster['id'] + '" quantidade="' + monster['quantidade'] + '"><td width="36px"><img width="36px" src="/dndapps/img/dragon-bullet-small2.png"></td><td colspan="2"><b>' + monster['name'] + ' (' + monster['quantidade'] + ')</b>, pag ' + monster['page'] + '</td><td class="align_center"><a class="plus"><i class="fa fa-plus clickable"></i></a><br><a class="minus"><i class="fa fa-minus clickable"></i></class></td></tr>';
+                    monsters += '<tr id="monster' + monster['id'] + '" quantidade="' + monster['quantidade'] + '"><td width="36px"><img width="36px" src="/dndapps/img/dragon-bullet-small2.png"></td><td colspan="2"><b>' + monster['name'] + ' (' + monster['quantidade'] + ')</b>, ' + monster['book'] + ' pag ' + monster['page'] + '</td><td class="align_center"><a class="plus"><i class="fa fa-plus clickable"></i></a><br><a class="minus"><i class="fa fa-minus clickable"></i></class></td></tr>';
                 });
                 var tbody = '<tbody>' + monsters + '<tr><td width="36px"><img width="40px" src="/dndapps/img/Overstuffed_Treasure_Chest-icon.png"></td><td colspan="3">' + encontro['Encounters']['treasure'] + '</td></tr><tr><td width="36px"><img width="40px" src="/dndapps/img/xp-icon.png"></td><td colspan="3">' + encontro['Encounters']['xp'] + '/' + encontro['Encounters']['adjusted_xp'] + '</td></tr><tr><td width="36px"><img width="40px" src="/dndapps/img/information.png"></td><td colspan="3">' + encontro['Encounters']['information'] + '</td></tr></tbody>'
 
@@ -662,7 +662,6 @@ function excluirEncontroConfirmado() {
 }
 
 function enviarEncontroParaTracker(encounterId) {
-    console.log(encounterId);
     $.ajax({
         dataType: "json",
         url: 'http://' + host + '/dndapps/encounters/getEncounter',

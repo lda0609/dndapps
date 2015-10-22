@@ -272,4 +272,9 @@ class CharactersController extends AppController
         return json_encode($retorno);
     }
 
+    function notes()
+    {
+        
+    }
+
 }

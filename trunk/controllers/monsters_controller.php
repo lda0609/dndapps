@@ -3,117 +3,91 @@
 class MonstersController extends AppController
 {
 
-    var $uses = array('Monsters', 'MonsterType', 'MonsterFavorites');
-//    var $helpers = array('Paginator');
-    var $paginate = array(
-        'limit' => 30,
-        'order' => array('Monsters.cr' => 'asc'),
-    );
+    var $uses = array('Monsters', 'MonsterTypes', 'MonsterFavorites');
 
+    //****************************************//
+    //**** FUNÇÕES COM VIEWS RELACIONADAS ****//
+    //****************************************//
     function index()
+    {
+        $monsterList = $this->Monsters->getListaPorPage();
+        $this->set('monsterList', $monsterList);
+
+        if (!empty($this->data)) {
+            $id = $this->data['Monsters']['id'];
+            $monster = $this->Monsters->getMonster($id);
+
+            $monsterType = $this->MonsterTypes->find('list', array(
+                'conditions' => array('dnd_monsters_id' => $id),
+                'fields' => array('dnd_type_id'),
+            ));
+
+            $this->set('monsterType', $monsterType);
+            $this->set('monster', $monster);
+        }
+    }
+
+    function update()
+    {
+        $this->autoRender = false;
+        debug($this->data);
+
+        $monsterType = $this->MonsterTypes->find('list', array(
+            'conditions' => array('dnd_monsters_id' => $this->data['Monsters']['id']),
+            'fields' => array('dnd_type_id')
+        ));
+
+        if (is_array($this->data['MonsterTypes']['dnd_type_id'])) {
+            $addType = array_diff($this->data['MonsterTypes']['dnd_type_id'], $monsterType);
+            debug($addType);
+            $removeType = array_diff($monsterType, $this->data['MonsterTypes']['dnd_type_id']);
+            debug($removeType);
+
+            foreach ($addType as $key => $type) {
+//            $newType['MonsterTypes']['id'] = '';
+                $newType['MonsterTypes']['dnd_monsters_id'] = $this->data['Monsters']['id'];
+                $newType['MonsterTypes']['dnd_type_id'] = $type;
+                debug($newType);
+                $this->MonsterTypes->save($newType);
+            }
+
+            foreach ($removeType as $key => $type) {
+                $deleteType = $this->MonsterTypes->find('first', array(
+                    'conditions' => array(
+                        'dnd_monsters_id' => $this->data['Monsters']['id'],
+                        'dnd_type_id' => $type),
+                    'fields' => array('id'),
+                ));
+                debug($deleteType);
+                $this->MonsterTypes->delete($deleteType['MonsterTypes']['id']);
+            }
+        }
+        $this->redirect('index');
+    }
+
+    function lista()
     {
         $monsterList = $this->Monsters->find('all', array(
             'order' => 'cr'));
         $this->set('monsterList', $monsterList);
     }
 
-    function monsters()
+    function cadastro()
     {
         if (!empty($this->data)) {
-            $monsterType = $this->MonsterType->find('list', array(
-                'conditions' => array('dnd_monsters_id' => $this->data['monsters']['monster']),
-                'fields' => array('dnd_type_id'),
-                'order' => 'dnd_type_id'));
-            $this->set('monsterType', $monsterType);
-            $this->set('monster', $this->data['monsters']['monster']);
-            $this->render('monster_type');
+            foreach ($this->data['MonsterTypes']['dnd_type_id'] as $key => $value) {
+                $temp[$key]['dnd_type_id'] = $value;
+            }
+            $this->data['MonsterTypes'] = $temp;
+            if ($this->Monsters->saveAll($this->data)) {
+                $this->redirect('cadastro');
+            }
         }
     }
 
-    function update($monsterId = null)
-    {
-        $monster = $this->Monsters->find('first', array(
-            'conditions' => array('size' => null),
-            'order' => 'page'));
-
-        $monsterType = $this->MonsterType->find('list', array(
-            'conditions' => array('dnd_monsters_id' => $monster['Monsters']['id']),
-            'fields' => array('dnd_type_id'),
-            'order' => 'dnd_type_id'));
-        $this->set('monsterType', $monsterType);
-        $this->set('monster', $monster);
-    }
-
-    function save()
-    {
-        $monsterType = $this->MonsterType->find('list', array(
-            'conditions' => array('dnd_monsters_id' => $this->data['monster']['monster']),
-            'fields' => array('dnd_type_id'),
-            'order' => 'dnd_type_id'));
-
-        $addType = array_diff($this->data['monster']['monsterType'], $monsterType);
-        $removeType = array_diff($monsterType, $this->data['monster']['monsterType']);
-        foreach ($addType as $key => $typeId) {
-            $newDomains['MonsterType']['id'] = '';
-            $newDomains['MonsterType']['dnd_monsters_id'] = $this->data['monster']['monster'];
-            $newDomains['MonsterType']['dnd_type_id'] = $typeId;
-            $this->MonsterType->save($newDomains);
-        }
-
-        foreach ($removeType as $key => $typeId) {
-            $deleteDomains = $this->MonsterType->find('first', array(
-                'conditions' => array(
-                    'dnd_monsters_id' => $this->data['monster']['monster'],
-                    'dnd_type_id' => $typeId),
-                'fields' => array('id'),
-            ));
-            $this->MonsterType->delete($deleteDomains['MonsterType']['id']);
-        }
-
-        $this->Monsters->id = $this->data['monster']['monster'];
-        $this->Monsters->save(array(
-            'size' => $this->data['monster']['size'],
-            'alignment' => $this->data['monster']['alignment'],
-                )
-        );
-        $this->redirect('update');
-    }
-
-//    function consulta()
-//    {
-//        if (!empty($this->data)) {
-//            $conditions = array();
-//            if (!empty($this->data['Monsters']['name'])) {
-//                $conditions['Monsters.name LIKE'] = '%' . $this->data['Monsters']['name'] . '%';
-//            }
-//            if (!empty($this->data['Monsters']['CRMin'])) {
-//                $conditions['Monsters.cr >='] = $this->data['Monsters']['CRMin'];
-//            }
-//            if (!empty($this->data['Monsters']['CRMax'])) {
-//                $conditions['Monsters.cr <='] = $this->data['Monsters']['CRMax'];
-//            }
-//            if (!empty($this->data['Monsters']['Type'])) {
-//                $conditions['MonsterType.dnd_type_id'] = $this->data['Monsters']['Type'];
-//            }
-//            if (!empty($this->data['Monsters']['Alignment'])) {
-//                $conditions['Monsters.alignment'] = $this->data['Monsters']['alignment'];
-//            }
-//            $monsters = $this->Monsters->find('all', array(
-//                'joins' => array(
-//                    array('table' => 'monster_types',
-//                        'alias' => 'MonsterType',
-//                        'type' => 'LEFT',
-//                        'conditions' => array(
-//                            'Monsters.id = MonsterType.dnd_monsters_id',
-//                        )
-//                    )
-//                ),
-//                'conditions' => $conditions,
-//                'order' => 'cr'));
-//
-//            $this->set('monsters', $monsters);
-//        }
-//    }
+    //***********************************//
+    //**** FUNÇÕES QUE RETORNAM JSON ****//
+    //***********************************//
 
     function search()
     {
@@ -181,24 +155,6 @@ class MonstersController extends AppController
             }
         }
         return array_values($monsters);
-    }
-
-    function teste()
-    {
-        $this->autoRender = false;
-        $monsters = $this->Monsters->find('all', array(
-            'joins' => array(
-                array('table' => 'monster_types',
-                    'alias' => 'MonsterType',
-                    'type' => 'LEFT',
-                    'conditions' => array(
-                        'Monsters.id = MonsterType.dnd_monsters_id',
-                    ),
-                    'order' => 'id'
-                )
-            ),
-            'conditions' => $conditions,
-            'order' => 'cr'));
     }
 
 }

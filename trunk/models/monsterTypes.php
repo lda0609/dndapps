@@ -13,7 +13,6 @@ class MonsterTypes extends AppModel
             'order' => ''
         ),
     );
-
 }
 
 ?>
