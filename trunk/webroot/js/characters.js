@@ -3,7 +3,6 @@ $("#msg_lvlup").hide();
 $("#btnAlterar").hide();
 $("#btnLevelUp").hide();
 
-
 var host = window.location.hostname;
 
 $(function () {
@@ -26,9 +25,6 @@ function getDataAventura() {
             options += '<option value="' + key + '">' + dataAventura + '</option>';
         });
         $('#data').html(options);
-
-//        $("#t2").click(); //teste
-
     });
 }
 
@@ -50,18 +46,43 @@ $('#data').change(function () {
 function showCharactersCards(data) {
     $('#allCharacters').html('');
     var character_card;
-    var character_header;
-    var atributes;
-    var outros_dados;
+//    var character_header;
+//    var atributes;
+//    var outros_dados;
     var cont = 1;
+    console.log(data);
     $.each(data, function (key, characterData) {
         if (characterData.AdventurersPerAdventure.xp_final == null) {
             characterData.AdventurersPerAdventure.xp_final = '';
         }
-        character_header = '<table class="characterCard"><tr><td rowspan="2">' + characterData.Adventurers.name + '</td><td>' + dnd_classes[characterData.Adventurers.class] + ' ' + characterData.AdventurersPerAdventure.lvl_inicial + '</td><td>' + characterData.Adventurers.background + '</td><td>' + characterData.Adventurers.race + '</td></tr><tr><td>' + characterData.Adventurers.player + '</td><td>' + dnd_alignment_players[characterData.Adventurers.alignment] + '</td><td>' + characterData.AdventurersPerAdventure.xp_final + '</td></tr></table>';
-        atributes = '<table><tr><td>Str: ' + characterData.CharacterProgression.strength + '</td><td>Dex: ' + characterData.CharacterProgression.dextery + '</td><td>Con: ' + characterData.CharacterProgression.constitution + '</td></tr><tr><td>Int: ' + characterData.CharacterProgression.intelligence + '</td><td>Wis: ' + characterData.CharacterProgression.wisdom + '</td><td>Cha: ' + characterData.CharacterProgression.charisma + '</td></tr></table>';
-        outros_dados = '<table><tr><td>AC: ' + characterData.CharacterProgression.ac + '</td><td>HP: ' + characterData.CharacterProgression.hit_point_max + '</td><td>Init: ' + characterData.CharacterProgression.initiative + '</td><td>Speed: ' + characterData.CharacterProgression.speed + '</td></tr></table>';
-        character_card = character_header + outros_dados + atributes;
+        var rows = '';
+        var html_skills = '';
+        rows += '<tr><td colspan="6" class="name_PC"><font class="card-name">' + characterData.Adventurers.name + '</font><br><font class="card-details">' + characterData.Adventurers.background + ' ' + dnd_classes[characterData.Adventurers.class] + ' ' + characterData.AdventurersPerAdventure.lvl_inicial + ', ' + dnd_alignment_players[characterData.Adventurers.alignment] + '</font><hr class="hr-paper-flip"></td></tr>';
+        rows += '<tr><td class="label">AC</td><td>' + characterData.CharacterProgression.ac + '</td><td class="label">SPD</td><td>' + characterData.CharacterProgression.speed + '</td><td class="label">Init</td><td>' + characterData.CharacterProgression.initiative + '</td></tr>';
+        rows += '<tr><td class="label">STR</td><td>' + characterData.CharacterProgression.strength + '</td><td class="label">DEX</td><td>' + characterData.CharacterProgression.dextery + '</td><td class="label">CON</td><td>' + characterData.CharacterProgression.constitution + '</td></tr>';
+        rows += '<tr><td class="label">INT</td><td>' + characterData.CharacterProgression.intelligence + '</td><td class="label">WIS</td><td>' + characterData.CharacterProgression.wisdom + '</td><td class="label">CHA</td><td>' + characterData.CharacterProgression.charisma + '</td></tr>';
+
+        html_skills = '<tr><td colspan="6"><font class="card-name">Skills </font><hr class="hr-paper-flip"></td></tr><tr>';
+        var cont_skill = 1;
+        var passive_perception = 10;
+        var hasPerception = false;
+        $.each(characterData['AdventurersSkills'], function (key, skill) {
+            html_skills += '<td class="label"> ' + dnd_skills[skill['AdventurersSkills']['dnd_skills_id']] + '</td><td> ' + skill['AdventurersSkills']['modifier'] + '</td>';
+            if (cont_skill++ % 2 === 0) {
+                html_skills += '</tr><tr>';
+            }
+            if (skill['AdventurersSkills']['dnd_skills_id'] === '13') {
+                hasPerception = true;
+                passive_perception = passive_perception + Number(skill['AdventurersSkills']['modifier']);
+            }
+        });
+        if (!hasPerception) {
+            bonus_wisdom = Math.floor((Number(characterData.CharacterProgression.wisdom) - 10) / 2);
+            passive_perception += bonus_wisdom;
+        }
+
+        html_skills += '<tr><td colspan="3"><strong>Passive Perception</strong></td><td>' + passive_perception + '</td></tr>';
+        character_card = '<table>' + rows + html_skills +'</table>';
 
         if (cont === 1) {
             cards_row = '<td>' + character_card + '</td>';
@@ -72,13 +93,13 @@ function showCharactersCards(data) {
             cont = 1
         }
     });
+
     if (cont === 2) {
         $('#allCharacters').append('<tr>' + cards_row + '</tr>');
     }
 }
 
 // Tab Inclusão de novo personagem
-
 $('#btnGravar').click(function () {
     salvarPersonagem('saveCharacter');
 });

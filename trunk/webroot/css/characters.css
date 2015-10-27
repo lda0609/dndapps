@@ -1,5 +1,8 @@
-table tr td {
+tr td {
     vertical-align: middle;
+}
+table {
+    border: 1px solid lightblue;
 }
 
 .characterCard {

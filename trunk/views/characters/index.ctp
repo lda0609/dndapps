@@ -1,10 +1,12 @@
 <?php echo $this->element('css'); ?>
 <link rel="stylesheet" href="/<?php echo APP_DIR ?>/css/characters.css" type="text/css"/> 
+<link rel="stylesheet" href="/<?php echo APP_DIR ?>/css/turntracker.css" type="text/css"/> 
 <?php echo $this->element('javascript'); ?>
 
 <script>
     var dnd_alignment_players = JSON.parse('<?php echo json_encode($dnd_alignment_players); ?>');
     var dnd_classes = JSON.parse('<?php echo json_encode($dnd_classes); ?>');
+    var dnd_skills = JSON.parse('<?php echo json_encode($dnd_skills); ?>');
 </script>
 
 <!-- tabs -->

@@ -5,7 +5,6 @@
     #rcorners {
         border-radius: 35px;
         border: 2px solid white;
-        /*background-color: #6EA7D2;*/
         background: url(webroot/img/dragon4.jpg);
         background-position: left top;
         background-repeat: round;
@@ -35,7 +34,13 @@
         border-radius: 30px;
         font-size: 2em;
         width: 240px;
-        -webkit-filter: opacity(100%);
+    }
+
+    .button-launcher-small {
+        border-radius: 30px;
+        font-size: 1.4em;
+        width: 180px;
+        float: right;
     }
 
     #Patch{
@@ -43,17 +48,17 @@
     }
 </style>
 
-
 <div class="outer">
     <div class="middle">
         <div id="rcorners" class="inner">
-            <button id="Personagens" class="button-success pure-button button-launcher" onClick="window.open('http://localhost/dndapps/characters/');">Characters</button>
+            <button class="button-success pure-button button-launcher" onClick="window.open('http://localhost/dndapps/characters/');">Characters</button>
+            <button class="button-warning pure-button button-launcher-small" onClick="window.open('http://localhost/dndapps/magic_items/consulta/');">Magic Items</button>
             <br><br>
-            <button id="Aventura" class="button-error pure-button button-launcher" onClick="window.open('http://localhost/dndapps/encounters/');">Adventure</button>
-            <br><br><br><br><br><br><br><br>
+            <button class="button-error pure-button button-launcher" onClick="window.open('http://localhost/dndapps/encounters/');">Adventure</button>
+            <br><br>
+            <br><br><br><br><br><br>
             <br><br><br><br><br><br><br><br><br>
             <?php
-            debug($newPatch);
             if ($newPatch) {
                 ?>
                 <button id="Patch" class="button-warning pure-button button-launcher" onClick="window.open('http://localhost/dndapps/patcher/');">Novo Patch</button>
