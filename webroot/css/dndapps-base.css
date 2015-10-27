@@ -71,16 +71,7 @@ table tr td{
     content: "\f146";
 }
 
-
-
 /*Filter styles*/
-
-.button-disabled {
-    -webkit-filter: opacity(30%);
-}
-
-
-
 .saturate {-webkit-filter: saturate(3);}
 .grayscale {-webkit-filter: grayscale(100%);}
 .contrast {-webkit-filter: contrast(160%);}
