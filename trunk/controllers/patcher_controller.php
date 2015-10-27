@@ -4,18 +4,20 @@ class PatcherController extends AppController
 {
 
     var $uses = array('Monsters', 'MonsterTypes', 'MonsterFavorites', 'Patch');
-    var $version = '0.1';
 
     function index()
     {
+        $myfile = fopen("patch/version.txt", "r") or die("Unable to open file!");
+        $version = fgets($myfile);
+        fclose($myfile);
         $patch_version = $this->Patch->find('first', array('conditions' => array('id' => '1')));
-        debug($patch_version);
-        if (!empty($patch_version) && $patch_version['Patch']['version'] !== $this->version) {
+        if (!empty($patch_version) && $patch_version['Patch']['version'] !== $version) {
             $myfile = fopen("patch/scripts.txt", "r") or die("Unable to open file!");
             while (!feof($myfile)) {
                 $query = fgets($myfile);
                 $this->Monsters->query($query);
             }
+            fclose($myfile);
 
             $mypatch = fopen("patch/patch.txt", "r") or die("Unable to open file!");
             $patch_data = unserialize(fgets($mypatch));
@@ -24,9 +26,10 @@ class PatcherController extends AppController
             }
             $patch_data = unserialize(fgets($mypatch));
             $this->MonsterTypes->saveAll($patch_data);
-            
-            $this->Patch->save(array('Patch' => array('id' => '1', 'version' => '0.1')));
-            $this->set('mensagem', 'Patch versão ' . $this->version . ' instalado');
+            fclose($patch_data);
+
+            $this->Patch->save(array('Patch' => array('id' => '1', 'version' => $version)));
+            $this->set('mensagem', 'Patch versão ' . $version . ' instalado');
         } else {
             $this->set('mensagem', 'A aplicação já está com o patch mais recente instalado');
         }
