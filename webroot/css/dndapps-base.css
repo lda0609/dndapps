@@ -81,3 +81,7 @@ table tr td{
 .sepia {-webkit-filter: sepia(100%); }
 .huerotate {-webkit-filter: hue-rotate(180deg);}
 .opacity {-webkit-filter: opacity(50%);}
+
+input[type=number]{
+    width: 55px;
+} 

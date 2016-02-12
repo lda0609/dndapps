@@ -62,7 +62,11 @@ class CharactersController extends AppController
             foreach ($AdventurersPerAdventureAnterior as $key => $value) {
                 $xpAnterior[$value['AdventurersPerAdventure']['dnd_adventurers_id']] = $value['AdventurersPerAdventure']['xp_final'];
             }
-            $adventurers = $this->Adventurers->find("all");
+            $adventurers = $this->Adventurers->find("all", array(
+                'conditions' => array(
+                    'status' => 1,
+                )
+            ));
             foreach ($adventurers as $key => $value) {
                 $lvl = 0;
                 while ($xpAnterior[$value['Adventurers']['id']] >= $this->xp_threshold[$lvl]) {
@@ -71,7 +75,11 @@ class CharactersController extends AppController
                 $adventurers[$key]['Adventurers']['lvl_inicial'] = $lvl;
             }
         }
-        $adventurers = $this->Adventurers->find("all");
+        $adventurers = $this->Adventurers->find("all", array(
+            'conditions' => array(
+                'status' => 1,
+            )
+        ));
         return json_encode($adventurers);
     }
 
@@ -148,6 +156,7 @@ class CharactersController extends AppController
     {
         $this->autoRender = false;
         $character = ($this->params['url']['adventurer']);
+        unset($character['CharacterProgression']['id']);
         $adventurer['Adventurers'] = $character['Adventurers'];
         $progression['CharacterProgression'] = $character['CharacterProgression'];
         $adventurerSkills['AdventurersSkills'] = $character['AdventurersSkills'];
@@ -178,8 +187,14 @@ class CharactersController extends AppController
         $progression['CharacterProgression'] = $character['CharacterProgression'];
         $adventurer['Adventurers'] = $character['Adventurers'];
         $adventurerSkillsUpdated['AdventurersSkills'] = $character['AdventurersSkills'];
-        $adventurer = $this->Adventurers->find('first', array('conditions' => array('name' => $adventurer['Adventurers']['name'])));
-        $progression['CharacterProgression']['dnd_adventurers_id'] = $adventurer['Adventurers']['id'];
+        $adventurerId = $this->CharacterProgression->find('first', array(
+            'conditions' => array(
+                'id' => $progression['CharacterProgression']['id']
+            ),
+            'fields' => array('dnd_adventurers_id')
+        ));
+        $progression['CharacterProgression']['dnd_adventurers_id'] = $adventurerId['CharacterProgression']['dnd_adventurers_id'];
+        unset($progression['CharacterProgression']['id']);
         if ($this->CharacterProgression->save($progression)) {
             $this->saveSkills($adventurerSkillsUpdated, $adventurer['Adventurers']['id']);
             return json_encode('ok');
@@ -195,8 +210,16 @@ class CharactersController extends AppController
         $adventurer['Adventurers'] = $character['Adventurers'];
         $progression['CharacterProgression'] = $character['CharacterProgression'];
         $adventurerSkillsUpdated['AdventurersSkills'] = $character['AdventurersSkills'];
-        $adventurerId = $this->Adventurers->find('first', array('conditions' => array('name' => $adventurer['Adventurers']['name'])));
-        $this->Adventurers->id = $adventurerId['Adventurers']['id'];
+
+        $adventurerId = $this->CharacterProgression->find('first', array(
+            'conditions' => array(
+                'id' => $progression['CharacterProgression']['id']
+            ),
+            'fields' => array('dnd_adventurers_id')
+        ));
+        $adventurerId = $adventurerId['CharacterProgression']['dnd_adventurers_id'];
+
+        $this->Adventurers->id = $adventurerId;
         if ($this->Adventurers->save($adventurer)) {
             $progression['CharacterProgression']['dnd_adventurers_id'] = $this->Adventurers->id;
             $characterProgressionId = $this->CharacterProgression->find('first', array('conditions' => array('dnd_adventurers_id' => $this->Adventurers->id, 'lvl' => $progression['CharacterProgression']['lvl'])));
@@ -213,6 +236,43 @@ class CharactersController extends AppController
     }
 
     private function saveSkills($adventurerSkillsUpdated, $adventurerId)
+    {
+        $adventurerSkills = $this->AdventurersSkills->find('all', array('conditions' => array('dnd_adventurers_id' => $adventurerId)));
+
+        foreach ($adventurerSkillsUpdated['AdventurersSkills'] as $key => $skillUpdated) {
+            $flag = 0;
+            foreach ($adventurerSkills as $key => $skillSaved) {
+                if ($skillUpdated['dnd_skills_id'] == $skillSaved['AdventurersSkills']['dnd_skills_id']) {
+                    $flag = 1;
+                    if ($skillUpdated['modifier'] != $skillSaved['AdventurersSkills']['modifier']) {
+                        $skillsUpdated[$key]['AdventurersSkills']['id'] = $skillSaved['AdventurersSkills']['id'];
+                        $skillsUpdated[$key]['AdventurersSkills']['modifier'] = $skillUpdated['modifier'];
+                    }
+                }
+            }
+            if ($flag == 0) {
+                $newSkill['AdventurersSkills']['dnd_adventurers_id'] = $adventurerId;
+                $newSkill['AdventurersSkills']['dnd_skills_id'] = $skillUpdated['dnd_skills_id'];
+                $newSkill['AdventurersSkills']['modifier'] = $skillUpdated['modifier'];
+                $this->AdventurersSkills->save($newSkill);
+            }
+        }
+        $this->AdventurersSkills->saveAll($skillsUpdated);
+
+        foreach ($adventurerSkills as $key => $skillSaved) {
+            $flag = 0;
+            foreach ($adventurerSkillsUpdated['AdventurersSkills'] as $key => $skillUpdated) {
+                if ($skillUpdated['dnd_skills_id'] == $skillSaved['AdventurersSkills']['dnd_skills_id']) {
+                    $flag = 1;
+                }
+            }
+            if ($flag == 0) {
+                $this->AdventurersSkills->delete($skillSaved['AdventurersSkills']['id']);
+            }
+        }
+    }
+
+    private function saveSkills_old($adventurerSkillsUpdated, $adventurerId)
     {
         $adventurerSkills = $this->AdventurersSkills->find('all', array('conditions' => array('dnd_adventurers_id' => $adventurerId)));
         foreach ($adventurerSkillsUpdated['AdventurersSkills'] as $key => $newSkill) {
@@ -232,7 +292,10 @@ class CharactersController extends AppController
     {
         $this->autoRender = false;
 
-        $adventurers = $this->Adventurers->find('all', array('order' => 'id'));
+        $adventurers = $this->Adventurers->find('all', array(
+            'conditions' => array(
+                'status' => 1,
+            ), 'order' => 'id'));
         $retorno = array();
         foreach ($adventurers as $key => $adventurer) {
             $characterProgression = $this->CharacterProgression->find('all', array(

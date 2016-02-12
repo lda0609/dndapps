@@ -5,7 +5,7 @@
     #rcorners {
         border-radius: 35px;
         border: 2px solid white;
-        background: url(webroot/img/dragon4.jpg);
+        background: url(/dndapps/webroot/img/dragon4.jpg);
         background-position: left top;
         background-repeat: round;
         padding: 20px; 
