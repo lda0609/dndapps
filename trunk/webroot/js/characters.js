@@ -123,6 +123,7 @@ function salvarPersonagem(funcao) {
     adventurer['Adventurers']['background'] = $('#background').val();
     adventurer['Adventurers']['alignment'] = $('#alignment').val();
 
+    adventurer['CharacterProgression']['id'] = $('#personagensGravados').val();
     adventurer['CharacterProgression']['lvl'] = $('#level').val();
     adventurer['CharacterProgression']['strength'] = $('#str').val();
     adventurer['CharacterProgression']['dextery'] = $('#dex').val();
@@ -134,6 +135,7 @@ function salvarPersonagem(funcao) {
     adventurer['CharacterProgression']['initiative'] = $('#init').val();
     adventurer['CharacterProgression']['speed'] = $('#speed').val();
     adventurer['CharacterProgression']['hit_point_max'] = $('#hp').val();
+
 
     var values = $('.skill').map(function () {
         if ($(this).val() !== '') {

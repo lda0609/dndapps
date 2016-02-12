@@ -1,0 +1,4 @@
+ALTER TABLE dnd.dnd_monsters ADD book text;
+UPDATE dnd.dnd_monsters set book='MM' where id<=447;
+INSERT INTO dnd.dnd_type (id, name) VALUES (18, '(Duergar)'),(19, '(Dwarf)'),(20, '(Aarakocra)'),(21, '(Bullywug)'),(22, '(Shapechanger)'),(23, '(Elf)'),(24, '(Titan)'),(25, '(Gith)'),(26, '(Gnoll)'),(27, '(Gnome)'),(28, '(Grimlock)'),(29, '(Kenku)'),(30, '(Kobold)'),(31, '(Kuo-toa)'),(32, '(Lizardfolk)'),(33, '(Human)'),(34, '(Merfolk)'),(35, '(Orc)'),(36, '(Quaggoth)'),(37, '(Sahuagin)'),(38, '(Thri-kreen)'),(39, '(Troglodyte)'),(40, '(Yuan-ti)'),(41, '(Yugoloth)'),(42, '(Derro)');
+SELECT pg_catalog.setval('dnd_monsters_id_seq', 470, true);

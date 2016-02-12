@@ -91,6 +91,7 @@ function mostraInfoGrupo(atualizaAventura) {
 //            data: callOptions,
             async: true
         }).done(function (data, textStatus, request) {
+            console.log(data);
             players = data['adventurers'];
             var countAdventurer = 0;
             multiplierIndex = data['multiplierIndex'];
@@ -108,7 +109,8 @@ function mostraInfoGrupo(atualizaAventura) {
             $('#xpThreshhold > tbody:last').append('<tr><td>Hard</td><td>' + data['xpMultiplier']['hard']['1'] + '</td><td>' + data['xpMultiplier']['hard']['2'] + '</td><td>' + data['xpMultiplier']['hard']['3-6'] + '</td><td>' + data['xpMultiplier']['hard']['7-10'] + '</td><td>' + data['xpMultiplier']['hard']['11-14'] + '</td><td>' + data['xpMultiplier']['hard']['15+'] + '</td></tr>');
             $('#xpThreshhold > tbody:last').append('<tr><td>Deadly</td><td>' + data['xpMultiplier']['deadly']['1'] + '</td><td>' + data['xpMultiplier']['deadly']['2'] + '</td><td>' + data['xpMultiplier']['deadly']['3-6'] + '</td><td>' + data['xpMultiplier']['deadly']['7-10'] + '</td><td>' + data['xpMultiplier']['deadly']['11-14'] + '</td><td>' + data['xpMultiplier']['deadly']['15+'] + '</td></tr>');
             $('#adventurers').html('<thead></thead><tbody></tbody>');
-            $('#adventurers > thead:last').append('<tr><th width="40px"></th><th>Name</th><th>Race</th><th>Class</th><th>Player</th><th>Level Inicial</th><th>XP Final</th></tr>');
+            level_xp = "lvl 1: 300xp&#13;&#10;lvl 2: 900xp&#13;&#10;lvl 3: 2700xp&#13;&#10;lvl 4: 6500xp&#13;&#10;lvl 5: 6500xp&#13;&#10;lvl 6: 14000xp&#13;&#10;lvl 7: 23000xp&#13;&#10;lvl 8: 34000xp&#13;&#10;lvl 9: 48000xp&#13;&#10;lvl 10: 64000xp&#13;&#10;lvl 11: 85000xp&#13;&#10;lvl 12: 100000xp&#13;&#10;lvl 13: 120000xp&#13;&#10;lvl 14: 140000xp&#13;&#10;lvl 15: 165000xp&#13;&#10;lvl 16: 195000xp&#13;&#10;lvl 17: 225000xp&#13;&#10;lvl 18: 265000xp&#13;&#10;lvl 19: 305000xp&#13;&#10;lvl 20: 355000xp";
+            $('#adventurers > thead:last').append('<tr><th width="40px"></th><th>Name</th><th>Race</th><th>Class</th><th>Player</th><th>Level Inicial</th><th><span title="' + level_xp + '">XP Final <i class="fa fa-question-circle"></i></span></th></tr>');
             $.each(data['adventurers'], function (key, adventurer) {
                 if (adventurer['AdventurersPerAdventure']['xp_final'] === null) {
                     xp_final = '<input type="text" id="xp_final' + adventurer['Adventurers']['id'] + '" class="xp_final" alt="numero6" size="8" maxlength="6">';
