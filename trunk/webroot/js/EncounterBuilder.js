@@ -227,8 +227,6 @@ $(function () {
 
 $('body').on('click', '#btnAtualizarXP', function () {
     $("#confirmaXP").dialog("open");
-
-
 });
 
 function AtualizacaoXPconfirmada() {

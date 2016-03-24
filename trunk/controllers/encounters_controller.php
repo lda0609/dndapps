@@ -52,12 +52,12 @@ class EncountersController extends AppController
                     'type' => 'LEFT',
                     'conditions' => array(
                         'Adventurers.id = AdventurersPerAdventure.dnd_adventurers_id',
-                    )
+                    ),
                 )
             ),
             'conditions' => array('AdventurersPerAdventure.dnd_adventure_id' => $idAventura),
             'fields' => array('dnd_adventure_id', 'dnd_adventurers_id', 'lvl_inicial', 'xp_final', 'ausente', 'Adventurers.id', 'Adventurers.name', 'Adventurers.race', 'Adventurers.class', 'Adventurers.player'),
-            'order' => 'AdventurersPerAdventure.id',
+            'order' => 'Adventurers.id',
         ));
 
         //getAdventurersPresentes($idAventura){}
