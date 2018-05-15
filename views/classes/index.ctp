@@ -10,6 +10,7 @@
         text-align: left;
         vertical-align: top;
         border-bottom: 0px solid #ddd;
+    }
     </style>
 
     <h2>Character Class</h2>

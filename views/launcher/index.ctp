@@ -55,13 +55,18 @@
             <button class="button-warning pure-button button-launcher-small" onClick="window.open('http://localhost/dndapps/magic_items/consulta/');">Magic Items</button>
             <br><br>
             <button class="button-error pure-button button-launcher" onClick="window.open('http://localhost/dndapps/encounters/');">Adventure</button>
+            <button class="button-warning pure-button button-launcher-small" onClick="window.open('http://localhost/dndapps/monsters/');">Update Monster</button>
             <br><br>
-            <br><br><br><br><br><br>
+            <button class="button-warning pure-button button-launcher-small" onClick="window.open('http://localhost/dndapps/monsters/cadastro');">New Monster</button>
+            <br><br><br><br>
+            <button class="button-warning pure-button button-launcher-small" onClick="window.open('http://localhost/dndapps/gods/');">Update Gods</button>
+            <br><br><br>
+            <button class="button-warning pure-button button-launcher-small" onClick="window.open('http://localhost/dndapps/gods/consulta');">Gods List</button>
             <br><br><br><br><br><br><br><br><br>
             <?php
-            if ($newPatch) {
+            if (!$newPatch) {
                 ?>
-                <button id="Patch" class="button-warning pure-button button-launcher" onClick="window.open('http://localhost/dndapps/patcher/');">Novo Patch</button>
+                <button id="Patch" class="button-error pure-button button-launcher" onClick="window.open('http://localhost/dndapps/patcher/');">Novo Patch</button>
             <?php } ?>
         </div>
     </div>
