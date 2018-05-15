@@ -1,10 +1,17 @@
 <?php
 
+//Passos para criar um novo patch:
+//scripts para executar no banco devem ser incluídos manualmente no arquivo scripts.txt, se não houver alterações deixar o arquivo em branco. 
+//Para incluir novos monstros deve ser usada a função "create" abaixo. Editar as variáveis de acordo com a necessidade. 
+//Atualizar o arquivo version.txt com a nova versão. 
+//
+//Para aplicar o patch, executar a função index diretamente ou pelo Launcher. 
+
 class PatcherController extends AppController
 {
 
     var $uses = array('Monsters', 'MonsterTypes', 'MonsterFavorites', 'Patch');
-
+    
     function index()
     {
         $myfile = fopen("patch/version.txt", "r") or die("Unable to open file!");
@@ -35,17 +42,22 @@ class PatcherController extends AppController
         }
     }
 
+    //executar essa função para criar patch com os novos monstros. 
     function create()
     {
+
+        $monster_id = '455'; //id do primeiro novo monstro
+        $monsterTypes_id = '479'; //id da primeira nova relação "monster->types"
+
         $monsters = $this->Monsters->find('all', array(
             'conditions' => array(
-                'id >=' => '455'
+                'id >=' => $monster_id
         )));
         $monsterTypes = $this->MonsterTypes->find('all', array(
             'conditions' => array(
                 'AND' => array(
-                    array('dnd_monsters_id <' => '455'),
-                    array('id >' => '479'),
+                    array('dnd_monsters_id <' => $monster_id),
+                    array('id >' => $monsterTypes_id),
                 )
         )));
         $myfile = fopen("patch/patch.txt", "w") or die("Unable to open file!");

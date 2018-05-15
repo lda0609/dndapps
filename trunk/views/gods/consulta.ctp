@@ -10,6 +10,7 @@
         text-align: left;
         vertical-align: top;
         border-bottom: 0px solid #ddd;
+    }
     </style>
 
     <?php // debug($gods);  ?>

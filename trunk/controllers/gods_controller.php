@@ -137,5 +137,3 @@ class GodsController extends AppController
     }
 
 }
-
-?>

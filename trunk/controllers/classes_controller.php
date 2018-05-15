@@ -15,5 +15,3 @@ class ClassesController extends AppController
     }
 
 }
-
-?>
