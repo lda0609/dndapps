@@ -142,13 +142,22 @@ class CharactersController extends AppController
             if (empty($value)) {
                 $value = 0;
             }
+
             if (isset($xpAnterior)) {
                 $AdventurerPerAdventure['AdventurersPerAdventure']['xp_final'] = $xpAnterior[$adventurerId] + $value;
             } else {
                 $AdventurerPerAdventure['AdventurersPerAdventure']['xp_final'] = $value;
             }
             $this->AdventurersPerAdventure->save($AdventurerPerAdventure);
+
+            $Adventurer = $this->Adventurers->findById($adventurerId);
+            unset($Adventurer['AdventurersPerAdventure']);
+            unset($Adventurer['AdventurersSkills']);
+            $Adventurer['Adventurers']['xp'] = $AdventurerPerAdventure['AdventurersPerAdventure']['xp_final'];
+
+            $this->Adventurers->save($Adventurer);
         }
+
         return json_encode('ok');
     }
 

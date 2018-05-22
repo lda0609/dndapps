@@ -39,7 +39,7 @@
             <div class="pure-control-group">
                 <table class="pure-table" border="0">
                     <tr>
-                        <td rowspan="2">
+                        <td>
                             <label for="name">Name</label><input id="name" type="text" class="field">
                         </td>
                         <td>
@@ -60,10 +60,17 @@
                             <label for="alignment">Alignment</label><select id="alignment"><?php echo $alignment; ?></select>
                         </td>
                         <td>
-                            <label for="player">player</label><input id="player" type="text" class="field">
+                            <label for="player">Player</label><input id="player" type="text" class="field">
+                        </td>
+                        <td>
+                            <label for="player">
+                                <span title="lvl 1: 300xp&#13;&#10;lvl 2: 900xp&#13;&#10;lvl 3: 2700xp&#13;&#10;lvl 4: 6500xp&#13;&#10;lvl 5: 6500xp&#13;&#10;lvl 6: 14000xp&#13;&#10;lvl 7: 23000xp&#13;&#10;lvl 8: 34000xp&#13;&#10;lvl 9: 48000xp&#13;&#10;lvl 10: 64000xp&#13;&#10;lvl 11: 85000xp&#13;&#10;lvl 12: 100000xp&#13;&#10;lvl 13: 120000xp&#13;&#10;lvl 14: 140000xp&#13;&#10;lvl 15: 165000xp&#13;&#10;lvl 16: 195000xp&#13;&#10;lvl 17: 225000xp&#13;&#10;lvl 18: 265000xp&#13;&#10;lvl 19: 305000xp&#13;&#10;lvl 20: 355000xp"> XP <i class="fa fa-question-circle"></i></span>
+                            </label><input id="xp" type="number" class="field large-number">
                         </td>
                     </tr>
                 </table>
+
+
 
                 <table border="0">
                     <tr>
@@ -90,16 +97,16 @@
                 <table border="0">
                     <tr>
                         <td>
-                            <label for="ac">AC</label><input id="ac" type="number" class="field">
+                            <label for="ac">AC</label><input id="ac" type="number" class="field small-number">
                         </td>
                         <td>
-                            <label for="hp">HP</label><input id="hp" type="number" class="field">
+                            <label for="hp">HP</label><input id="hp" type="number" class="field small-number">
                         </td>
                         <td>
-                            <label for="init">Init</label><input id="init" type="number" class="field">
+                            <label for="init">Init</label><input id="init" type="number" class="field small-number">
                         </td>
                         <td>
-                            <label for="speed">Speed</label><input id="speed" type="number" class="field">
+                            <label for="speed">Speed</label><input id="speed" type="number" class="field small-number">
                         </td>
                     </tr>
                 </table>
@@ -113,9 +120,9 @@
                     <tr>
                         <?php
                         $rows = '';
-                        $cont=1;
+                        $cont = 1;
                         foreach ($dnd_skills as $key => $skill) {
-                            $rows .= '<tr><td>' . $skill . '</td><td><input id="' . $key . '" type="number" class="skill"></td></tr>';
+                            $rows .= '<tr><td>' . $skill . '</td><td><input id="' . $key . '" type="number" class="skill small-number"></td></tr>';
                             if ($cont++ % 6 == 0) {
                                 $column = '<td><table>' . $rows . '</table></td>';
                                 echo $column;

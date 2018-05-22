@@ -59,7 +59,7 @@ $monster_size = array('Tiny' => 'Tiny', 'Small' => 'Small', 'Medium' => 'Medium'
         <td><?php echo $this->Form->input('page', array('type' => 'text', 'class' => 'monster-data')); ?></td>
     </tr>
     <tr>
-        <td><?php echo $this->Form->input('book', array('type' => 'select', 'options' => array('Volo' => 'Volo', 'OotA' => 'OotA', 'MM' => 'MM'), 'class' => 'monster-data')); ?></td>
+        <td><?php echo $this->Form->input('book', array('type' => 'select', 'options' => array('MToF' => 'MToF', 'Volo' => 'Volo', 'OotA' => 'OotA', 'MM' => 'MM'), 'class' => 'monster-data')); ?></td>
     </tr>
     <tr>
         <?php

@@ -24,4 +24,4 @@
     </div>
 </div>
 
-<script src="/<?php echo APP_DIR ?> /js/characters.js"></script>
+<script src="/<?php echo APP_DIR ?> /js/characters.js?123"></script>
