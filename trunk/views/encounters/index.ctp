@@ -49,5 +49,5 @@
     </tr>
 </table>
 
-<script src="/<?php echo APP_DIR ?> /js/EncounterBuilder.js"></script>
+<script src="/<?php echo APP_DIR ?> /js/EncounterBuilder.js?122"></script>
 <script src="/<?php echo APP_DIR ?>/js/turntracker.js"></script>

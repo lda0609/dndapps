@@ -110,7 +110,7 @@ function mostraInfoGrupo(atualizaAventura) {
             $('#xpThreshhold > tbody:last').append('<tr><td>Deadly</td><td>' + data['xpMultiplier']['deadly']['1'] + '</td><td>' + data['xpMultiplier']['deadly']['2'] + '</td><td>' + data['xpMultiplier']['deadly']['3-6'] + '</td><td>' + data['xpMultiplier']['deadly']['7-10'] + '</td><td>' + data['xpMultiplier']['deadly']['11-14'] + '</td><td>' + data['xpMultiplier']['deadly']['15+'] + '</td></tr>');
             $('#adventurers').html('<thead></thead><tbody></tbody>');
             level_xp = "lvl 1: 300xp&#13;&#10;lvl 2: 900xp&#13;&#10;lvl 3: 2700xp&#13;&#10;lvl 4: 6500xp&#13;&#10;lvl 5: 6500xp&#13;&#10;lvl 6: 14000xp&#13;&#10;lvl 7: 23000xp&#13;&#10;lvl 8: 34000xp&#13;&#10;lvl 9: 48000xp&#13;&#10;lvl 10: 64000xp&#13;&#10;lvl 11: 85000xp&#13;&#10;lvl 12: 100000xp&#13;&#10;lvl 13: 120000xp&#13;&#10;lvl 14: 140000xp&#13;&#10;lvl 15: 165000xp&#13;&#10;lvl 16: 195000xp&#13;&#10;lvl 17: 225000xp&#13;&#10;lvl 18: 265000xp&#13;&#10;lvl 19: 305000xp&#13;&#10;lvl 20: 355000xp";
-            $('#adventurers > thead:last').append('<tr><th width="40px"></th><th>Name</th><th>Race</th><th>Class</th><th>Player</th><th>Level Inicial</th><th><span title="' + level_xp + '">XP Final <i class="fa fa-question-circle"></i></span></th></tr>');
+            $('#adventurers > thead:last').append('<tr><th width="40px"></th><th>Name</th><th>Race</th><th>Class</th><th>Player</th><th>Level</th><th>XP</th><th><span title="' + level_xp + '">XP Final <i class="fa fa-question-circle"></i></span></th></tr>');
             $.each(data['adventurers'], function (key, adventurer) {
                 if (adventurer['AdventurersPerAdventure']['xp_final'] === null) {
                     xp_final = '<input type="text" id="xp_final' + adventurer['Adventurers']['id'] + '" class="xp_final" alt="numero6" size="8" maxlength="6">';
@@ -118,7 +118,7 @@ function mostraInfoGrupo(atualizaAventura) {
                 } else {
                     xp_final = adventurer['AdventurersPerAdventure']['xp_final'];
                 }
-                $('#adventurers > tbody:last').append('<tr id="aventureiro' + adventurer['Adventurers']['id'] + '" class="saveonclick"><td id="img' + adventurer['Adventurers']['id'] + '"><a onclick="toggleAusencia(\'' + adventurer['Adventurers']['id'] + '\')"><img height="38px" src="/dndapps/img/green-dragon.png" class="clickable"></a></td><td>' + adventurer['Adventurers']['name'] + '</td><td>' + adventurer['Adventurers']['race'] + '</td><td>' + dnd_classes[adventurer['Adventurers']['class']] + '</td><td>' + adventurer['Adventurers']['player'] + '</td><td>' + adventurer['AdventurersPerAdventure']['lvl_inicial'] + '</td><td>' + xp_final + '</td></tr>');
+                $('#adventurers > tbody:last').append('<tr id="aventureiro' + adventurer['Adventurers']['id'] + '" class="saveonclick"><td id="img' + adventurer['Adventurers']['id'] + '"><a onclick="toggleAusencia(\'' + adventurer['Adventurers']['id'] + '\')"><img height="38px" src="/dndapps/img/green-dragon.png" class="clickable"></a></td><td>' + adventurer['Adventurers']['name'] + '</td><td>' + adventurer['Adventurers']['race'] + '</td><td>' + dnd_classes[adventurer['Adventurers']['class']] + '</td><td>' + adventurer['Adventurers']['player'] + '</td><td>' + adventurer['AdventurersPerAdventure']['lvl_inicial'] + '</td><td>' + adventurer['Adventurers']['xp'] + '</td><td>' + xp_final + '</td></tr>');
 
                 if (adventurer['AdventurersPerAdventure']['ausente'] === '1') {
                     $('#aventureiro' + adventurer['Adventurers']['id']).addClass('ausencia');
@@ -377,7 +377,8 @@ function adicionarAoEncontro(monsterId) {
     var cr = $(monsterData).find('td#tdCr').html();
     var page = $(monsterData).find('td#tdPage').html();
     var hp = $(monsterData).find('td#tdHP').html();
-    $('#tabEncontro > tbody:last').append('<tr class="encounterMonster" id="' + monsterId + '"><td> <a onclick="excluirDoEncontro(\'' + monsterId + '\')"><img class="clickable" src="/dndapps/img/minus24px.png"></a></td><td>' + monster + '</td><td><input type="text" id="qtde' + monsterId + '" class="quantidade" alt="numero3" size="3" maxlength="3"></td><td id="tdCr">' + cr + '</td><td>' + hp + '</td><td id="xp' + monsterId + '" class="xpEncounter"></td><td>' + page + '</td></tr>');
+    $('#tabEncontro > tbody:last').append('<tr class="encounterMonster" id="' + monsterId + '"><td> <a onclick="excluirDoEncontro(\'' + monsterId + '\')"><img class="clickable" src="/dndapps/img/minus24px.png"></a></td><td>' + monster + '</td><td><input type="text" id="qtde' + monsterId + '" class="quantidade" alt="numero3" size="3" maxlength="3" value="1"></td><td id="tdCr">' + cr + '</td><td>' + hp + '</td><td id="xp' + monsterId + '" class="xpEncounter"></td><td>' + page + '</td></tr>');
+    $('.quantidade').change();//força atualização do xp
     aplicaMask();
 }
 
@@ -681,4 +682,17 @@ $("#t4").click(function () {
     if ($('#data').val() === '') {
         alert('Data da Aventura deve ser selecionada');
     }
+});
+
+var input = document.getElementById("monsterName");
+
+// Execute a function when the user releases a key on the keyboard
+input.addEventListener("keydown", function (event) {
+    // Number 13 is the "Enter" key on the keyboard
+    if (event.keyCode === 13) {
+        // Cancel the default action, if needed
+        event.preventDefault();
+        document.getElementById("btnConsultar").click();
+    }
+    return false;
 });

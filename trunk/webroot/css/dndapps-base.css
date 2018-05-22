@@ -6,6 +6,14 @@
     margin-right: auto;
 }
 
+.list_cor_sim {
+    background: #ddd;
+}
+
+.list_cor_nao {
+    background-color: #fff;
+}
+
 #footer, #header {
     display: none;
 }
@@ -82,6 +90,11 @@ table tr td{
 .huerotate {-webkit-filter: hue-rotate(180deg);}
 .opacity {-webkit-filter: opacity(50%);}
 
-input[type=number]{
-    width: 55px;
-} 
+
+.small-number {
+    width: 60px;
+}
+
+.large-number {
+    width: 180px;
+}

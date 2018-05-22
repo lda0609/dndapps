@@ -122,6 +122,7 @@ function salvarPersonagem(funcao) {
     adventurer['Adventurers']['player'] = $('#player').val();
     adventurer['Adventurers']['background'] = $('#background').val();
     adventurer['Adventurers']['alignment'] = $('#alignment').val();
+    adventurer['Adventurers']['xp'] = $('#xp').val();
 
     adventurer['CharacterProgression']['id'] = $('#personagensGravados').val();
     adventurer['CharacterProgression']['lvl'] = $('#level').val();
@@ -200,6 +201,7 @@ $('#personagensGravados').change(function () {
             $('#player').val(data['Adventurers'].player);
             $('#background').val(data['Adventurers'].background);
             $('#alignment').val(data['Adventurers'].alignment);
+            $('#xp').val(data['Adventurers'].xp);
 
             $('#level').val(data['CharacterProgression'].lvl);
             $('#str').val(data['CharacterProgression'].strength);
