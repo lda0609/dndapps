@@ -1,6 +1,8 @@
 $.mask.masks.numero3 = {mask: '999'};
 $.mask.masks.numero6 = {mask: '999999'};
 var players = '';
+var avoidedEncounters = [];
+
 $(function () {
     $("#tabs").tabs({
         disabled: [1, 2, 3]
@@ -109,7 +111,7 @@ function mostraInfoGrupo(atualizaAventura) {
             $('#xpThreshhold > tbody:last').append('<tr><td>Hard</td><td>' + data['xpMultiplier']['hard']['1'] + '</td><td>' + data['xpMultiplier']['hard']['2'] + '</td><td>' + data['xpMultiplier']['hard']['3-6'] + '</td><td>' + data['xpMultiplier']['hard']['7-10'] + '</td><td>' + data['xpMultiplier']['hard']['11-14'] + '</td><td>' + data['xpMultiplier']['hard']['15+'] + '</td></tr>');
             $('#xpThreshhold > tbody:last').append('<tr><td>Deadly</td><td>' + data['xpMultiplier']['deadly']['1'] + '</td><td>' + data['xpMultiplier']['deadly']['2'] + '</td><td>' + data['xpMultiplier']['deadly']['3-6'] + '</td><td>' + data['xpMultiplier']['deadly']['7-10'] + '</td><td>' + data['xpMultiplier']['deadly']['11-14'] + '</td><td>' + data['xpMultiplier']['deadly']['15+'] + '</td></tr>');
             $('#adventurers').html('<thead></thead><tbody></tbody>');
-            level_xp = "lvl 1: 300xp&#13;&#10;lvl 2: 900xp&#13;&#10;lvl 3: 2700xp&#13;&#10;lvl 4: 6500xp&#13;&#10;lvl 5: 6500xp&#13;&#10;lvl 6: 14000xp&#13;&#10;lvl 7: 23000xp&#13;&#10;lvl 8: 34000xp&#13;&#10;lvl 9: 48000xp&#13;&#10;lvl 10: 64000xp&#13;&#10;lvl 11: 85000xp&#13;&#10;lvl 12: 100000xp&#13;&#10;lvl 13: 120000xp&#13;&#10;lvl 14: 140000xp&#13;&#10;lvl 15: 165000xp&#13;&#10;lvl 16: 195000xp&#13;&#10;lvl 17: 225000xp&#13;&#10;lvl 18: 265000xp&#13;&#10;lvl 19: 305000xp&#13;&#10;lvl 20: 355000xp";
+            level_xp = "lvl 1: 0xp&#13;&#10;lvl 2: 300xp&#13;&#10;lvl 3: 900xp&#13;&#10;lvl 4: 2700xp&#13;&#10;lvl 5: 6500xp&#13;&#10;lvl 6: 14000xp&#13;&#10;lvl 7: 23000xp&#13;&#10;lvl 8: 34000xp&#13;&#10;lvl 9: 48000xp&#13;&#10;lvl 10: 64000xp&#13;&#10;lvl 11: 85000xp&#13;&#10;lvl 12: 100000xp&#13;&#10;lvl 13: 120000xp&#13;&#10;lvl 14: 140000xp&#13;&#10;lvl 15: 165000xp&#13;&#10;lvl 16: 195000xp&#13;&#10;lvl 17: 225000xp&#13;&#10;lvl 18: 265000xp&#13;&#10;lvl 19: 305000xp&#13;&#10;lvl 20: 355000xp";
             $('#adventurers > thead:last').append('<tr><th width="40px"></th><th>Name</th><th>Race</th><th>Class</th><th>Player</th><th>Level</th><th>XP</th><th><span title="' + level_xp + '">XP Final <i class="fa fa-question-circle"></i></span></th></tr>');
             $.each(data['adventurers'], function (key, adventurer) {
                 if (adventurer['AdventurersPerAdventure']['xp_final'] === null) {
@@ -366,7 +368,7 @@ function showResult(data) {
             img_class = 'favorite';
             img_src = '/dndapps/img/pentagram_on.png';
         }
-        $('#tabResult > tbody:last').append('<tr id="monster' + monster['Monsters']['id'] + '"><td><a onclick="toggleFavorite(\'' + monster['Monsters']['id'] + '\')"><img height="24px" id="favorite' + monster['Monsters']['id'] + '" class="' + img_class + ' clickable" src="' + img_src + '"></td><td><a onclick="adicionarAoEncontro(\'' + monster['Monsters']['id'] + '\')"><img class="clickable" src="/dndapps/img/plus24px.png"></a></td><td id="tdMonster">' + monster['Monsters']['name'] + '</td><td id="tdType">' + monster['MonsterTypes'][0]['dnd_type_id'] + '</td><td id="tdCr">' + monster['Monsters']['cr'] + '</td><td id="tdSize">' + monster['Monsters']['size'] + '</td><td id="tdHP">' + monster['Monsters']['hp'] + '</td><td id="tdAlignment">' + monster['Monsters']['alignment'] + '</td><td id="tdPage">' + monster['Monsters']['page'] + '</td></tr>');
+        $('#tabResult > tbody:last').append('<tr id="monster' + monster['Monsters']['id'] + '"><td><a onclick="toggleFavorite(\'' + monster['Monsters']['id'] + '\')"><img height="24px" id="favorite' + monster['Monsters']['id'] + '" class="' + img_class + ' clickable" src="' + img_src + '"></td><td><a onclick="adicionarAoEncontro(\'' + monster['Monsters']['id'] + '\')"><img class="clickable" src="/dndapps/img/plus24px.png"></a></td><td id="tdMonster">' + monster['Monsters']['name'] + '</td><td id="tdType">' + monster['MonsterTypes'][0]['dnd_type_id'] + '</td><td id="tdCr">' + monster['Monsters']['cr'] + '</td><td id="tdSize">' + monster['Monsters']['size'] + '</td><td id="tdHP">' + monster['Monsters']['hp'] + '</td><td id="tdAlignment">' + monster['Monsters']['alignment'] + '</td><td id="tdPage">' + monster['Monsters']['book'] + ', ' + monster['Monsters']['page'] + '</td></tr>');
     });
 }
 
@@ -553,6 +555,12 @@ $("#t3").click(function () {
                 }
 
                 var img_excluir = '<td class="' + diff_class + '" width="28px"><a onclick="excluirEncontro(\'' + encontro['Encounters']['id'] + '\')"><img width="28px" src="/dndapps/img/document_delete.png" title="Exclui encontro" class="clickable"></a></td>';
+
+                if (avoidedEncounters.indexOf(encontro['Encounters']['id']) === -1) {
+					var img_toggle_avoidance = '<td class="' + diff_class + '" width="28px"><a onclick="toggleAvoidance(\'' + encontro['Encounters']['id'] + '\')"><img width="28px" src="/dndapps/img/power-green.png" title="Desabilita Encontro" class="clickable"></a></td>';
+				} else {
+					var img_toggle_avoidance = '<td class="' + diff_class + '" width="28px"><a onclick="toggleAvoidance(\'' + encontro['Encounters']['id'] + '\')"><img width="28px" src="/dndapps/img/power-red.png" title="Habilita Encontro" class="clickable"></a></td>';
+				}
                 var img_turntracker = '<td class="align_center ' + diff_class + '" width="28px"><a onclick="enviarEncontroParaTracker(\'' + encontro['Encounters']['id'] + '\')"><img width="28px" src="/dndapps/img/attack4.png" title="Carrega encontro no Turn Tracker" class="clickable"></a></td>';
                 var monsters = '';
                 $.each(encontro['EncountersMonsters'], function (key, monster) {
@@ -560,7 +568,7 @@ $("#t3").click(function () {
                 });
                 var tbody = '<tbody>' + monsters + '<tr><td width="36px"><img width="40px" src="/dndapps/img/Overstuffed_Treasure_Chest-icon.png"></td><td colspan="3">' + encontro['Encounters']['treasure'] + '</td></tr><tr><td width="36px"><img width="40px" src="/dndapps/img/xp-icon.png"></td><td colspan="3">' + encontro['Encounters']['xp'] + '/' + encontro['Encounters']['adjusted_xp'] + '</td></tr><tr><td width="36px"><img width="40px" src="/dndapps/img/information.png"></td><td colspan="3">' + encontro['Encounters']['information'] + '</td></tr></tbody>'
 
-                encounter_card = '<td class="encounterCard connectedSortable ui-state-default" id="pos' + contador + '"><table id="encounter' + encontro['Encounters']['id'] + '" ><thead><tr>' + img_turntracker + '<td class="' + diff_class + '" colspan="2">' + encontro['Encounters']['title'] + '</td>' + img_excluir + '</tr></thead>' + tbody + '</table></td>';
+                encounter_card = '<td class="encounterCard connectedSortable ui-state-default" id="pos' + contador + '"><table id="encounter' + encontro['Encounters']['id'] + '" ><thead><tr>' + img_turntracker + '<td class="' + diff_class + '" colspan="0">' + encontro['Encounters']['title'] + '</td>' + img_toggle_avoidance + img_excluir + '</tr></thead>' + tbody + '</table></td>';
                 if (contador++ % 2 === 0) {
                     encounter_card_row += encounter_card;
                 } else {
@@ -569,8 +577,13 @@ $("#t3").click(function () {
                     encounter_card_row = '';
                 }
                 //calcula totais
-                xp += Number(encontro['Encounters']['xp']);
-                adjustedXp += Number(encontro['Encounters']['adjusted_xp']);
+                console.log(avoidedEncounters);
+                console.log(avoidedEncounters.indexOf(encontro['Encounters']['id']));
+                if (avoidedEncounters.indexOf(encontro['Encounters']['id']) === -1) {
+                    xp += Number(encontro['Encounters']['xp']);
+                    adjustedXp += Number(encontro['Encounters']['adjusted_xp']);
+                }
+
             });
             if (contador++ % 2 !== 0) {
                 $('#listaEncontros > tbody:last').append('<tr>' + encounter_card_row + '</tr>');
@@ -674,6 +687,21 @@ function enviarEncontroParaTracker(encounterId) {
         $("#t4").click();
     });
 }
+
+
+function toggleAvoidance(encounterId) {
+
+    var index = avoidedEncounters.indexOf(encounterId);
+    if (index === -1) {
+        avoidedEncounters.push(encounterId);
+    } else {
+        avoidedEncounters.splice(index, 1);
+    }
+
+    console.log(avoidedEncounters);
+    $("#t3").click();
+}
+
 
 $("#t4").click(function () {
     $('.tracker-side-frame').show();
