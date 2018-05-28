@@ -38,9 +38,20 @@ class CharactersController extends AppController
             $adventurers[$key]['CharacterProgression'] = $characterProgression['CharacterProgression'];
 
             $AdventurersSkills = $this->AdventurersSkills->find('all', array(
+	            'joins' => array(
+					array('table' => 'skills',
+						'alias' => 'Skills',
+						'type' => 'LEFT',
+						'conditions' => array(
+							'Skills.id = AdventurersSkills.dnd_skills_id',
+						)
+					)
+				),
                 'conditions' => array(
                     'dnd_adventurers_id' => $value['AdventurersPerAdventure']['dnd_adventurers_id']
-            )));
+				),
+				'order' => array('Skills.name'),
+			));
             $adventurers[$key]['AdventurersSkills'] = $AdventurersSkills;
         }
         return json_encode($adventurers);
@@ -49,37 +60,19 @@ class CharactersController extends AppController
     function getListCharacters()
     {
         $this->autoRender = false;
-
-        $aventuraAnterior = $this->Adventure->find('list', array('fields' => 'id'));
-        if (!empty($aventuraAnterior)) {
-            $aventuraAnteriorId = max($aventuraAnterior);
-            $AdventurersPerAdventureAnterior = $this->AdventurersPerAdventure->find('all', array(
-                'conditions' => array(
-                    'dnd_adventure_id' => $aventuraAnteriorId,
-                ),
-                'fields' => array('xp_final', 'dnd_adventurers_id')
-            ));
-            foreach ($AdventurersPerAdventureAnterior as $key => $value) {
-                $xpAnterior[$value['AdventurersPerAdventure']['dnd_adventurers_id']] = $value['AdventurersPerAdventure']['xp_final'];
-            }
-            $adventurers = $this->Adventurers->find("all", array(
-                'conditions' => array(
-                    'status' => 1,
-                )
-            ));
-            foreach ($adventurers as $key => $value) {
-                $lvl = 0;
-                while ($xpAnterior[$value['Adventurers']['id']] >= $this->xp_threshold[$lvl]) {
-                    $lvl++;
-                }
-                $adventurers[$key]['Adventurers']['lvl_inicial'] = $lvl;
-            }
-        }
         $adventurers = $this->Adventurers->find("all", array(
             'conditions' => array(
                 'status' => 1,
             )
         ));
+
+        foreach ($adventurers as $key => $value) {
+            $lvl = 0;
+            while ($value['Adventurers']['xp'] >= $this->xp_threshold[$lvl]) {
+                $lvl++;
+            }
+            $adventurers[$key]['Adventurers']['lvl_inicial'] = $lvl;
+        }
         return json_encode($adventurers);
     }
 
@@ -263,11 +256,13 @@ class CharactersController extends AppController
                 $newSkill['AdventurersSkills']['dnd_adventurers_id'] = $adventurerId;
                 $newSkill['AdventurersSkills']['dnd_skills_id'] = $skillUpdated['dnd_skills_id'];
                 $newSkill['AdventurersSkills']['modifier'] = $skillUpdated['modifier'];
+				$this->AdventurersSkills->create();
                 $this->AdventurersSkills->save($newSkill);
             }
         }
-        $this->AdventurersSkills->saveAll($skillsUpdated);
-
+		if (isset($skillsUpdated)){
+			$this->AdventurersSkills->saveAll($skillsUpdated);
+		}
         foreach ($adventurerSkills as $key => $skillSaved) {
             $flag = 0;
             foreach ($adventurerSkillsUpdated['AdventurersSkills'] as $key => $skillUpdated) {
@@ -303,7 +298,7 @@ class CharactersController extends AppController
 
         $adventurers = $this->Adventurers->find('all', array(
             'conditions' => array(
-                'status' => 1,
+//                'status' => 1,
             ), 'order' => 'id'));
         $retorno = array();
         foreach ($adventurers as $key => $adventurer) {
@@ -342,6 +337,30 @@ class CharactersController extends AppController
         $retorno['AdventurersSkills'] = $adventurers['AdventurersSkills'];
 
         return json_encode($retorno);
+    }
+
+    function inativar()
+    {
+        $this->autoRender = false;
+        $adventurer['Adventurers']['status'] = '0';
+        $this->Adventurers->id = $this->params['form']['characterId'];
+        if ($this->Adventurers->save($adventurer)) {
+            return json_encode('inativado');
+        } else {
+            return json_encode('erro ao atualizar o BD');
+        }
+    }
+
+    function reativar()
+    {
+        $this->autoRender = false;
+        $adventurer['Adventurers']['status'] = '1';
+        $this->Adventurers->id = $this->params['form']['characterId'];
+        if ($this->Adventurers->save($adventurer)) {
+            return json_encode('reativado');
+        } else {
+            return json_encode('erro ao atualizar o BD');
+        }
     }
 
     function notes()

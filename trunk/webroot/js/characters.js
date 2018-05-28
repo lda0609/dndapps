@@ -2,6 +2,8 @@ $("#msg_inclusao").hide();
 $("#msg_lvlup").hide();
 $("#btnAlterar").hide();
 $("#btnLevelUp").hide();
+$("#btnInativar").hide();
+$("#btnReativar").hide();
 
 var host = window.location.hostname;
 
@@ -55,42 +57,46 @@ function showCharactersCards(data) {
         if (characterData.AdventurersPerAdventure.xp_final == null) {
             characterData.AdventurersPerAdventure.xp_final = '';
         }
-        var rows = '';
-        var html_skills = '';
-        rows += '<tr><td colspan="6" class="name_PC"><font class="card-name">' + characterData.Adventurers.name + '</font><br><font class="card-details">' + characterData.Adventurers.background + ' ' + dnd_classes[characterData.Adventurers.class] + ' ' + characterData.AdventurersPerAdventure.lvl_inicial + ', ' + dnd_alignment_players[characterData.Adventurers.alignment] + '</font><hr class="hr-paper-flip"></td></tr>';
-        rows += '<tr><td class="label">AC</td><td>' + characterData.CharacterProgression.ac + '</td><td class="label">SPD</td><td>' + characterData.CharacterProgression.speed + '</td><td class="label">Init</td><td>' + characterData.CharacterProgression.initiative + '</td></tr>';
-        rows += '<tr><td class="label">STR</td><td>' + characterData.CharacterProgression.strength + '</td><td class="label">DEX</td><td>' + characterData.CharacterProgression.dextery + '</td><td class="label">CON</td><td>' + characterData.CharacterProgression.constitution + '</td></tr>';
-        rows += '<tr><td class="label">INT</td><td>' + characterData.CharacterProgression.intelligence + '</td><td class="label">WIS</td><td>' + characterData.CharacterProgression.wisdom + '</td><td class="label">CHA</td><td>' + characterData.CharacterProgression.charisma + '</td></tr>';
-
-        html_skills = '<tr><td colspan="6"><font class="card-name">Skills </font><hr class="hr-paper-flip"></td></tr><tr>';
-        var cont_skill = 1;
-        var passive_perception = 10;
-        var hasPerception = false;
-        $.each(characterData['AdventurersSkills'], function (key, skill) {
-            html_skills += '<td class="label"> ' + dnd_skills[skill['AdventurersSkills']['dnd_skills_id']] + '</td><td> ' + skill['AdventurersSkills']['modifier'] + '</td>';
-            if (cont_skill++ % 2 === 0) {
-                html_skills += '</tr><tr>';
-            }
-            if (skill['AdventurersSkills']['dnd_skills_id'] === '13') {
-                hasPerception = true;
-                passive_perception = passive_perception + Number(skill['AdventurersSkills']['modifier']);
-            }
-        });
-        if (!hasPerception) {
-            bonus_wisdom = Math.floor((Number(characterData.CharacterProgression.wisdom) - 10) / 2);
-            passive_perception += bonus_wisdom;
-        }
-
-        html_skills += '<tr><td colspan="3"><strong>Passive Perception</strong></td><td>' + passive_perception + '</td></tr>';
-        character_card = '<table>' + rows + html_skills +'</table>';
-
-        if (cont === 1) {
-            cards_row = '<td>' + character_card + '</td>';
-            cont = 2
+        if (characterData.CharacterProgression === null) {
+            console.log('Falta atualizar o nível do personagem!');
         } else {
-            cards_row = cards_row + '<td>' + character_card + '</td>';
-            $('#allCharacters').append('<tr>' + cards_row + '</tr>');
-            cont = 1
+            var rows = '';
+            var html_skills = '';
+            rows += '<tr><td colspan="6" class="name_PC"><font class="card-name">' + characterData.Adventurers.name + '</font><br><font class="card-details">' + characterData.Adventurers.background + ' ' + dnd_classes[characterData.Adventurers.class] + ' ' + characterData.AdventurersPerAdventure.lvl_inicial + ', ' + dnd_alignment_players[characterData.Adventurers.alignment] + '</font><hr class="hr-paper-flip"></td></tr>';
+            rows += '<tr><td class="label">AC</td><td>' + characterData.CharacterProgression.ac + '</td><td class="label">SPD</td><td>' + characterData.CharacterProgression.speed + '</td><td class="label">Init</td><td>' + characterData.CharacterProgression.initiative + '</td></tr>';
+            rows += '<tr><td class="label">STR</td><td>' + characterData.CharacterProgression.strength + '</td><td class="label">DEX</td><td>' + characterData.CharacterProgression.dextery + '</td><td class="label">CON</td><td>' + characterData.CharacterProgression.constitution + '</td></tr>';
+            rows += '<tr><td class="label">INT</td><td>' + characterData.CharacterProgression.intelligence + '</td><td class="label">WIS</td><td>' + characterData.CharacterProgression.wisdom + '</td><td class="label">CHA</td><td>' + characterData.CharacterProgression.charisma + '</td></tr>';
+
+            html_skills = '<tr><td colspan="6"><font class="card-name">Skills </font><hr class="hr-paper-flip"></td></tr><tr>';
+            var cont_skill = 1;
+            var passive_perception = 10;
+            var hasPerception = false;
+            $.each(characterData['AdventurersSkills'], function (key, skill) {
+                html_skills += '<td class="label" colspan="2"> ' + dnd_skills[skill['AdventurersSkills']['dnd_skills_id']] + '</td><td> ' + skill['AdventurersSkills']['modifier'] + '</td>';
+                if (cont_skill++ % 2 === 0) {
+                    html_skills += '</tr><tr>';
+                }
+                if (skill['AdventurersSkills']['dnd_skills_id'] === '13') {
+                    hasPerception = true;
+                    passive_perception = passive_perception + Number(skill['AdventurersSkills']['modifier']);
+                }
+            });
+            if (!hasPerception) {
+                bonus_wisdom = Math.floor((Number(characterData.CharacterProgression.wisdom) - 10) / 2);
+                passive_perception += bonus_wisdom;
+            }
+
+            html_skills += '<tr><td colspan="3"><strong>Passive Perception</strong></td><td>' + passive_perception + '</td></tr>';
+            character_card = '<table>' + rows + html_skills + '</table>';
+
+            if (cont === 1) {
+                cards_row = '<td>' + character_card + '</td>';
+                cont = 2
+            } else {
+                cards_row = cards_row + '<td>' + character_card + '</td>';
+                $('#allCharacters').append('<tr>' + cards_row + '</tr>');
+                cont = 1
+            }
         }
     });
 
@@ -113,9 +119,9 @@ $('#btnAlterar').click(function () {
 });
 
 function salvarPersonagem(funcao) {
-    var adventurer = {}
-    adventurer['Adventurers'] = {}
-    adventurer['CharacterProgression'] = {}
+    var adventurer = {};
+    adventurer['Adventurers'] = {};
+    adventurer['CharacterProgression'] = {};
     adventurer['Adventurers']['name'] = $('#name').val();
     adventurer['Adventurers']['race'] = $('#race').val();
     adventurer['Adventurers']['class'] = $('#class').val();
@@ -195,6 +201,8 @@ $('#personagensGravados').change(function () {
             async: true
         }).done(function (data, textStatus, request) {
             console.log(data);
+
+            $('#characterId').val(data['Adventurers'].id);
             $('#name').val(data['Adventurers'].name);
             $('#race').val(data['Adventurers'].race);
             $('#class').val(data['Adventurers'].class);
@@ -224,14 +232,63 @@ $('#personagensGravados').change(function () {
             $("#btnGravar").hide();
             $("#btnAlterar").show();
             $("#btnLevelUp").show();
+            if (data['Adventurers'].status === '1') {
+                $("#btnReativar").hide();
+                $("#btnInativar").show();
+            } else {
+                $("#btnInativar").hide();
+                $("#btnReativar").show();
+            }
+
         });
     } else {
         $("#btnGravar").show();
         $("#btnAlterar").hide();
         $("#btnLevelUp").hide();
+        $("#btnInativar").hide();
+        $("#btnReativar").hide();
         $('#btnLimpar').click();
     }
 });
+
+$('#btnInativar').click(function () {
+    var callOptions = {
+        "characterId": $('#characterId').val()
+    };
+    $.ajax({
+        dataType: "json",
+        url: 'http://' + host + '/dndapps/characters/inativar/',
+        type: 'POST',
+        data: callOptions,
+        async: true
+    }).done(function (data, textStatus, request) {
+        console.log(data);
+        if (data === 'inativado') {
+            $("#btnInativar").hide();
+            $("#btnReativar").show();
+        }
+    });
+});
+
+$('#btnReativar').click(function () {
+    var callOptions = {
+        "characterId": $('#characterId').val()
+    };
+    $.ajax({
+        dataType: "json",
+        url: 'http://' + host + '/dndapps/characters/reativar/',
+        type: 'POST',
+        data: callOptions,
+        async: true
+    }).done(function (data, textStatus, request) {
+        console.log(data);
+        if (data === 'reativado') {
+            $("#btnReativar").hide();
+            $("#btnInativar").show();
+        }
+    });
+});
+
 $('#btnLimpar').click(function () {
     $('.attribute_field option[value="6"]').attr('selected', 'selected');
     $('#class option[value="Barbarian"]').attr('selected', 'selected');

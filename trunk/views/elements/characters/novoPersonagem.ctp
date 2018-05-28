@@ -9,7 +9,16 @@
 <div id="grupo1">
     <form class="pure-form pure-form-aligned">
         <fieldset>
-            <div class="pure-control-group"><label for="personagensGravados">Personagens Gravados</label><select id="personagensGravados"></select></div>
+            <div class="pure-control-group">
+                <label for="personagensGravados">Personagens Gravados</label><select id="personagensGravados"></select>
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                &nbsp;&nbsp;&nbsp;&nbsp;&nbsp;
+                <button class="pure-button button-error" type="button" id="btnInativar">Inativar</button>
+                <button class="pure-button button-secondary" type="button" id="btnReativar">Reativar</button>
+            </div>
         </fieldset>
     </form>
 </div>
@@ -37,6 +46,7 @@
     <form class="pure-form pure-form-stacked">
         <fieldset>
             <div class="pure-control-group">
+                <input id="characterId" type="hidden">
                 <table class="pure-table" border="0">
                     <tr>
                         <td>
@@ -64,7 +74,7 @@
                         </td>
                         <td>
                             <label for="player">
-                                <span title="lvl 1: 300xp&#13;&#10;lvl 2: 900xp&#13;&#10;lvl 3: 2700xp&#13;&#10;lvl 4: 6500xp&#13;&#10;lvl 5: 6500xp&#13;&#10;lvl 6: 14000xp&#13;&#10;lvl 7: 23000xp&#13;&#10;lvl 8: 34000xp&#13;&#10;lvl 9: 48000xp&#13;&#10;lvl 10: 64000xp&#13;&#10;lvl 11: 85000xp&#13;&#10;lvl 12: 100000xp&#13;&#10;lvl 13: 120000xp&#13;&#10;lvl 14: 140000xp&#13;&#10;lvl 15: 165000xp&#13;&#10;lvl 16: 195000xp&#13;&#10;lvl 17: 225000xp&#13;&#10;lvl 18: 265000xp&#13;&#10;lvl 19: 305000xp&#13;&#10;lvl 20: 355000xp"> XP <i class="fa fa-question-circle"></i></span>
+                                <span title="lvl 1: 0xp&#13;&#10;lvl 2: 300xp&#13;&#10;lvl 3: 900xp&#13;&#10;lvl 4: 2700xp&#13;&#10;lvl 5: 6500xp&#13;&#10;lvl 6: 14000xp&#13;&#10;lvl 7: 23000xp&#13;&#10;lvl 8: 34000xp&#13;&#10;lvl 9: 48000xp&#13;&#10;lvl 10: 64000xp&#13;&#10;lvl 11: 85000xp&#13;&#10;lvl 12: 100000xp&#13;&#10;lvl 13: 120000xp&#13;&#10;lvl 14: 140000xp&#13;&#10;lvl 15: 165000xp&#13;&#10;lvl 16: 195000xp&#13;&#10;lvl 17: 225000xp&#13;&#10;lvl 18: 265000xp&#13;&#10;lvl 19: 305000xp&#13;&#10;lvl 20: 355000xp"> XP <i class="fa fa-question-circle"></i></span>
                             </label><input id="xp" type="number" class="field large-number">
                         </td>
                     </tr>

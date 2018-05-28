@@ -32,15 +32,15 @@
                 <thead>
                     <tr>
                         <th width="20px"><div class="th-inner"></div></th>
-                <th width="20px"><div class="th-inner"></div></th>
-                <th><div class="th-inner">Monster</div></th>
-                <th><div class="th-inner">Type</div></th>
-                <th><div class="th-inner">CR</div></th>
-                <th><div class="th-inner">Size</div></th>
-                <th><div class="th-inner">HP</div></th>
-                <th><div class="th-inner">Alignment</div></th>
-                <th><div class="th-inner">Page</div></th>
-                </tr>
+                        <th width="20px"><div class="th-inner"></div></th>
+                        <th><div class="th-inner">Monster</div></th>
+                        <th><div class="th-inner">Type</div></th>
+                        <th><div class="th-inner">CR</div></th>
+                        <th><div class="th-inner">Size</div></th>
+                        <th><div class="th-inner">HP</div></th>
+                        <th><div class="th-inner">Alig.</div></th>
+                        <th width="90px"><div class="th-inner">Page</div></th>
+                    </tr>
                 </thead>
                 <tbody>
 
