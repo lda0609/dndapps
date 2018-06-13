@@ -3,7 +3,7 @@
 class MonstersController extends AppController
 {
 
-    var $uses = array('Monsters', 'MonsterTypes', 'MonsterFavorites');
+    var $uses = array('Monsters', 'MonsterTypes', 'MonsterFavorites', 'MonsterEnvironments');
 
     //****************************************//
     //**** FUNÇÕES COM VIEWS RELACIONADAS ****//
@@ -22,8 +22,15 @@ class MonstersController extends AppController
                 'fields' => array('dnd_type_id'),
             ));
 
-            $this->set('monsterType', $monsterType);
+            debug($this->MonsterEnvironments->find('all'));
+            $monsterEnv = $this->MonsterEnvironments->find('list', array(
+                'conditions' => array('dnd_monsters_id' => $id),
+                'fields' => array('dnd_environments_id'),
+            ));
+
             $this->set('monster', $monster);
+            $this->set('monsterType', $monsterType);
+            $this->set('monsterEnv', $monsterEnv);
         }
     }
 
@@ -31,12 +38,12 @@ class MonstersController extends AppController
     {
         $this->autoRender = false;
         debug($this->data);
-
         $monsterType = $this->MonsterTypes->find('list', array(
             'conditions' => array('dnd_monsters_id' => $this->data['Monsters']['id']),
             'fields' => array('dnd_type_id')
         ));
 
+        //Update Monster Types
         if (is_array($this->data['MonsterTypes']['dnd_type_id'])) {
             $addType = array_diff($this->data['MonsterTypes']['dnd_type_id'], $monsterType);
             debug($addType);
@@ -44,10 +51,10 @@ class MonstersController extends AppController
             debug($removeType);
 
             foreach ($addType as $key => $type) {
-//            $newType['MonsterTypes']['id'] = '';
                 $newType['MonsterTypes']['dnd_monsters_id'] = $this->data['Monsters']['id'];
                 $newType['MonsterTypes']['dnd_type_id'] = $type;
                 debug($newType);
+                $this->MonsterTypes->create();
                 $this->MonsterTypes->save($newType);
             }
 
@@ -62,6 +69,39 @@ class MonstersController extends AppController
                 $this->MonsterTypes->delete($deleteType['MonsterTypes']['id']);
             }
         }
+
+        //Update Monster Environments
+        $monsterEnv = $this->MonsterEnvironments->find('list', array(
+            'conditions' => array('dnd_monsters_id' => $this->data['Monsters']['id']),
+            'fields' => array('dnd_environments_id')
+        ));
+
+        if (is_array($this->data['MonsterEnvironments']['dnd_environments_id'])) {
+
+            $addEnv = array_diff($this->data['MonsterEnvironments']['dnd_environments_id'], $monsterEnv);
+            debug($addEnv);
+            $removeEnv = array_diff($monsterEnv, $this->data['MonsterEnvironments']['dnd_environments_id']);
+            debug($removeEnv);
+            foreach ($addEnv as $key => $env) {
+                $newEnv['MonsterEnvironments']['dnd_monsters_id'] = $this->data['Monsters']['id'];
+                $newEnv['MonsterEnvironments']['dnd_environments_id'] = $env;
+                debug($newEnv);
+                $this->MonsterEnvironments->create();
+                $this->MonsterEnvironments->save($newEnv);
+            }
+
+            foreach ($removeEnv as $key => $env) {
+                $deleteEnv = $this->MonsterEnvironments->find('first', array(
+                    'conditions' => array(
+                        'dnd_monsters_id' => $this->data['Monsters']['id'],
+                        'dnd_environments_id' => $env),
+                    'fields' => array('id'),
+                ));
+                debug($deleteEnv);
+                $this->MonsterEnvironments->delete($deleteEnv['MonsterEnvironments']['id']);
+            }
+        }
+
         $this->redirect('index');
     }
 
@@ -109,6 +149,9 @@ class MonstersController extends AppController
             if (!empty($params['type']) || $params['type'] == '0') {
                 $conditions['MonsterType.dnd_type_id'] = $params['type'];
             }
+            if (!empty($params['environment']) || $params['environment'] == '0') {
+                $conditions['MonsterEnvironments.dnd_environments_id'] = $params['environment'];
+            }
             if (!empty($params['alignment'])) {
                 $conditions['Monsters.alignment'] = $params['alignment'];
             }
@@ -124,7 +167,15 @@ class MonstersController extends AppController
                         'Monsters.id = MonsterType.dnd_monsters_id',
                     ),
                     'order' => 'id'
-                )
+                ),
+                array('table' => 'monster_environments',
+                    'alias' => 'MonsterEnvironments',
+                    'type' => 'LEFT',
+                    'conditions' => array(
+                        'Monsters.id = MonsterEnvironments.dnd_monsters_id',
+                    ),
+                    'order' => 'id'
+                ),
             ),
             'conditions' => $conditions,
             'order' => 'cr'));

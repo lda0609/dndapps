@@ -38,20 +38,20 @@ class CharactersController extends AppController
             $adventurers[$key]['CharacterProgression'] = $characterProgression['CharacterProgression'];
 
             $AdventurersSkills = $this->AdventurersSkills->find('all', array(
-	            'joins' => array(
-					array('table' => 'skills',
-						'alias' => 'Skills',
-						'type' => 'LEFT',
-						'conditions' => array(
-							'Skills.id = AdventurersSkills.dnd_skills_id',
-						)
-					)
-				),
+                'joins' => array(
+                    array('table' => 'skills',
+                        'alias' => 'Skills',
+                        'type' => 'LEFT',
+                        'conditions' => array(
+                            'Skills.id = AdventurersSkills.dnd_skills_id',
+                        )
+                    )
+                ),
                 'conditions' => array(
                     'dnd_adventurers_id' => $value['AdventurersPerAdventure']['dnd_adventurers_id']
-				),
-				'order' => array('Skills.name'),
-			));
+                ),
+                'order' => array('Skills.name'),
+            ));
             $adventurers[$key]['AdventurersSkills'] = $AdventurersSkills;
         }
         return json_encode($adventurers);
@@ -256,13 +256,13 @@ class CharactersController extends AppController
                 $newSkill['AdventurersSkills']['dnd_adventurers_id'] = $adventurerId;
                 $newSkill['AdventurersSkills']['dnd_skills_id'] = $skillUpdated['dnd_skills_id'];
                 $newSkill['AdventurersSkills']['modifier'] = $skillUpdated['modifier'];
-				$this->AdventurersSkills->create();
+                $this->AdventurersSkills->create();
                 $this->AdventurersSkills->save($newSkill);
             }
         }
-		if (isset($skillsUpdated)){
-			$this->AdventurersSkills->saveAll($skillsUpdated);
-		}
+        if (isset($skillsUpdated)) {
+            $this->AdventurersSkills->saveAll($skillsUpdated);
+        }
         foreach ($adventurerSkills as $key => $skillSaved) {
             $flag = 0;
             foreach ($adventurerSkillsUpdated['AdventurersSkills'] as $key => $skillUpdated) {

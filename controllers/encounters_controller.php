@@ -271,6 +271,13 @@ class EncountersController extends AppController
         $encontro['Encounters']['difficulty'] = $this->params['url']['difficulty'];
         $encontro['Encounters']['information'] = $this->params['url']['information'];
 
+        $encontro['Encounters']['ordem'] = $this->Encounters->find('all', array(
+            'conditions' => array(
+                'dnd_adventure_id' => $this->params['url']['idAventura']
+            ),
+            'fields' => 'MAX(ordem) AS ordem_encontro'
+        ));
+
         if ($this->Encounters->save($encontro)) {
             foreach ($this->params['url']['monsterId'] as $key => $monsterId) {
                 $monstros[$key]['EncountersMonsters']['dnd_encounters_id'] = $this->Encounters->id;
@@ -278,10 +285,6 @@ class EncountersController extends AppController
                 $monstros[$key]['EncountersMonsters']['quantidade'] = $this->params['url']['monsterQtde'][$key];
             }
             $this->EncountersMonsters->saveAll($monstros);
-
-            //update com o id no campo ordem
-            $encontro['Encounters']['ordem'] = $this->Encounters->id;
-            $this->Encounters->save($encontro);
 
             return json_encode($this->Encounters->id);
         } else {

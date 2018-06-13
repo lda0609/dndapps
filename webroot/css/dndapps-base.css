@@ -79,6 +79,19 @@ table tr td{
     content: "\f146";
 }
 
+.fa-caret-up, .fa-caret-down{
+    color: #FFFFFF;
+}
+
+.arrow-up:hover .fa-caret-up:before {
+    content: "\f151";
+}
+
+.arrow-down:hover .fa-caret-down:before {
+    content: "\f150";
+}
+
+
 /*Filter styles*/
 .saturate {-webkit-filter: saturate(3);}
 .grayscale {-webkit-filter: grayscale(100%);}
@@ -97,4 +110,8 @@ table tr td{
 
 .large-number {
     width: 180px;
+}
+
+.icon {
+    width: 28px;
 }

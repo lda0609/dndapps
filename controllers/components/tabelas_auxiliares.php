@@ -15,6 +15,8 @@ class TabelasAuxiliaresComponent extends Object
 
     function startup(&$controller)
     {
+
+        $ignoreCache = true;
         //Domains
         if (($domains = Cache::read('dnd_domains')) === false) {
             $controller->loadModel('Domains');
@@ -103,8 +105,13 @@ class TabelasAuxiliaresComponent extends Object
             Cache::write('dnd_alignment_players', $dnd_alignment_players);
         }
         $controller->set('dnd_alignment_players', $dnd_alignment_players);
+
+        if ($ignoreCache === true || ($dnd_alignment_players = Cache::read('dnd_monster_environments')) === false) {
+            $controller->loadModel('Environments');
+            $dnd_monster_environments = $controller->Environments->getLista();
+            Cache::write('dnd_monster_environments', $dnd_monster_environments);
+        }
+        $controller->set('dnd_monster_environments', $dnd_monster_environments);
     }
 
 }
-
-?>

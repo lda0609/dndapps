@@ -52,7 +52,7 @@ function nextTurn() {
             $('#combat-log').append('<br><font class="log-title">ROUND ' + combatRound++ + ' - FIGHT!</font><br>');
         }
         load_side_frame(fighter, 'td_left_size');
-        $('#combat-log').append('<font class="log-title"><i class="fa fa-hourglass-start"></i> ' + fighter.name + ' Turn</font><br>');
+        $('#combat-log').append('<font class="log-title"><i class="fas fa-hourglass-start"></i> ' + fighter.name + ' Turn</font><br>');
         combat_log_anchor();
     }
 }
@@ -76,11 +76,11 @@ function limparTracker() {
     $("#imgStartCombat").addClass('button-disabled');
     $("#toggleLockHPMod").removeClass('unlocked');
     $("#toggleLockHPMod").addClass('locked');
-    $("#toggleLockHPMod").html('<i class="fa fa-lock"></i>');
+    $("#toggleLockHPMod").html('<i class="fas fa-lock"></i>');
     $(".initValue").attr('disabled', false);
     $("#toggleLockInit").removeClass('locked');
     $("#toggleLockInit").addClass('unlocked');
-    $("#toggleLockInit").html('<i class="fa fa-unlock-alt"></i>');
+    $("#toggleLockInit").html('<i class="fas fa-unlock-alt"></i>');
     $(".hpModifier").attr('disabled', true);
     $('#td_left_size').html('');
     $('#td_right_size').html('');
@@ -318,12 +318,12 @@ $("#toggleLockInit").click(function () {
     if ($(this).attr('class') === 'unlocked') {
         $(this).removeClass('unlocked');
         $(this).addClass('locked');
-        $(this).html('<i class="fa fa-lock"></i>');
+        $(this).html('<i class="fas fa-lock"></i>');
         $(".initValue").attr('disabled', true);
     } else {
         $(this).removeClass('locked');
         $(this).addClass('unlocked');
-        $(this).html('<i class="fa fa-unlock-alt"></i>');
+        $(this).html('<i class="fas fa-unlock-alt"></i>');
         $(".initValue").attr('disabled', false);
     }
 });
@@ -332,12 +332,12 @@ $("#toggleLockHPMod").click(function () {
     if ($(this).attr('class') === 'unlocked') {
         $(this).removeClass('unlocked');
         $(this).addClass('locked');
-        $(this).html('<i class="fa fa-lock"></i>');
+        $(this).html('<i class="fas fa-lock"></i>');
         $(".hpModifier").attr('disabled', true);
     } else {
         $(this).removeClass('locked');
         $(this).addClass('unlocked');
-        $(this).html('<i class="fa fa-unlock-alt"></i>');
+        $(this).html('<i class="fas fa-unlock-alt"></i>');
         $(".hpModifier").attr('disabled', false);
     }
 });
@@ -360,11 +360,11 @@ function startCombat() {
         $("#btnOdenar").click();
         $("#toggleLockInit").removeClass('unlocked');
         $("#toggleLockInit").addClass('locked');
-        $("#toggleLockInit").html('<i class="fa fa-lock"></i>');
+        $("#toggleLockInit").html('<i class="fas fa-lock"></i>');
         $(".initValue").attr('disabled', true);
         $("#toggleLockHPMod").removeClass('locked');
         $("#toggleLockHPMod").addClass('unlocked');
-        $("#toggleLockHPMod").html('<i class="fa fa-unlock-alt"></i>');
+        $("#toggleLockHPMod").html('<i class="fas fa-unlock-alt"></i>');
         $(".hpModifier").attr('disabled', false);
         $("#tableTracker tbody > tr").removeClass('currentTurn');
         $("#tableTracker tbody > tr:first").addClass('currentTurn');
@@ -374,7 +374,7 @@ function startCombat() {
         load_side_frame(fighter, 'td_left_size');
         $('#td_footer').html('<table><tr><th>Combat Log</th></tr><tr><td><div id="combat-log-frame" class="tracker-side-frame"><div id="combat-log" class="scrollit"></div><hr class="hr-blood"></div></td></tr></table>');
         $('#combat-log').append('<font class="log-title">ROUND ' + combatRound++ + ' - FIGHT!</font><br>');
-        $('#combat-log').append('<font class="log-title"><i class="fa fa-hourglass-start"></i> ' + fighter.name + ' Turn</font><br>');
+        $('#combat-log').append('<font class="log-title"><i class="fas fa-hourglass-start"></i> ' + fighter.name + ' Turn</font><br>');
         combat_log_anchor();
     }
 }
@@ -439,7 +439,7 @@ function load_side_frame(fighter, side) {
         if (fighter.conditions.indexOf(condition) > -1) {
             hasCondition = 'hasCondition';
         }
-        html_conditions += '<td class="clickable conditions ' + hasCondition + '" name="' + condition + '"><i class="fa fa-plus-square"> ' + condition + '</i></td>';
+        html_conditions += '<td class="clickable conditions ' + hasCondition + '" name="' + condition + '"><i class="fas fa-plus-square"> ' + condition + '</i></td>';
         if (cont++ % 4 === 0) {
             html_conditions += '</tr><tr>';
         }
