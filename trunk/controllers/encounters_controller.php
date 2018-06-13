@@ -271,13 +271,13 @@ class EncountersController extends AppController
         $encontro['Encounters']['difficulty'] = $this->params['url']['difficulty'];
         $encontro['Encounters']['information'] = $this->params['url']['information'];
 
-        $encontro['Encounters']['ordem'] = $this->Encounters->find('all', array(
+        $ordem = $this->Encounters->find('first', array(
             'conditions' => array(
                 'dnd_adventure_id' => $this->params['url']['idAventura']
             ),
             'fields' => 'MAX(ordem) AS ordem_encontro'
         ));
-
+        $encontro['Encounters']['ordem'] = $ordem[0]['ordem_encontro'] + 1;
         if ($this->Encounters->save($encontro)) {
             foreach ($this->params['url']['monsterId'] as $key => $monsterId) {
                 $monstros[$key]['EncountersMonsters']['dnd_encounters_id'] = $this->Encounters->id;
@@ -345,6 +345,65 @@ class EncountersController extends AppController
         $dados = json_decode($this->getAdventurers($this->params['url']['idAventura']), true);
         $this->atualizaEncontro($this->params['url']['encounterId'], $dados);
         return json_encode('ok');
+    }
+
+    function changeOrder()
+    {
+        $this->autoRender = false;
+        if ($this->params['form']['action'] === 'up') {
+            $encounter = $this->Encounters->findById($this->params['form']['encounterId']);
+            $ordemOriginal = $encounter['Encounters']['ordem'];
+            $encounter['Encounters']['ordem'] --;
+        } elseif ($this->params['form']['action'] === 'down') {
+            $encounter = $this->Encounters->findById($this->params['form']['encounterId']);
+            $ordemOriginal = $encounter['Encounters']['ordem'];
+            $encounter['Encounters']['ordem'] ++;
+        } else {
+            return json_encode('changeOrder() - unexpected action: ' . $this->params['form']['action']);
+        }
+
+        if ($encounter['Encounters']['ordem'] == 0) {
+            return json_encode('changeOrder() - ordem não pode ser 0');
+        } else {
+
+            $encounterReplaced = $this->Encounters->find('first', array(
+                'conditions' => array(
+                    'dnd_adventure_id' => $encounter['Encounters']['dnd_adventure_id'],
+                    'ordem' => $encounter['Encounters']['ordem']
+                )
+            ));
+            if (!empty($encounterReplaced)) {
+                $encounterReplaced['Encounters']['ordem'] = $ordemOriginal;
+                $this->Encounters->save($encounterReplaced);
+            }
+            $this->Encounters->save($encounter);
+            return json_encode('ok');
+        }
+    }
+
+    function editTreasure()
+    {
+        $this->autoRender = false;
+        $encounter = $this->Encounters->findById($this->params['form']['encounterId']);
+        $encounter['Encounters']['treasure'] = $this->params['form']['newTreasure'];
+        if ($this->Encounters->save($encounter)) {
+            return json_encode('ok');
+        } else {
+            return json_encode('editTreasure() - nok');
+        }
+    }
+
+    function editInformation()
+    {
+        $this->autoRender = false;
+
+        $encounter = $this->Encounters->findById($this->params['form']['encounterId']);
+        $encounter['Encounters']['information'] = $this->params['form']['newInfo'];
+        if ($this->Encounters->save($encounter)) {
+            return json_encode('ok');
+        } else {
+            return json_encode('editInformation() - nok');
+        }
     }
 
     function deleteEncounter()

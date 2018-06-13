@@ -570,11 +570,11 @@ $("#t3").click(function () {
                 });
                 var treasure = '<tr id="treasure' + encontro['Encounters']['id'] + '"><td width="36px"><img width="40px" src="/dndapps/img/Overstuffed_Treasure_Chest-icon.png"></td><td colspan="3">' + encontro['Encounters']['treasure'] + '</td><td class="align_center" width="36px"><a onclick="editTreasure(\'' + encontro['Encounters']['id'] + '\')"><img class="icon clickable" src="/dndapps/img/edit.png"></a></td></tr>';
                 var xp_tab = '<tr><td width="36px"><img width="40px" src="/dndapps/img/xp-icon.png"></td><td colspan="4">' + encontro['Encounters']['xp'] + '/' + encontro['Encounters']['adjusted_xp'] + '</td></tr>';
-                var info = '<tr><td width="36px"><img width="40px" src="/dndapps/img/information.png"></td><td colspan="3">' + encontro['Encounters']['information'] + '</td><td class="align_center" width="36px"><img class="icon clickable" src="/dndapps/img/edit.png"></td></tr>';
-                var tbody = '<tbody>' + monsters + treasure + xp_tab + info + '</tbody>'
-                var encounter_order = '<td  width="20px" class="align_center ' + diff_class + '"><a class="arrow-up"><i class="fas fa-caret-up clickable"></i></a><br><br><a class="arrow-down"><i class="fas fa-caret-down clickable"></i></class></a></td>'
+                var info = '<tr id="information' + encontro['Encounters']['id'] + '"><td width="36px"><img width="40px" src="/dndapps/img/information.png"></td><td colspan="3">' + encontro['Encounters']['information'] + '</td><td class="align_center" width="36px"><a onclick="editInfo(\'' + encontro['Encounters']['id'] + '\')"><img class="icon clickable" src="/dndapps/img/edit.png"></a></td></tr>';
+                var tbody = '<tbody>' + monsters + treasure + xp_tab + info + '</tbody>';
+                var encounter_order = '<td  width="20px" class="align_center ' + diff_class + '"><a class="arrow-up"><i class="fas fa-caret-up clickable"></i></a><br><br><a class="arrow-down"><i class="fas fa-caret-down clickable"></i></class></a></td>';
 
-                encounter_card = '<td class="encounterCard connectedSortable ui-state-default" id="pos' + contador + '"><table id="encounter' + encontro['Encounters']['id'] + '" ><thead><tr>' + img_turntracker + '<td class="' + diff_class + '" colspan="0">' + encontro['Encounters']['title'] + '</td>' + encounter_order + img_toggle_avoidance + img_excluir + '</tr></thead>' + tbody + '</table></td>';
+                encounter_card = '<td class="encounterCard connectedSortable ui-state-default" id="pos' + contador + '"><table id="encounter' + encontro['Encounters']['id'] + '" ><thead><tr>' + img_turntracker + '<td class="' + diff_class + '" colspan="0">' + encontro['Encounters']['ordem'] + '. ' + encontro['Encounters']['title'] + '</td>' + encounter_order + img_toggle_avoidance + img_excluir + '</tr></thead>' + tbody + '</table></td>';
                 if (contador++ % 2 === 0) {
                     encounter_card_row += encounter_card;
                 } else {
@@ -587,7 +587,6 @@ $("#t3").click(function () {
                     xp += Number(encontro['Encounters']['xp']);
                     adjustedXp += Number(encontro['Encounters']['adjusted_xp']);
                 }
-
             });
             if (contador++ % 2 !== 0) {
                 $('#listaEncontros > tbody:last').append('<tr>' + encounter_card_row + '</tr>');
@@ -639,8 +638,42 @@ function editarEncontro(callOptions) {
         console.log(data);
         $("#t3").click();
     });
-
 }
+
+$('body').on('click', '.arrow-up', function () {
+    var callOptions = {
+        "encounterId": $(this).closest('table').attr('id').substr(9),
+        "action": "up"
+    };
+    changeOrder(callOptions);
+});
+
+$('body').on('click', '.arrow-down', function () {
+    var callOptions = {
+        "encounterId": $(this).closest('table').attr('id').substr(9),
+        "action": "down"
+    };
+    changeOrder(callOptions);
+});
+
+function changeOrder(callOptions) {
+
+    $.ajax({
+        dataType: "json",
+        url: 'http://' + host + '/dndapps/encounters/changeOrder',
+        type: 'POST',
+        data: callOptions,
+        async: true
+    }).done(function (data, textStatus, request) {
+        if (data === "ok") {
+            console.log(data);
+            $("#t3").click();
+        } else {
+            console.log(data);
+        }
+    });
+}
+
 
 function excluirEncontro(encounterId) {
     $.data(document.body, "encounterId", encounterId);
@@ -707,31 +740,69 @@ function toggleAvoidance(encounterId) {
 }
 
 function editTreasure(encounterId) {
-
-    tdId = "#treasure" + encounterId;
-    console.log(tdId);
-    var treasure = '<td width="36px"><img width="40px" src="/dndapps/img/Overstuffed_Treasure_Chest-icon.png"></td><td colspan="1"><input type="text" id="newTreasure' + encounterId + '"></td><td class="align_center"><a onclick="cancelTreasureEdit(\'' + encounterId + '\')"><img class="icon clickable" src="/dndapps/img/deleteIcon.png"></a></td><td class="align_center" width="36px"><a onclick="saveTreasure(\'' + encounterId + '\')"><img class="icon clickable" src="/dndapps/img/save.png"></a></td>';
-
-    $(tdId).html(treasure);
-
-
+    var trId = "#treasure" + encounterId;
+    var treasure = '<td width="36px"><img width="40px" src="/dndapps/img/Overstuffed_Treasure_Chest-icon.png"></td><td colspan="2"><input type="text" id="newTreasure' + encounterId + '"></td><td class="align_center"><a onclick="cancelEdit()"><img class="icon clickable" src="/dndapps/img/deleteIcon.png"></a></td><td class="align_center" width="36px"><a onclick="saveTreasure(\'' + encounterId + '\')"><img class="icon clickable" src="/dndapps/img/save.png"></a></td>';
+    console.log(trId);
+    $(trId).html(treasure);
 }
 
-function cancelTreasureEdit(encounterId) {
-
-    tdId = "#treasure" + encounterId;
-    var treasure = '<td width="36px"><img width="40px" src="/dndapps/img/Overstuffed_Treasure_Chest-icon.png"></td><td colspan="2">' + encounterId + '</td><td class="align_center" width="36px"><a onclick="editTreasure(\'' + encounterId + '\')"><img class="icon clickable" src="/dndapps/img/edit.png"></a></td>';
-
-    $(tdId).html(treasure);
+function editInfo(encounterId) {
+    var trId = "#information" + encounterId;
+    var info = '<td width="36px"><img width="40px" src="/dndapps/img/information.png"></td><td colspan="2"><input type="text" id="newInfo' + encounterId + '"></td><td class="align_center"><a onclick="cancelEdit()"><img class="icon clickable" src="/dndapps/img/deleteIcon.png"></a></td><td class="align_center" width="36px"><a onclick="saveInfo(\'' + encounterId + '\')"><img class="icon clickable" src="/dndapps/img/save.png"></a></td>';
+    console.log(trId);
+    $(trId).html(info);
 }
 
+function cancelEdit() {
+    $("#t3").click();
+}
 
 function saveTreasure(encounterId) {
+    var newTreasureId = "#newTreasure" + encounterId;
+    var newTreasure = $(newTreasureId).val();
+    var callOptions = {
+        "encounterId": encounterId,
+        "newTreasure": newTreasure
+    };
+    $.ajax({
+        dataType: "json",
+        url: 'http://' + host + '/dndapps/encounters/editTreasure',
+        type: 'POST',
+        data: callOptions,
+        async: true
+    }).done(function (data, textStatus, request) {
+        if (data === 'ok') {
+            var treasure = '<td width="36px"><img width="40px" src="/dndapps/img/Overstuffed_Treasure_Chest-icon.png"></td><td colspan="3">' + newTreasure + '</td><td class="align_center" width="36px"><a onclick="editTreasure(\'' + encounterId + '\')"><img class="icon clickable" src="/dndapps/img/edit.png"></a></td>';
+            var trId = "#treasure" + encounterId;
+            $(trId).html(treasure);
+        } else {
+            console.log(data);
+        }
+    });
+}
 
-    tdId = "#treasure" + encounterId;
-    var treasure = '<td width="36px"><img width="40px" src="/dndapps/img/Overstuffed_Treasure_Chest-icon.png"></td><td colspan="2">' + encounterId + '</td><td class="align_center" width="36px"><a onclick="editTreasure(\'' + encounterId + '\')"><img class="icon clickable" src="/dndapps/img/edit.png"></a></td>';
-
-    $(tdId).html(treasure);
+function saveInfo(encounterId) {
+    var newInfoId = "#newInfo" + encounterId;
+    var newInfo = $(newInfoId).val();
+    var callOptions = {
+        "encounterId": encounterId,
+        "newInfo": newInfo
+    };
+    $.ajax({
+        dataType: "json",
+        url: 'http://' + host + '/dndapps/encounters/editInformation',
+        type: 'POST',
+        data: callOptions,
+        async: true
+    }).done(function (data, textStatus, request) {
+        if (data === 'ok') {
+            var info = '<td width="36px"><img width="40px" src="/dndapps/img/information.png"></td><td colspan="3">' + newInfo + '</td><td class="align_center" width="36px"><a onclick="editInfo(\'' + encounterId + '\')"><img class="icon clickable" src="/dndapps/img/edit.png"></a></td>';
+            var trId = "#information" + encounterId;
+            $(trId).html(info);
+        } else {
+            console.log(data);
+        }
+    });
 }
 
 
