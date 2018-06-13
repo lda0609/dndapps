@@ -11,6 +11,7 @@
                 echo '<tr><td>' . $this->Form->input('CRMin', array('type' => 'select', 'options' => $cr_list, 'empty' => 'Any', 'id' => 'crMin', 'label' => 'CR Min')) . '</td>';
                 echo '<td>' . $this->Form->input('CRMax', array('type' => 'select', 'options' => $cr_list, 'empty' => 'Any', 'id' => 'crMax', 'label' => 'CR Max')) . '</td>';
                 echo '<td>' . $this->Form->input('Type', array('type' => 'select', 'options' => $dnd_monster_type, 'empty' => 'Any', 'id' => 'type')) . '</td>';
+                echo '<td>' . $this->Form->input('Environment', array('type' => 'select', 'options' => $dnd_monster_environments, 'empty' => 'Any', 'id' => 'environment')) . '</td>';
                 echo '<td>' . $this->Form->input('alignment', array('type' => 'select', 'options' => $dnd_alignment, 'empty' => 'Any', 'id' => 'alignment')) . '</td></tr>';
                 ?>
             </tbody>

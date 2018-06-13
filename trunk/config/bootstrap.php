@@ -58,5 +58,6 @@ Inflector::rules('plural', array('rules' => array(), 'irregular' => array(), 'un
     'magicItem', 
     'character_progression',
     'alignment',
-    'patch'
+    'patch',
+    'environment'
     )));
