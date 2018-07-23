@@ -208,4 +208,56 @@ class MonstersController extends AppController
         return array_values($monsters);
     }
 
+//    function importar()
+//    {
+//        $this->autoRender = false;
+//
+//        $monsters = file('files/monsters.csv');
+//        foreach ($monsters as $key => $monster) {
+//            $monsters_parsed[$key] = str_getcsv($monster, ';');
+//        }
+////        debug($monsters_parsed);
+//
+//        foreach ($monsters_parsed as $key => $monster_parsed) {
+//
+//            $monsters_to_save = $this->Monsters->find('first', array(
+//                'conditions' => array(
+//                    'name' => trim($monster_parsed[0])
+//                )
+//            ));
+////            debug($monsters_to_save);
+////            break;
+//            if (!empty($monsters_to_save)) {
+//                $monsters_to_save['Monsters']['ac'] = trim($monster_parsed[3]);
+//                $monsters_to_save['Monsters']['armor'] = trim($monster_parsed[4]);
+//                $monsters_to_save['Monsters']['hp_dice'] = trim($monster_parsed[6]);
+//                $monsters_to_save['Monsters']['speed'] = trim($monster_parsed[7]);
+//                $monsters_to_save['Monsters']['str'] = trim($monster_parsed[8]);
+//                $monsters_to_save['Monsters']['dex'] = trim($monster_parsed[9]);
+//                $monsters_to_save['Monsters']['con'] = trim($monster_parsed[10]);
+//                $monsters_to_save['Monsters']['int'] = trim($monster_parsed[11]);
+//                $monsters_to_save['Monsters']['wis'] = trim($monster_parsed[12]);
+//                $monsters_to_save['Monsters']['cha'] = trim($monster_parsed[13]);
+//                $monsters_to_save['Monsters']['saves'] = trim($monster_parsed[14]);
+//                $monsters_to_save['Monsters']['skills'] = trim($monster_parsed[15]);
+//                $monsters_to_save['Monsters']['resistences'] = trim($monster_parsed[16]);
+//                $monsters_to_save['Monsters']['damage_immunities'] = trim($monster_parsed[17]);
+//                $monsters_to_save['Monsters']['conditions_immunities'] = trim($monster_parsed[18]);
+//                $monsters_to_save['Monsters']['senses'] = trim($monster_parsed[19]);
+//                $monsters_to_save['Monsters']['languages'] = trim($monster_parsed[20]);
+//                $monsters_to_save['Monsters']['actions'] = trim($monster_parsed[23]);
+//                $monsters_to_save['Monsters']['legendary_actions'] = trim($monster_parsed[24]);
+//                $monsters_to_save['Monsters']['abilities'] = trim($monster_parsed[25]);
+//            } else {
+//                CakeLog::write('error', 'NOT FOUND: ' . $monster_parsed[0]);
+//            }
+//            debug($monsters_to_save);
+//            if ($this->Monsters->save($monsters_to_save)) {
+//                CakeLog::write('debug', 'sucesso: ' . $monster_parsed[0]);
+//            } else {
+//                CakeLog::write('error', 'ERRO DE GRAVAÇÃO: ' . $monster_parsed[0]);
+//            }
+//        }
+//    }
+
 }
