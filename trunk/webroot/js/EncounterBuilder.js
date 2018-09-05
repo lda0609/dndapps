@@ -120,7 +120,7 @@ function mostraInfoGrupo(atualizaAventura) {
                 } else {
                     xp_final = adventurer['AdventurersPerAdventure']['xp_final'];
                 }
-                $('#adventurers > tbody:last').append('<tr id="aventureiro' + adventurer['Adventurers']['id'] + '" class="saveonclick"><td id="img' + adventurer['Adventurers']['id'] + '"><a onclick="toggleAusencia(\'' + adventurer['Adventurers']['id'] + '\')"><img height="38px" src="/dndapps/img/green-dragon.png" class="clickable"></a></td><td>' + adventurer['Adventurers']['name'] + '</td><td>' + adventurer['Adventurers']['race'] + '</td><td>' + dnd_classes[adventurer['Adventurers']['class']] + '</td><td>' + adventurer['Adventurers']['player'] + '</td><td>' + adventurer['AdventurersPerAdventure']['lvl_inicial'] + '</td><td>' + adventurer['Adventurers']['xp'] + '</td><td>' + xp_final + '</td></tr>');
+                $('#adventurers > tbody:last').append('<tr id="aventureiro' + adventurer['Adventurers']['id'] + '" class="saveonclick"><td id="img' + adventurer['Adventurers']['id'] + '"><a onclick="toggleAusencia(\'' + adventurer['Adventurers']['id'] + '\')"><img height="38px" src="/dndapps/img/green-dragon.png" class="clickable"></a></td><td>' + adventurer['Adventurers']['name'] + '</td><td>' + adventurer['Adventurers']['race'] + '</td><td>' + dnd_classes[adventurer['Adventurers']['class']] + '</td><td>' + adventurer['Adventurers']['player'] + '</td><td>' + adventurer['AdventurersPerAdventure']['lvl_inicial'] + '</td><td>' + adventurer['AdventurersPerAdventure']['xp_inicial'] + '</td><td>' + xp_final + '</td></tr>');
 
                 if (adventurer['AdventurersPerAdventure']['ausente'] === '1') {
                     $('#aventureiro' + adventurer['Adventurers']['id']).addClass('ausencia');
@@ -148,7 +148,7 @@ $("#btnNovaAventura").click(function () {
         async: true
     }).done(function (data, textStatus, request) {
         console.log(data);
-        $('#adventurers > thead:last').append('<tr><th width="40px"></th><th>Name</th><th>Race</th><th>Class</th><th>Player</th><th>Level</th></tr>');
+        $('#adventurers > thead:last').append('<tr><th width="40px"></th><th>Name</th><th>Race</th><th>Class</th><th>XP</th><th>Player</th><th>Level</th></tr>');
         $.each(data, function (key, adventurer) {
             var select = '<select class="selectLvl id="lvl' + adventurer['Adventurers']['id'] + '">';
             for (var count = 1; count <= 20; count++) {
@@ -159,7 +159,7 @@ $("#btnNovaAventura").click(function () {
                 }
             }
             select += '</select>';
-            $('#adventurers > tbody:last').append('<tr id="aventureiro' + adventurer['Adventurers']['id'] + '"><td id="img' + adventurer['Adventurers']['id'] + '"><a onclick="toggleAusencia(\'' + adventurer['Adventurers']['id'] + '\')"><img height="38px" src="/dndapps/img/green-dragon.png" class="clickable"></a></td><td>' + adventurer['Adventurers']['name'] + '</td><td>' + adventurer['Adventurers']['race'] + '</td><td>' + dnd_classes[adventurer['Adventurers']['class']] + '</td><td>' + adventurer['Adventurers']['player'] + '</td><td>' + select + '</td></tr>');
+            $('#adventurers > tbody:last').append('<tr id="aventureiro' + adventurer['Adventurers']['id'] + '"><td id="img' + adventurer['Adventurers']['id'] + '"><a onclick="toggleAusencia(\'' + adventurer['Adventurers']['id'] + '\')"><img height="38px" src="/dndapps/img/green-dragon.png" class="clickable"></a></td><td>' + adventurer['Adventurers']['name'] + '</td><td>' + adventurer['Adventurers']['race'] + '</td><td>' + dnd_classes[adventurer['Adventurers']['class']] + '</td><td class="characterXp">' + adventurer['Adventurers']['xp'] + '</td><td>' + adventurer['Adventurers']['player'] + '</td><td>' + select + '</td></tr>');
         });
         $('#saveButtom').html('<div align="center"><button class="pure-button button-warning" type="button" id="btnVoltar">Voltar</button> <button class="pure-button pure-button-primary" type="button" id="btnSalvarAventura">Salvar Aventura</button></div>');
     });
@@ -183,13 +183,17 @@ $('body').on('click', '#btnSalvarAventura', function () {
     var aventureirosID = $('#adventurers tr').map(function () {
         return $(this).attr('id');
     }).get();
+    var characterXp = $('.characterXp').map(function () {
+        return $(this).html();
+    }).get();
 
     console.log(aventureirosID);
     var callOptions = {
         "dataAventura": $('#dataAventura').val(),
         "level": values,
         "ausencia": ausencia,
-        "aventureirosID": aventureirosID
+        "aventureirosID": aventureirosID,
+        "characterXp": characterXp
     };
     console.log(callOptions);
     $.ajax({
