@@ -79,6 +79,7 @@
             <tr>
                 <th width="20px"></th>
                 <th>Monster</th>
+                <th width="150px">Alias</th>
                 <th width="40px">Qtde</th>
                 <th>CR</th>
                 <th>HP</th>

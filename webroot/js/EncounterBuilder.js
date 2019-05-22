@@ -385,7 +385,7 @@ function adicionarAoEncontro(monsterId) {
     var cr = $(monsterData).find('td#tdCr').html();
     var page = $(monsterData).find('td#tdPage').html();
     var hp = $(monsterData).find('td#tdHP').html();
-    $('#tabEncontro > tbody:last').append('<tr class="encounterMonster" id="' + monsterId + '"><td> <a onclick="excluirDoEncontro(\'' + monsterId + '\')"><img class="clickable" src="/dndapps/img/minus24px.png"></a></td><td>' + monster + '</td><td><input type="text" id="qtde' + monsterId + '" class="quantidade" alt="numero3" size="3" maxlength="3" value="1"></td><td id="tdCr">' + cr + '</td><td>' + hp + '</td><td id="xp' + monsterId + '" class="xpEncounter"></td><td>' + page + '</td></tr>');
+    $('#tabEncontro > tbody:last').append('<tr class="encounterMonster" id="' + monsterId + '"><td> <a onclick="excluirDoEncontro(\'' + monsterId + '\')"><img class="clickable" src="/dndapps/img/minus24px.png"></a></td><td>' + monster + '</td><td><input type="text" id="alias' + monsterId + '" class="alias"></td><td><input type="text" id="qtde' + monsterId + '" class="quantidade" alt="numero3" size="3" maxlength="3" value="1"></td><td id="tdCr">' + cr + '</td><td>' + hp + '</td><td id="xp' + monsterId + '" class="xpEncounter"></td><td>' + page + '</td></tr>');
     $('.quantidade').change();//força atualização do xp
     aplicaMask();
 }
@@ -495,9 +495,14 @@ $("#btnSalvarEncontro").click(function () {
             var monsterQtde = $('.quantidade').map(function () {
                 return $(this).val();
             }).get();
+            var monsterAlias = $('.alias').map(function () {
+                return $(this).val();
+            }).get();
+
             var callOptions = {
                 "monsterId": monsterId,
                 "monsterQtde": monsterQtde,
+                "monsterAlias": monsterAlias,
                 "idAventura": idAventura,
                 "totalEncontro": $('#totalEncontro').html(),
                 "adjustedXP": $('#adjustedXP').html(),
@@ -570,7 +575,12 @@ $("#t3").click(function () {
                 var img_turntracker = '<td class="align_center ' + diff_class + '" width="28px"><a onclick="enviarEncontroParaTracker(\'' + encontro['Encounters']['id'] + '\')"><img width="28px" src="/dndapps/img/attack4.png" title="Carrega encontro no Turn Tracker" class="clickable"></a></td>';
                 var monsters = '';
                 $.each(encontro['EncountersMonsters'], function (key, monster) {
-                    monsters += '<tr id="monster' + monster['id'] + '" quantidade="' + monster['quantidade'] + '"><td width="36px"><img width="36px" src="/dndapps/img/dragon-bullet-small2.png"></td><td colspan="3"><b>' + monster['name'] + ' (' + monster['quantidade'] + ')</b>, ' + monster['book'] + ' pag ' + monster['page'] + '</td><td class="align_center"><a class="plus"><i class="fas fa-plus clickable"></i></a><br><a class="minus"><i class="fas fa-minus clickable"></i></class></td></tr>';
+                    if (monster['alias'] === null) {
+                        monster['alias'] = '';
+                    } else {
+                        monster['alias'] = ', ' + monster['alias'];
+                    }
+                    monsters += '<tr id="monster' + monster['id'] + '" quantidade="' + monster['quantidade'] + '"><td width="36px"><img width="36px" src="/dndapps/img/dragon-bullet-small2.png"></td><td colspan="3"><b>' + monster['name'] + ' (' + monster['quantidade'] + ')</b>, ' + monster['book'] + ' ' + monster['page'] + monster['alias'] + '</td><td class="align_center"><a class="plus"><i class="fas fa-plus clickable"></i></a><br><a class="minus"><i class="fas fa-minus clickable"></i></class></td></tr>';
                 });
                 var treasure = '<tr id="treasure' + encontro['Encounters']['id'] + '"><td width="36px"><img width="40px" src="/dndapps/img/Overstuffed_Treasure_Chest-icon.png"></td><td colspan="3">' + encontro['Encounters']['treasure'] + '</td><td class="align_center" width="36px"><a onclick="editTreasure(\'' + encontro['Encounters']['id'] + '\')"><img class="icon clickable" src="/dndapps/img/edit.png"></a></td></tr>';
                 var xp_tab = '<tr><td width="36px"><img width="40px" src="/dndapps/img/xp-icon.png"></td><td colspan="4">' + encontro['Encounters']['xp'] + '/' + encontro['Encounters']['adjusted_xp'] + '</td></tr>';
@@ -724,6 +734,7 @@ function enviarEncontroParaTracker(encounterId) {
         data: {"encounterId": encounterId},
         async: true
     }).done(function (data, textStatus, request) {
+        console.log(data);
         loadEncounter(data);
         $("#t4").click();
     });

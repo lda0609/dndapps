@@ -16,13 +16,15 @@ function loadPlayers() {
 function loadEncounter(encounter) {
     $("#divTurnTracker").show();
     count = allFighters.length;
-    
+
     $.each(encounter['monsters'], function (key, monster) {
         temp = {}
         temp['conditions'] = [];
         temp['id'] = 'm' + count++;
         temp['name'] = monster['name'];
+        temp['realname'] = monster['realname'];
         temp['HPMax'] = monster['hp'];
+        temp['bookpage'] = monster['bookpage'];
         temp['HPTemp'] = 0;
         temp['HPAtual'] = temp['HPMax'];
         temp['iniciativa'] = 0;
@@ -394,7 +396,7 @@ function load_side_frame(fighter, side) {
     var rows = '';
     var html_skills = '';
     if (fighter['id'].substring(0, 1) === 'm') {
-        rows += '<tr><td class="name_NPC card-name">' + fighter.name + '<hr class="hr-monster-card"></td></tr>';
+        rows += '<tr><td class="name_NPC card-name">' + fighter.name + ' - ' + fighter.bookpage + '<hr class="hr-monster-card"></td></tr><tr><td><i><b>' + fighter.realname + '</b></i></td></tr>';
     } else {
         //monta tabela com atributos
         rows += '<tr><td colspan="6" class="name_PC"><font class="card-name">' + fighter.name + '</font><br><font class="card-details">' + fighter.background + ' ' + fighter.class + ', ' + fighter.alignment + '</font><hr class="hr-paper-flip"></td></tr>';

@@ -283,9 +283,9 @@ class EncountersController extends AppController
                 $monstros[$key]['EncountersMonsters']['dnd_encounters_id'] = $this->Encounters->id;
                 $monstros[$key]['EncountersMonsters']['dnd_monsters_id'] = $monsterId;
                 $monstros[$key]['EncountersMonsters']['quantidade'] = $this->params['url']['monsterQtde'][$key];
+                $monstros[$key]['EncountersMonsters']['alias'] = $this->params['url']['monsterAlias'][$key];
             }
             $this->EncountersMonsters->saveAll($monstros);
-
             return json_encode($this->Encounters->id);
         } else {
             return json_encode($encontro);
@@ -325,8 +325,14 @@ class EncountersController extends AppController
         foreach ($encontros['EncountersMonsters'] as $key => $encounterMonster) {
             $monster = $this->Monsters->find('first', array('conditions' => array('id' => $encounterMonster['dnd_monsters_id'])));
             for ($i = 1; $i <= $encounterMonster['quantidade']; $i++) {
-                $monsterList['monsters'][$cont]['name'] = $monster['Monsters']['name'] . ' (' . $i . ')';
+                $monsterList['monsters'][$cont]['realname'] = $monster['Monsters']['name'] . ' (' . $i . ')';
+                if (empty($encounterMonster['alias'])) {
+                    $monsterList['monsters'][$cont]['name'] = $monster['Monsters']['name'] . ' (' . $i . ')';
+                } else {
+                    $monsterList['monsters'][$cont]['name'] = $encounterMonster['alias'] . ' (' . $i . ')';
+                }
                 $monsterList['monsters'][$cont]['hp'] = $monster['Monsters']['hp'];
+                $monsterList['monsters'][$cont]['bookpage'] = $monster['Monsters']['book'] . ', ' . $monster['Monsters']['page'];
                 $cont++;
             }
         }
