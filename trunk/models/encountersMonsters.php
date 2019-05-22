@@ -15,5 +15,3 @@ class EncountersMonsters extends AppModel
     );
 
 }
-
-?>
