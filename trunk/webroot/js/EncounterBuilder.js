@@ -63,8 +63,8 @@ function getDataAventura() {
         });
         $('#data').html(options);
         //teste
-//        $('#data option:last-child').attr('selected', 'selected');
-//        $('#data').change();
+        $('#data option:last-child').attr('selected', 'selected');
+        $('#data').change();
 //        $('#t3').click();
         //teste
     });
@@ -582,9 +582,9 @@ $("#t3").click(function () {
                     }
                     monsters += '<tr id="monster' + monster['id'] + '" quantidade="' + monster['quantidade'] + '"><td width="36px"><img width="36px" src="/dndapps/img/dragon-bullet-small2.png"></td><td colspan="3"><b>' + monster['name'] + ' (' + monster['quantidade'] + ')</b>, ' + monster['book'] + ' ' + monster['page'] + monster['alias'] + '</td><td class="align_center"><a class="plus"><i class="fas fa-plus clickable"></i></a><br><a class="minus"><i class="fas fa-minus clickable"></i></class></td></tr>';
                 });
-                var treasure = '<tr id="treasure' + encontro['Encounters']['id'] + '"><td width="36px"><img width="40px" src="/dndapps/img/Overstuffed_Treasure_Chest-icon.png"></td><td colspan="3">' + encontro['Encounters']['treasure'] + '</td><td class="align_center" width="36px"><a onclick="editTreasure(\'' + encontro['Encounters']['id'] + '\')"><img class="icon clickable" src="/dndapps/img/edit.png"></a></td></tr>';
+                var treasure = '<tr id="treasure' + encontro['Encounters']['id'] + '"><td width="36px"><img width="40px" src="/dndapps/img/Overstuffed_Treasure_Chest-icon.png"></td><td colspan="3" class="fieldValue">' + encontro['Encounters']['treasure'] + '</td><td class="align_center" width="36px"><a onclick="editTreasure(\'' + encontro['Encounters']['id'] + '\')"><img class="icon clickable" src="/dndapps/img/edit.png"></a></td></tr>';
                 var xp_tab = '<tr><td width="36px"><img width="40px" src="/dndapps/img/xp-icon.png"></td><td colspan="4">' + encontro['Encounters']['xp'] + '/' + encontro['Encounters']['adjusted_xp'] + '</td></tr>';
-                var info = '<tr id="information' + encontro['Encounters']['id'] + '"><td width="36px"><img width="40px" src="/dndapps/img/information.png"></td><td colspan="3">' + encontro['Encounters']['information'] + '</td><td class="align_center" width="36px"><a onclick="editInfo(\'' + encontro['Encounters']['id'] + '\')"><img class="icon clickable" src="/dndapps/img/edit.png"></a></td></tr>';
+                var info = '<tr id="information' + encontro['Encounters']['id'] + '"><td width="36px"><img width="40px" src="/dndapps/img/information.png"></td><td colspan="3" class="fieldValue">' + encontro['Encounters']['information'] + '</td><td class="align_center" width="36px"><a onclick="editInfo(\'' + encontro['Encounters']['id'] + '\')"><img class="icon clickable" src="/dndapps/img/edit.png"></a></td></tr>';
                 var tbody = '<tbody>' + monsters + treasure + xp_tab + info + '</tbody>';
                 var encounter_order = '<td  width="20px" class="align_center ' + diff_class + '"><a class="arrow-up"><i class="fas fa-caret-up clickable"></i></a><br><br><a class="arrow-down"><i class="fas fa-caret-down clickable"></i></class></a></td>';
 
@@ -756,14 +756,16 @@ function toggleAvoidance(encounterId) {
 
 function editTreasure(encounterId) {
     var trId = "#treasure" + encounterId;
-    var treasure = '<td width="36px"><img width="40px" src="/dndapps/img/Overstuffed_Treasure_Chest-icon.png"></td><td colspan="2"><input type="text" id="newTreasure' + encounterId + '"></td><td class="align_center"><a onclick="cancelEdit()"><img class="icon clickable" src="/dndapps/img/deleteIcon.png"></a></td><td class="align_center" width="36px"><a onclick="saveTreasure(\'' + encounterId + '\')"><img class="icon clickable" src="/dndapps/img/save.png"></a></td>';
+    var valorAtual = $(trId + ' .fieldValue').text();
+    var treasure = '<td width="36px"><img width="40px" src="/dndapps/img/Overstuffed_Treasure_Chest-icon.png"></td><td colspan="2"><input type="text" id="newTreasure' + encounterId + '" value="' + valorAtual + '"></td><td class="align_center"><a onclick="cancelEdit()"><img class="icon clickable" src="/dndapps/img/deleteIcon.png"></a></td><td class="align_center" width="36px"><a onclick="saveTreasure(\'' + encounterId + '\')"><img class="icon clickable" src="/dndapps/img/save.png"></a></td>';
     console.log(trId);
     $(trId).html(treasure);
 }
 
 function editInfo(encounterId) {
     var trId = "#information" + encounterId;
-    var info = '<td width="36px"><img width="40px" src="/dndapps/img/information.png"></td><td colspan="2"><input type="text" id="newInfo' + encounterId + '"></td><td class="align_center"><a onclick="cancelEdit()"><img class="icon clickable" src="/dndapps/img/deleteIcon.png"></a></td><td class="align_center" width="36px"><a onclick="saveInfo(\'' + encounterId + '\')"><img class="icon clickable" src="/dndapps/img/save.png"></a></td>';
+    var valorAtual = $(trId + ' .fieldValue').text();
+    var info = '<td width="36px"><img width="40px" src="/dndapps/img/information.png"></td><td colspan="2"><input type="text" id="newInfo' + encounterId + '" value="' + valorAtual + '"></td><td class="align_center"><a onclick="cancelEdit()"><img class="icon clickable" src="/dndapps/img/deleteIcon.png"></a></td><td class="align_center" width="36px"><a onclick="saveInfo(\'' + encounterId + '\')"><img class="icon clickable" src="/dndapps/img/save.png"></a></td>';
     console.log(trId);
     $(trId).html(info);
 }
@@ -787,7 +789,7 @@ function saveTreasure(encounterId) {
         async: true
     }).done(function (data, textStatus, request) {
         if (data === 'ok') {
-            var treasure = '<td width="36px"><img width="40px" src="/dndapps/img/Overstuffed_Treasure_Chest-icon.png"></td><td colspan="3">' + newTreasure + '</td><td class="align_center" width="36px"><a onclick="editTreasure(\'' + encounterId + '\')"><img class="icon clickable" src="/dndapps/img/edit.png"></a></td>';
+            var treasure = '<td width="36px"><img width="40px" src="/dndapps/img/Overstuffed_Treasure_Chest-icon.png"></td><td colspan="3" class="fieldValue">' + newTreasure + '</td><td class="align_center" width="36px"><a onclick="editTreasure(\'' + encounterId + '\')"><img class="icon clickable" src="/dndapps/img/edit.png"></a></td>';
             var trId = "#treasure" + encounterId;
             $(trId).html(treasure);
         } else {
@@ -811,7 +813,7 @@ function saveInfo(encounterId) {
         async: true
     }).done(function (data, textStatus, request) {
         if (data === 'ok') {
-            var info = '<td width="36px"><img width="40px" src="/dndapps/img/information.png"></td><td colspan="3">' + newInfo + '</td><td class="align_center" width="36px"><a onclick="editInfo(\'' + encounterId + '\')"><img class="icon clickable" src="/dndapps/img/edit.png"></a></td>';
+            var info = '<td width="36px"><img width="40px" src="/dndapps/img/information.png"></td><td colspan="3" class="fieldValue">' + newInfo + '</td><td class="align_center" width="36px"><a onclick="editInfo(\'' + encounterId + '\')"><img class="icon clickable" src="/dndapps/img/edit.png"></a></td>';
             var trId = "#information" + encounterId;
             $(trId).html(info);
         } else {

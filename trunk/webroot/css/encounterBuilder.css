@@ -66,14 +66,6 @@ form div {
     margin-bottom: 0em;
 }
 
-h1 {
-    color: #005CA2;
-    font-family: 'Lucida Grande', helvetica, arial, sans-serif;
-    font-size: 165%;
-    margin-top: 0.5em;
-    border-bottom: 1px solid #D79100;
-}
-
 #sortable1, #sortable2 {
     border: 1px solid #eee;
     width: 142px;

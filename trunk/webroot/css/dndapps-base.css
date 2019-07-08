@@ -115,3 +115,11 @@ table tr td{
 .icon {
     width: 28px;
 }
+
+h1 {
+    color: #005CA2;
+    font-family: 'Lucida Grande', helvetica, arial, sans-serif;
+    font-size: 165%;
+    margin-top: 0.5em;
+    border-bottom: 1px solid #D79100;
+}
