@@ -336,8 +336,9 @@ $("#btnConsultar").click(function () {
         "crMin": $("#crMin").val(),
         "crMax": $("#crMax").val(),
         "type": $("#type").val(),
+        "tag": $("#tag").val(),
         "environment": $("#environment").val(),
-        "alignment": $("#alignment").val(),
+//        "alignment": $("#alignment").val(),
         "favoritos": '0'
     };
     console.log(callOptions);
@@ -347,7 +348,8 @@ $("#btnConsultar").click(function () {
         data: callOptions,
         async: true
     }).done(function (data, textStatus, request) {
-        showResult(data);
+    console.log(data);
+    showResult(data);
     });
 });
 
@@ -374,7 +376,7 @@ function showResult(data) {
             img_class = 'favorite';
             img_src = '/dndapps/img/pentagram_on.png';
         }
-        $('#tabResult > tbody:last').append('<tr id="monster' + monster['Monsters']['id'] + '"><td><a onclick="toggleFavorite(\'' + monster['Monsters']['id'] + '\')"><img height="24px" id="favorite' + monster['Monsters']['id'] + '" class="' + img_class + ' clickable" src="' + img_src + '"></td><td><a onclick="adicionarAoEncontro(\'' + monster['Monsters']['id'] + '\')"><img class="clickable" src="/dndapps/img/plus24px.png"></a></td><td id="tdMonster">' + monster['Monsters']['name'] + '</td><td id="tdType">' + monster['MonsterTypes'][0]['dnd_type_id'] + '</td><td id="tdCr">' + monster['Monsters']['cr'] + '</td><td id="tdSize">' + monster['Monsters']['size'] + '</td><td id="tdHP">' + monster['Monsters']['hp'] + '</td><td id="tdAlignment">' + monster['Monsters']['alignment'] + '</td><td id="tdPage">' + monster['Monsters']['book'] + ', ' + monster['Monsters']['page'] + '</td></tr>');
+        $('#tabResult > tbody:last').append('<tr id="monster' + monster['Monsters']['id'] + '"><td><a onclick="toggleFavorite(\'' + monster['Monsters']['id'] + '\')"><img height="24px" id="favorite' + monster['Monsters']['id'] + '" class="' + img_class + ' clickable" src="' + img_src + '"></td><td><a onclick="adicionarAoEncontro(\'' + monster['Monsters']['id'] + '\')"><img class="clickable" src="/dndapps/img/plus24px.png"></a></td><td id="tdMonster">' + monster['Monsters']['name'] + '</td><td id="tdType">' + monster['Monsters']['type'] + '</td><td id="tdTag">' + monster['Monsters']['tag'] + '</td><td id="tdCr">' + monster['Monsters']['cr'] + '</td><td id="tdSize">' + monster['Monsters']['size'] + '</td><td id="tdHP">' + monster['Monsters']['hp'] + '</td><td id="tdAlignment">' + monster['Monsters']['alignment'] + '</td><td id="tdPage">' + monster['Monsters']['book'] + ', ' + monster['Monsters']['page'] + '</td></tr>');
     });
 }
 
