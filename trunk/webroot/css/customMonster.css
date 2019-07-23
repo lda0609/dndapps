@@ -1,0 +1,61 @@
+#MonsterForm {
+    width: 1000px;
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+}
+
+input, select, textarea, button {
+    font-family: Lucida Grande,Lucida Sans,Arial,sans-serif;
+    font-size: 1.2em;
+}
+
+table {
+    border: 1px solid lightblue;
+}
+
+.selectable { 
+    list-style-type: none; 
+    margin: 0; 
+    padding: 0; 
+    width: 99%; 
+}
+
+.selectable li { 
+    margin: 3px; 
+    padding: 0.4em; 
+    font-size: 1.4em; 
+    height: 18px; 
+}
+
+/*menu*/
+.ui-menu { 
+    width: 300px; 
+}
+.ui-widget-header { 
+    padding: 0.2em; 
+}
+
+#menu ul, li {
+    margin: 0 0px;
+}
+
+.ui-menu-item {
+    font-size: 1.5em;
+
+}
+
+#menu {
+    float: right;
+    overflow: auto;
+}
+
+/*GERAL*/
+
+h2 {
+    color: #005CA2;
+    font-family: 'Lucida Grande', helvetica, arial, sans-serif;
+    font-size: 150%;
+    margin-top: 0.5em;
+    margin-bottom: 0.1em;
+}

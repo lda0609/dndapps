@@ -42,12 +42,18 @@ class TabelasAuxiliaresComponent extends Object
         $controller->set('dnd_monsters', $monsters);
 
         //Monsters type
-        if (($monsterType = Cache::read('dnd_monster_type')) === false) {
+//        if (($monsterType = Cache::read('dnd_monster_type')) === false) {
             $controller->loadModel('Type');
-            $monsterType = $controller->Type->getLista();
+            $allTypes = $controller->Type->getLista();
+            unset ($allTypes[0]);
+            $monsterType = array_slice($allTypes, 0, 14, true);
+            $monsterTag = array_slice($allTypes, 14, null, true);
+
             Cache::write('dnd_monster_type', $monsterType);
-        }
+            Cache::write('dnd_monster_tag', $monsterTag);
+//        }
         $controller->set('dnd_monster_type', $monsterType);
+        $controller->set('dnd_monster_tag', $monsterTag);
 
 
         //xp

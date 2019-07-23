@@ -108,6 +108,10 @@ table tr td{
     width: 60px;
 }
 
+.medium-number {
+    width: 80px;
+}
+
 .large-number {
     width: 180px;
 }

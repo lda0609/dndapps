@@ -85,7 +85,6 @@ class MonstersController extends AppController
             foreach ($addEnv as $key => $env) {
                 $newEnv['MonsterEnvironments']['dnd_monsters_id'] = $this->data['Monsters']['id'];
                 $newEnv['MonsterEnvironments']['dnd_environments_id'] = $env;
-                debug($newEnv);
                 $this->MonsterEnvironments->create();
                 $this->MonsterEnvironments->save($newEnv);
             }
@@ -125,6 +124,11 @@ class MonstersController extends AppController
         }
     }
 
+    function custom()
+    {
+        
+    }
+
     //***********************************//
     //**** FUNÇÕES QUE RETORNAM JSON ****//
     //***********************************//
@@ -146,10 +150,13 @@ class MonstersController extends AppController
             if (!empty($params['crMax'])) {
                 $conditions['Monsters.cr <='] = $params['crMax'];
             }
-            if (!empty($params['type']) || $params['type'] == '0') {
-                $conditions['MonsterType.dnd_type_id'] = $params['type'];
+            if (!empty($params['type'])) {
+                $conditions['Monsters.type'] = $params['type'];
             }
-            if (!empty($params['environment']) || $params['environment'] == '0') {
+            if (!empty($params['tag'])) {
+                $conditions['Monsters.tag'] = $params['tag'];
+            }
+            if (!empty($params['environment'])) {
                 $conditions['MonsterEnvironments.dnd_environments_id'] = $params['environment'];
             }
             if (!empty($params['alignment'])) {
@@ -160,14 +167,6 @@ class MonstersController extends AppController
         }
         $monsters = $this->Monsters->find('all', array(
             'joins' => array(
-                array('table' => 'monster_types',
-                    'alias' => 'MonsterType',
-                    'type' => 'LEFT',
-                    'conditions' => array(
-                        'Monsters.id = MonsterType.dnd_monsters_id',
-                    ),
-                    'order' => 'id'
-                ),
                 array('table' => 'monster_environments',
                     'alias' => 'MonsterEnvironments',
                     'type' => 'LEFT',
@@ -182,14 +181,22 @@ class MonstersController extends AppController
 
 
         foreach ($monsters as $key => $monster) {
-            $monsters[$key]['MonsterTypes'][0]['dnd_type_id'] = $this->viewVars['dnd_monster_type'][$monster['MonsterTypes'][0]['dnd_type_id']];
+            if (!is_null($monsters[$key]['Monsters']['type'])) {
+                $monsters[$key]['Monsters']['type'] = $this->viewVars['dnd_monster_type'][$monsters[$key]['Monsters']['type']];
+            } else {
+                $monsters[$key]['Monsters']['type'] = '';
+            }
+            if (!is_null($monsters[$key]['Monsters']['tag'])) {
+                $monsters[$key]['Monsters']['tag'] = $this->viewVars['dnd_monster_tag'][$monsters[$key]['Monsters']['tag']];
+            } else {
+                $monsters[$key]['Monsters']['tag'] = '';
+            }
             if (in_array($monster['Monsters']['id'], $favorites)) {
                 $monsters[$key]['MonsterFavorites'] = '1';
             } else {
                 $monsters[$key]['MonsterFavorites'] = '0';
             }
         }
-
         $monsters = $this->limparResultado($monsters);
         return json_encode($monsters);
     }
@@ -207,57 +214,5 @@ class MonstersController extends AppController
         }
         return array_values($monsters);
     }
-
-//    function importar()
-//    {
-//        $this->autoRender = false;
-//
-//        $monsters = file('files/monsters.csv');
-//        foreach ($monsters as $key => $monster) {
-//            $monsters_parsed[$key] = str_getcsv($monster, ';');
-//        }
-////        debug($monsters_parsed);
-//
-//        foreach ($monsters_parsed as $key => $monster_parsed) {
-//
-//            $monsters_to_save = $this->Monsters->find('first', array(
-//                'conditions' => array(
-//                    'name' => trim($monster_parsed[0])
-//                )
-//            ));
-////            debug($monsters_to_save);
-////            break;
-//            if (!empty($monsters_to_save)) {
-//                $monsters_to_save['Monsters']['ac'] = trim($monster_parsed[3]);
-//                $monsters_to_save['Monsters']['armor'] = trim($monster_parsed[4]);
-//                $monsters_to_save['Monsters']['hp_dice'] = trim($monster_parsed[6]);
-//                $monsters_to_save['Monsters']['speed'] = trim($monster_parsed[7]);
-//                $monsters_to_save['Monsters']['str'] = trim($monster_parsed[8]);
-//                $monsters_to_save['Monsters']['dex'] = trim($monster_parsed[9]);
-//                $monsters_to_save['Monsters']['con'] = trim($monster_parsed[10]);
-//                $monsters_to_save['Monsters']['int'] = trim($monster_parsed[11]);
-//                $monsters_to_save['Monsters']['wis'] = trim($monster_parsed[12]);
-//                $monsters_to_save['Monsters']['cha'] = trim($monster_parsed[13]);
-//                $monsters_to_save['Monsters']['saves'] = trim($monster_parsed[14]);
-//                $monsters_to_save['Monsters']['skills'] = trim($monster_parsed[15]);
-//                $monsters_to_save['Monsters']['resistences'] = trim($monster_parsed[16]);
-//                $monsters_to_save['Monsters']['damage_immunities'] = trim($monster_parsed[17]);
-//                $monsters_to_save['Monsters']['conditions_immunities'] = trim($monster_parsed[18]);
-//                $monsters_to_save['Monsters']['senses'] = trim($monster_parsed[19]);
-//                $monsters_to_save['Monsters']['languages'] = trim($monster_parsed[20]);
-//                $monsters_to_save['Monsters']['actions'] = trim($monster_parsed[23]);
-//                $monsters_to_save['Monsters']['legendary_actions'] = trim($monster_parsed[24]);
-//                $monsters_to_save['Monsters']['abilities'] = trim($monster_parsed[25]);
-//            } else {
-//                CakeLog::write('error', 'NOT FOUND: ' . $monster_parsed[0]);
-//            }
-//            debug($monsters_to_save);
-//            if ($this->Monsters->save($monsters_to_save)) {
-//                CakeLog::write('debug', 'sucesso: ' . $monster_parsed[0]);
-//            } else {
-//                CakeLog::write('error', 'ERRO DE GRAVAÇÃO: ' . $monster_parsed[0]);
-//            }
-//        }
-//    }
 
 }

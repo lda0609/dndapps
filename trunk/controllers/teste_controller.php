@@ -3,7 +3,7 @@
 class TesteController extends AppController
 {
 
-    var $uses = array('Monsters', 'xpThresholds', 'Adventure', 'AdventurersPerAdventure', 'Encounters', 'EncountersMonsters', 'MonsterFavorites');
+    var $uses = array('Monsters', 'xpThresholds', 'Adventure', 'AdventurersPerAdventure', 'Encounters', 'EncountersMonsters', 'MonsterFavorites', 'MonsterTypes');
     var $multiplier = array(
         '1' => 0.5,
         '2' => 1,
@@ -39,18 +39,50 @@ class TesteController extends AppController
     {
         Configure::write('debug', 2);
         $this->autoRender = false;
-
-        $this->params['url']['encounterMonsterId'] = 46;
-        $this->params['url']['quantidade'] = 4;
-        $this->params['url']['idAventura'] = 9;
-        $this->params['url']['encounterId'] = 50;
-
-        $this->EncountersMonsters->id = $this->params['url']['encounterMonsterId'];
-        $EncountersMonsters['EncountersMonsters']['quantidade'] = $this->params['url']['quantidade'];
-        $this->EncountersMonsters->save($EncountersMonsters);
-
-        $dados = json_decode($this->getAdventurers($this->params['url']['idAventura']), true);
-        $this->atualizaEncontro($this->params['url']['encounterId'], $dados);
+        $types = $this->MonsterTypes->find('all', array());
+        $group = array();
+        foreach ($types as $key => $value) {
+            if (array_key_exists($value['MonsterTypes']['dnd_monsters_id'], $group)) {
+                $group[$value['MonsterTypes']['dnd_monsters_id']] = $group[$value['MonsterTypes']['dnd_monsters_id']] + 1;
+            } else {
+                $group[$value['MonsterTypes']['dnd_monsters_id']] = 1;
+            }
+        }
+//        $monsterall = $this->Monsters->find('all');
+//        debug($monsterall);
+//        die;
+        debug(count($group));
+        $count = 0;
+        foreach ($group as $key => $value) {
+            if ($value >= 1) {
+//                debug($key);
+                $count ++;
+                $monster = $this->Monsters->findByid($key);
+                debug($monster);
+                foreach ($monster['MonsterTypes'] as $monstertype) {
+                    if ($monstertype['dnd_type_id'] >= 1 && $monstertype['dnd_type_id'] <= 14) {
+                        if (!isset($monster['Monsters']['type'])) {
+                            $monster['Monsters']['type'] = $monstertype['dnd_type_id'];
+                        } else {
+                           debug($monster);
+                           debug($monstertype['dnd_type_id']);
+                        }
+                    } elseif ($monstertype['dnd_type_id'] >= 15 && $monstertype['dnd_type_id'] != 22) {
+                        if (!isset($monster['Monsters']['race'])) {
+                            $monster['Monsters']['tag'] = $monstertype['dnd_type_id'];
+                        } else {
+                           debug($monster);
+                           debug($monstertype['dnd_type_id']);
+                        }
+                    } elseif ($monstertype['dnd_type_id'] == 22) {
+                        $monster['Monsters']['shapechanger'] = 1;
+                    }
+                } 
+//                debug($monster);
+//                debug($this->Monsters->save($monster));
+            }
+        }
+        debug($count);
     }
 
     private function atualizaEncontro($encounterId, $dados)

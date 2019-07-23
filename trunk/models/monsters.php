@@ -4,16 +4,6 @@ class Monsters extends AppModel
 {
 
     var $name = 'Monsters';
-    var $hasMany = array(
-        'MonsterTypes' => array(
-            'className' => 'MonsterTypes',
-            'foreignKey' => 'dnd_monsters_id',
-            'conditions' => '',
-            'order' => '',
-            'limit' => '',
-            'dependent' => ''
-        ),
-    );
 
     function getLista()
     {
@@ -39,5 +29,3 @@ class Monsters extends AppModel
     }
 
 }
-
-?>
