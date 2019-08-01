@@ -1,16 +1,12 @@
 <div id="divMenuTracker">
-    <table>
-        <tr>
-            <td class="button-menu"><a onclick="loadPlayers()"><img id="imgLoadPlayers" height="60px" src="/dndapps/img/adventurer.jpg" title="Adicionar Aventureiros (alt-a)" class="clickable"></a></td>
-            <td class="button-menu"><a onclick="startCombat()"><img id="imgStartCombat" height="60px" src="/dndapps/img/combat.png" title="Iniciar Combate (alt-s)" class="clickable button-disabled"></a></td>
-            <td class="button-menu"><a onclick="nextTurn()"><img id="imgNextTurn" height="60px" src="/dndapps/img/red_next.png" title="Próximo Turno (alt-n, alt-')" class="clickable button-disabled"></a></td>
-            <td class="button-menu"><a onclick="limparTracker()"><img id="imgLimparTracker" height="60px" src="/dndapps/img/red_stop_playback.png" title="Parar Encontro (alt-p)" class="clickable button-disabled"></a></td>
-            <td class="button-menu"></td>
-            <td></td>
-        </tr>
-    </table>
+	<a onclick="loadPlayers()"><img id="imgLoadPlayers" height="60px" src="/dndapps/img/adventurer.jpg" title="Adicionar Aventureiros (alt-a)" class="clickable button-menu"></a>
+	<a onclick="startCombat()"><img id="imgStartCombat" height="60px" src="/dndapps/img/combat.png" title="Iniciar Combate (alt-s)" class="clickable button-disabled button-menu"></a>
+	<a onclick="nextTurn()"><img id="imgNextTurn" height="60px" src="/dndapps/img/red_next.png" title="Próximo Turno (alt-n, alt-')" class="clickable button-disabled button-menu"></a>
+	<a onclick="limparTracker()"><img id="imgLimparTracker" height="60px" src="/dndapps/img/red_stop_playback.png" title="Parar Encontro (alt-p)" class="clickable button-disabled button-menu"></a>
+	<img id="imgInformation" height="60px" src="/dndapps/img/information.png" title="Ver informações extras abaixo" class="clickable button-menu" style="display: none;">
 </div>
 <hr class="hr-top">
+
 <div id="divTurnTracker">
     <table id="tableTracker" class="pure-table">
         <thead>

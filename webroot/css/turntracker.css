@@ -26,7 +26,7 @@
 }
 
 .button-menu {
-    width:100px;
+	padding: 10px 10px;
 }
 
 #tableTracker {
@@ -134,22 +134,18 @@
     color:black;
 }
 
-/*.scroll_tabela{
-    margin-top: 3px;
-    margin-bottom: 3px;
-    border-top: 1px solid #C0C0C0;
-    border-left: 1px solid #C0C0C0;
-    border-right: 1px solid #C0C0C0;
-    border-bottom: 1px solid #C0C0C0;
-    float: none;
-    border-collapse: collapse;
+.combat-info {
+	border: 2px solid lightskyblue;
+}
+.combat-info  td{
+	color: blue;
+	font-weight: bold;
+	font-size: 1rem;
 }
 
-.scroll_tabela td {
-    padding: 3px;
-    color: #000000;
-    font-size: 11px;
-}*/
+#imgInformation {
+	float: right
+}
 
 .scrollit{
     overflow:auto;

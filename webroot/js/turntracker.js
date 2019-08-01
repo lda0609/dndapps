@@ -30,7 +30,10 @@ function loadEncounter(encounter) {
         temp['iniciativa'] = 0;
         allFighters.push(temp);
     });
-    $("#td_footer_info").html('<table><tr><th>Combat Information</th></tr><tr><td>' + encounter['information'] + '</td></tr></table>');
+    $("#td_footer_info").html('<table class="combat-info"><tr><th>Combat Information</th></tr><tr><td>' + encounter['information'] + '</td></tr></table>');
+	if (encounter['information'] !== '' ){
+		$("#imgInformation").show();
+	}
     $("#imgStartCombat").removeClass('button-disabled');
     turnTracker();
 
@@ -76,6 +79,7 @@ function limparTracker() {
     $("#imgNextTurn").addClass('button-disabled');
     $("#imgLimparTracker").addClass('button-disabled');
     $("#imgStartCombat").addClass('button-disabled');
+	$("#imgInformation").hide();
     $("#toggleLockHPMod").removeClass('unlocked');
     $("#toggleLockHPMod").addClass('locked');
     $("#toggleLockHPMod").html('<i class="fas fa-lock"></i>');
