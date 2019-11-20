@@ -47,8 +47,8 @@ class TabelasAuxiliaresComponent extends Object
             $allTypes = $controller->Type->getLista();
             unset ($allTypes[0]);
             $monsterType = array_slice($allTypes, 0, 14, true);
-            $monsterTag = array_slice($allTypes, 14, null, true);
-
+            // $monsterTag = array_slice($allTypes, 14, null, true);
+            $monsterTag = $controller->Type->getTagList();
             Cache::write('dnd_monster_type', $monsterType);
             Cache::write('dnd_monster_tag', $monsterTag);
 //        }

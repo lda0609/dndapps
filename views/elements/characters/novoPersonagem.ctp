@@ -110,7 +110,7 @@
                             <label for="ac">AC</label><input id="ac" type="number" class="field small-number">
                         </td>
                         <td>
-                            <label for="hp">HP</label><input id="hp" type="number" class="field small-number">
+                            <label for="hp">HP</label><input id="hp" type="number" class="field medium-number">
                         </td>
                         <td>
                             <label for="init">Init</label><input id="init" type="number" class="field small-number">

@@ -114,10 +114,10 @@ class MonstersController extends AppController
     function cadastro()
     {
         if (!empty($this->data)) {
-            foreach ($this->data['MonsterTypes']['dnd_type_id'] as $key => $value) {
-                $temp[$key]['dnd_type_id'] = $value;
-            }
-            $this->data['MonsterTypes'] = $temp;
+            // foreach ($this->data['MonsterTypes']['dnd_type_id'] as $key => $value) {
+            //     $temp[$key]['dnd_type_id'] = $value;
+            // }
+            // $this->data['MonsterTypes'] = $temp;
             if ($this->Monsters->saveAll($this->data)) {
                 $this->redirect('cadastro');
             }

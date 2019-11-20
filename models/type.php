@@ -17,9 +17,17 @@ class Type extends AppModel
 
     function getLista()
     {
-        return $this->find('list', array('fields'=>'name', 'order' => 'id'));
+        return $this->find('list', array('fields' => 'name', 'order' => 'id'));
     }
 
+    function getTagList()
+    {
+        return $this->find('list', array(
+            'fields' => 'name',
+            'order' => 'name',
+            'conditions' => array(
+                'id >=' => '14'
+            )
+        ));
+    }
 }
-
-?>
