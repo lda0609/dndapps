@@ -3,7 +3,7 @@
 class TesteController extends AppController
 {
 
-    var $uses = array('Monsters', 'xpThresholds', 'Adventure', 'AdventurersPerAdventure', 'Encounters', 'EncountersMonsters', 'MonsterFavorites', 'MonsterTypes');
+    var $uses = array('Monsters', 'Type', 'MonsterEnvironments', 'Environments', 'xpThresholds', 'Adventure', 'AdventurersPerAdventure', 'Encounters', 'EncountersMonsters', 'MonsterFavorites', 'MonsterTypes');
     var $multiplier = array(
         '1' => 0.5,
         '2' => 1,
@@ -34,8 +34,70 @@ class TesteController extends AppController
         19 => 30000,
         20 => 40000,
     );
-
     function index()
+    {
+        Configure::write('debug', 2);
+        $this->autoRender = false;
+        $types = $this->Type->find('all', array());
+        $monsterTypes = [];
+        foreach ($types as $value) {
+            $id = $value['Type']['id'];
+            $name = $value['Type']['name'];
+            $monsterTypes[$id] = $name;
+        }
+        debug($monsterTypes);
+        $monsters = $this->Monsters->find('all', array('order' => array('id')));
+        // debug($monsters);
+
+        $environmentsAll = $this->Environments->find('all', array('order' => array('id')));
+        $environments = [];
+        foreach ($environmentsAll as $value) {
+            $id = $value['Environments']['id'];
+            $name = $value['Environments']['name'];
+            $environments[$id] = $name;
+        }
+        // debug($environments);
+
+        // $MonstersByEnvironments = $this->MonsterEnvironments->find('all', array('order' => array('id')));
+        // debug($MonstersByEnvironments);
+
+        $monstersExport = [];
+        foreach ($monsters as $key => $value) {
+            $monsterEdited['name'] = $value['Monsters']['name'];
+            $monsterEdited['page'] = $value['Monsters']['page'];
+            $monsterEdited['cr'] = $value['Monsters']['cr'];
+            $monsterEdited['size'] = $value['Monsters']['size'];
+            $monsterEdited['alignment'] = $value['Monsters']['alignment'];
+            $monsterEdited['hp'] = $value['Monsters']['hp'];
+            $monsterEdited['book'] = $value['Monsters']['book'];
+            if (empty($monsterTypes[$value['Monsters']['type']])) {
+                $monsterEdited['type'] = '';
+                // debug($value);
+            } else {
+                $monsterEdited['type'] = $monsterTypes[$value['Monsters']['type']];
+            }
+            if (empty($monsterTypes[$value['Monsters']['tag']])) {
+                // debug($value);
+                $monsterEdited['tag'] = '';
+            } else {
+                $monsterEdited['tag'] = $monsterTypes[$value['Monsters']['tag']];
+            }
+            if ($value['Monsters']['template'] == 1) {
+                $monsterEdited['template'] = true;
+            } else {
+                $monsterEdited['template'] = false;
+            }
+            $monsterEdited['environments'] = [];
+            foreach ($value['MonsterEnvironments'] as $monsterEnv) {
+                $env =  $environments[$monsterEnv['dnd_environments_id']];
+                array_push($monsterEdited['environments'], $env);
+            }
+
+            array_push($monstersExport, $monsterEdited);
+        }
+        debug(json_encode($monstersExport));
+    }
+    function index2()
     {
         Configure::write('debug', 2);
         $this->autoRender = false;
@@ -48,15 +110,15 @@ class TesteController extends AppController
                 $group[$value['MonsterTypes']['dnd_monsters_id']] = 1;
             }
         }
-//        $monsterall = $this->Monsters->find('all');
-//        debug($monsterall);
-//        die;
+        //        $monsterall = $this->Monsters->find('all');
+        //        debug($monsterall);
+        //        die;
         debug(count($group));
         $count = 0;
         foreach ($group as $key => $value) {
             if ($value >= 1) {
-//                debug($key);
-                $count ++;
+                //                debug($key);
+                $count++;
                 $monster = $this->Monsters->findByid($key);
                 debug($monster);
                 foreach ($monster['MonsterTypes'] as $monstertype) {
@@ -64,22 +126,22 @@ class TesteController extends AppController
                         if (!isset($monster['Monsters']['type'])) {
                             $monster['Monsters']['type'] = $monstertype['dnd_type_id'];
                         } else {
-                           debug($monster);
-                           debug($monstertype['dnd_type_id']);
+                            debug($monster);
+                            debug($monstertype['dnd_type_id']);
                         }
                     } elseif ($monstertype['dnd_type_id'] >= 15 && $monstertype['dnd_type_id'] != 22) {
                         if (!isset($monster['Monsters']['race'])) {
                             $monster['Monsters']['tag'] = $monstertype['dnd_type_id'];
                         } else {
-                           debug($monster);
-                           debug($monstertype['dnd_type_id']);
+                            debug($monster);
+                            debug($monstertype['dnd_type_id']);
                         }
                     } elseif ($monstertype['dnd_type_id'] == 22) {
                         $monster['Monsters']['shapechanger'] = 1;
                     }
-                } 
-//                debug($monster);
-//                debug($this->Monsters->save($monster));
+                }
+                //                debug($monster);
+                //                debug($this->Monsters->save($monster));
             }
         }
         debug($count);
@@ -152,7 +214,8 @@ class TesteController extends AppController
         debug($idAventura);
         $AdventurersPerAdventure = $this->AdventurersPerAdventure->find('all', array(
             'joins' => array(
-                array('table' => 'adventurers',
+                array(
+                    'table' => 'adventurers',
                     'alias' => 'Adventurers',
                     'type' => 'LEFT',
                     'conditions' => array(
@@ -213,5 +276,4 @@ class TesteController extends AppController
 
         return json_encode($retorno);
     }
-
 }
